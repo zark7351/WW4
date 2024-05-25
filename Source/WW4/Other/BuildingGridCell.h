@@ -16,7 +16,9 @@ class WW4_API ABuildingGridCell : public AStaticMeshActor
 	
 
 public:
-	
+
+	ABuildingGridCell();
+
 	UPROPERTY()
 	bool bEnabled{true};
 
@@ -24,6 +26,8 @@ public:
 	bool bBlock{false};
 
 protected:
+
+	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds)override;
 

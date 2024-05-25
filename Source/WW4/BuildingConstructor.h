@@ -15,20 +15,21 @@ public:
 	ABuildingConstructor();
 
 
-	UFUNCTION(Server, Reliable)
-	void Construct();
+	UFUNCTION(BlueprintCallable)
+	bool Construct();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AStaticMeshActor> CellClass;
+	TSubclassOf<class ABuildingGridCell> CellClass;
 
 	void InitCell();
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
+	bool TracePos(FHitResult& OutHitResult);
 
 public:	
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 UnitID;
@@ -36,16 +37,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
 
-	//UPROPERTY()
-	//TArray<int32> CellGrid;
+	UPROPERTY()
+	TArray<int32> CellGrid;
+
+	UPROPERTY()
+	TArray<ABuildingGridCell*> CellArr;
 
 	UPROPERTY()
 	FString CurBuilding;
 
+	bool CanConstruct();
+
 private:
-	UPROPERTY()
-	TArray<class ABuildingGridCell*> CellArr;
 
 	FVector Offset{ FVector::ZeroVector };
+
+	FVector HitPos{ FVector::ZeroVector };
 
 };

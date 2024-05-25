@@ -5,6 +5,7 @@
 #include "WW4/Building/UnitFactoryBase.h"
 #include "WW4/Unit/UnitBase.h"
 #include "WW4/Unit/Vehicle/VehicleBase.h"
+#include "WW4/Building/BuildingBase.h"
 
 AUnitManager::AUnitManager()
 {
@@ -81,6 +82,18 @@ void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 		break;
 	default:
 		break;
+	}
+}
+
+void AUnitManager::SpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
+{
+	if (BuildingGridInfo)
+	{
+		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");
+		if (Row && Row->ItemClass)
+		{
+			GetWorld()->SpawnActor<AActor>(Row->ItemClass, Location, Rotation);
+		}
 	}
 }
 

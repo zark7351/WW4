@@ -5,6 +5,18 @@
 #include "Components/MeshComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+ABuildingGridCell::ABuildingGridCell()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+
+void ABuildingGridCell::BeginPlay()
+{
+	Super::BeginPlay();
+	SetStyle(false);
+}
+
 void ABuildingGridCell::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -24,8 +36,8 @@ bool ABuildingGridCell::TraceBlock()
 {
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	FHitResult HitResult;
-	ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery7);
 	ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery8);
+	ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery9);
 	UKismetSystemLibrary::BoxTraceSingleForObjects(
 		GetWorld(),
 		GetActorLocation(),
@@ -39,10 +51,6 @@ bool ABuildingGridCell::TraceBlock()
 		HitResult,
 		true
 	);
-	if (HitResult.bBlockingHit)
-	{
-		bBlock = true;
-		return true;
-	}
-	return false;
+	bBlock = HitResult.bBlockingHit;
+	return bBlock;
 }
