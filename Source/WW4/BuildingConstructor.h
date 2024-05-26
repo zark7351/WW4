@@ -40,13 +40,16 @@ public:
 	UPROPERTY()
 	TArray<int32> CellGrid;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TArray<ABuildingGridCell*> CellArr;
 
 	UPROPERTY()
 	FString CurBuilding;
 
 	bool CanConstruct();
+
+	UFUNCTION(BlueprintCallable)
+	void ClearCellArr();
 
 private:
 

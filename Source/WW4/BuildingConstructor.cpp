@@ -23,8 +23,14 @@ bool ABuildingConstructor::Construct()
 		AUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
 		if (UnitManager)
 		{
-			UnitManager->SpawnBuilding(FName(*CurBuilding), HitPos, FRotator());
-			return true;
+			//test
+			auto Connection = UnitManager->GetNetConnection();
+			if (Connection)
+			{
+				UnitManager->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator());
+				ClearCellArr();
+				return true;
+			}
 		}
 	}
 	return false;
@@ -110,3 +116,15 @@ bool ABuildingConstructor::CanConstruct()
 	return Can;
 }
 
+void ABuildingConstructor::ClearCellArr()
+{
+	if (CellArr.Num()>0)
+	{
+		for (auto Cell : CellArr) 
+		{
+			Cell->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+			Cell->Destroy();
+		}
+		CellArr.Empty();
+	}
+}

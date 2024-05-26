@@ -6,6 +6,7 @@
 #include "WW4/Unit/UnitBase.h"
 #include "WW4/Unit/Vehicle/VehicleBase.h"
 #include "WW4/Building/BuildingBase.h"
+#include "WW4/Common/WW4CommonFunctionLibrary.h"
 
 AUnitManager::AUnitManager()
 {
@@ -16,7 +17,6 @@ AUnitManager::AUnitManager()
 void AUnitManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AUnitManager::Tick(float DeltaTime)
@@ -85,9 +85,9 @@ void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 	}
 }
 
-void AUnitManager::SpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void AUnitManager::ServerSpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
-	if (BuildingGridInfo)
+	if (HasAuthority() && BuildingGridInfo)
 	{
 		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");
 		if (Row && Row->ItemClass)

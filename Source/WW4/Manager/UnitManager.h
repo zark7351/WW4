@@ -71,10 +71,9 @@ public:
 	void SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
 	UFUNCTION(Server, Reliable)
 	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform);
+	
 	UFUNCTION(Server, Reliable)
-	void SpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);
-
-private:
+	void ServerSpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);
 
 	UPROPERTY()
 	TMap<EFaction,FUnitsInfo> Units;
