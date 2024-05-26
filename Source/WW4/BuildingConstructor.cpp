@@ -13,7 +13,6 @@
 ABuildingConstructor::ABuildingConstructor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
 }
 
 bool ABuildingConstructor::Construct()
@@ -23,14 +22,9 @@ bool ABuildingConstructor::Construct()
 		AUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
 		if (UnitManager)
 		{
-			//test
-			auto Connection = UnitManager->GetNetConnection();
-			if (Connection)
-			{
-				UnitManager->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator());
-				ClearCellArr();
-				return true;
-			}
+			UnitManager->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator());
+			ClearCellArr();
+			return true;
 		}
 	}
 	return false;

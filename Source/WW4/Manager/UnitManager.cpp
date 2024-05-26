@@ -12,6 +12,7 @@ AUnitManager::AUnitManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	bAlwaysRelevant = true;
 }
 
 void AUnitManager::BeginPlay()
@@ -87,6 +88,7 @@ void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 
 void AUnitManager::ServerSpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
+	FString(TEXT("1"))
 	if (HasAuthority() && BuildingGridInfo)
 	{
 		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");

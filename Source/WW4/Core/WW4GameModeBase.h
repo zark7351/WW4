@@ -16,7 +16,12 @@ class WW4_API AWW4GameModeBase : public AGameModeBase
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	const AUnitManager* GetUnitManager();
+	void InitManager();
+
+	virtual void StartPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AUnitManager> UnitManagerClass;
 
 private:
 	class AUnitManager* UnitManager = nullptr;

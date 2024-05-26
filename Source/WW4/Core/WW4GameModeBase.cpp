@@ -4,15 +4,20 @@
 #include "WW4GameModeBase.h"
 #include "WW4/Manager/UnitManager.h"
 
-const AUnitManager* AWW4GameModeBase::GetUnitManager()
+void AWW4GameModeBase::InitManager()
 {
 	if (!UnitManager)
 	{
 		UWorld* World = GetWorld();
-		if (World)
+		if (World && UnitManagerClass)
 		{
-			UnitManager = World->SpawnActor<AUnitManager>();
+			UnitManager = World->SpawnActor<AUnitManager>(UnitManagerClass);
 		}
 	}
-	return UnitManager;
+}
+
+void AWW4GameModeBase::StartPlay()
+{
+	Super::StartPlay();
+	InitManager();
 }
