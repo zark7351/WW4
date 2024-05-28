@@ -26,5 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Common")
 	static void PrintCommonMessage(const FString& Msg, FColor Color = FColor::Blue);
+	
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
+	static void SpawnUnit(const UObject* WorldContextObject, const EFaction& InFaction, TSubclassOf<AUnitBase> InUnitClass, const FTransform& InTransform, class ABuildingBase* InOwnerBuilding);
 
 };

@@ -70,7 +70,7 @@ public:
 	UFUNCTION()
 	void SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
 	UFUNCTION()
-	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform);
+	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding = nullptr);
 	
 	UFUNCTION()
 	void SpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);

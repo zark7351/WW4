@@ -4,6 +4,7 @@
 #include "OreRefinery.h"
 #include "WW4/Unit/Vehicle/Miner.h"
 #include "Kismet/GameplayStatics.h"
+#include "WW4/Common/WW4CommonFunctionLibrary.h"
 
 AOreRefinery::AOreRefinery()
 {
@@ -16,11 +17,6 @@ void AOreRefinery::BeginPlay()
 	if (MinerClass)
 	{
 		FTransform Transform = MinerSpawnPoint->GetComponentTransform();
-		AMiner* Miner = GetWorld()->SpawnActor<AMiner>(MinerClass, Transform);
-		if (Miner)
-		{
-			Miner->SetOwnerOreRefinery(this);
-			Miner->OnInit();
-		}
+		UWW4CommonFunctionLibrary::SpawnUnit(GetWorld(), EFaction::EF_RedTeam, MinerClass, Transform, this);
 	}
 }

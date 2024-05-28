@@ -18,17 +18,13 @@ class WW4_API AMiner : public AVehicleBase
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetOwnerOreRefinery(AOreRefinery* InOwnerOreRefinery);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	FORCEINLINE AOreRefinery* GetOwnerOreRefinery(){ return OwnerOreRefinery; }
+	virtual void OnInit() override;
 
-public:
+protected:
 
-	void OnInit();
+	virtual void BeginPlay() override;
 
 private:
 
-	AOreRefinery* OwnerOreRefinery = nullptr;
 };

@@ -41,11 +41,12 @@ void AUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> 
 	}
 }
 
-void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform)
+void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
 	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform);
 	if (Unit)
 	{
+		Unit->SetOwnerBuilding(OwnerBuilding);
 		if (Units.Contains(Faction))
 		{
 			Units[Faction].Units.Add(FUnitInfoBase(Unit));
@@ -54,6 +55,7 @@ void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, 
 		{
 			Units.Add(Faction, FUnitsInfo(Unit));
 		}
+		Unit->OnInit();
 	}
 }
 

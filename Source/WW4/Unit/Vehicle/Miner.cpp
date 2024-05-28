@@ -3,11 +3,7 @@
 
 #include "Miner.h"
 #include "WW4/AI/Controller/MinerAIController.h"
-
-void AMiner::SetOwnerOreRefinery(AOreRefinery* InOwnerOreRefinery)
-{
-	OwnerOreRefinery = InOwnerOreRefinery;
-}
+#include "WW4/Manager/UnitManager.h"
 
 void AMiner::OnInit()
 {
@@ -16,4 +12,10 @@ void AMiner::OnInit()
 	{
 		MinerController->Ready();
 	}
+	Super::OnInit();
+}
+
+void AMiner::BeginPlay()
+{
+	Super::BeginPlay();
 }

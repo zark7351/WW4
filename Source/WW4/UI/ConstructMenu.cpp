@@ -11,6 +11,7 @@
 #include "WW4/Unit/UnitBase.h"
 #include "WW4/Manager/UnitManager.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "WW4/Core/WW4PlayerController.h"
 
 UConstructMenu::UConstructMenu(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -77,7 +78,6 @@ void UConstructMenu::InitConstructionList(UUniformGridPanel* UniformGridPanel, U
 	}
 }
 
-//PRAGMA_DISABLE_OPTIMIZATION
 
 void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInfo)
 {
@@ -92,14 +92,12 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 	}
 	else if (ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
 	{
-		AUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
-		if (UnitManager)
+		AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
+		if (PlayerController)
 		{
-			UnitManager->SpawnVehicle(EFaction::EF_RedTeam, ItemInfo.ItemClass);
+			PlayerController->ServerSpawnVehicle(EFaction::EF_RedTeam, ItemInfo.ItemClass);
 		}
 		
 	}
 
 }
-
-//PRAGMA_ENABLE_OPTIMIZATION

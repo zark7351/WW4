@@ -18,7 +18,10 @@ public:
 	void ServerSpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
 	UFUNCTION(Server, Reliable)
-	void ServerSpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform);
+	void ServerSpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSpawnVehicle(EFaction Faction, UClass* VehicleType);
 
 private:
 	class AUnitManager* UnitManager;

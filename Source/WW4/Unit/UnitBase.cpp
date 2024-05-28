@@ -16,6 +16,10 @@ void AUnitBase::BeginPlay()
 	
 }
 
+void AUnitBase::OnInit()
+{
+}
+
 void AUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
