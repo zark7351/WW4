@@ -9,6 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "WW4/Manager/UnitManager.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "WW4/Core/WW4PlayerController.h"
 
 ABuildingConstructor::ABuildingConstructor()
 {
@@ -19,10 +20,10 @@ bool ABuildingConstructor::Construct()
 {
 	if (CanConstruct())
 	{
-		AUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
-		if (UnitManager)
+		AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
+		if (PlayerController)
 		{
-			UnitManager->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator());
+			PlayerController->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}

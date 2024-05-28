@@ -11,8 +11,6 @@
 AUnitManager::AUnitManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
-	bAlwaysRelevant = true;
 }
 
 void AUnitManager::BeginPlay()
@@ -26,7 +24,7 @@ void AUnitManager::Tick(float DeltaTime)
 
 }
 
-void AUnitManager::SpawnUnitAtBuilding_Implementation(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
+void AUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
 {
 	AUnitBase* Unit = nullptr;
 	if (SpawnBuilding)
@@ -43,7 +41,7 @@ void AUnitManager::SpawnUnitAtBuilding_Implementation(EFaction Faction, TSubclas
 	}
 }
 
-void AUnitManager::SpawnUnit_Implementation(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform)
+void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform)
 {
 	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform);
 	if (Unit)
@@ -59,7 +57,7 @@ void AUnitManager::SpawnUnit_Implementation(EFaction Faction, TSubclassOf<AUnitB
 	}
 }
 
-void AUnitManager::SpawnVehicle_Implementation(EFaction Faction, UClass* VehicleType)
+void AUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
 {
 	if (CurrentVehicleFactory)
 	{
@@ -86,10 +84,9 @@ void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 	}
 }
 
-void AUnitManager::ServerSpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void AUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
-	FString(TEXT("1"))
-	if (HasAuthority() && BuildingGridInfo)
+	if (BuildingGridInfo)
 	{
 		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");
 		if (Row && Row->ItemClass)

@@ -62,18 +62,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
+	UFUNCTION(BlueprintCallable)
 	void SpawnVehicle(EFaction Faction, UClass* VehicleType);
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION()
 	void SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
-	UFUNCTION(Server, Reliable)
+	UFUNCTION()
 	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform);
 	
-	UFUNCTION(Server, Reliable)
-	void ServerSpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);
+	UFUNCTION()
+	void SpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);
 
 	UPROPERTY()
 	TMap<EFaction,FUnitsInfo> Units;
