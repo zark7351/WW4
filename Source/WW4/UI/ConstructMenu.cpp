@@ -6,7 +6,7 @@
 #include "WW4/Building/BuildingBase.h"
 #include "ConstructItem.h"
 #include "components/Button.h"
-#include "WW4/BuildingConstructor.h"
+#include "WW4/Other/BuildingConstructor.h"
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "WW4/Unit/UnitBase.h"
 #include "WW4/Manager/UnitManager.h"

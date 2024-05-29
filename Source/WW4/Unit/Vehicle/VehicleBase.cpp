@@ -7,4 +7,5 @@
 AVehicleBase::AVehicleBase()
 {
 	VehicleMovement = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("VehicleMovement"));
+	PrimaryActorTick.bCanEverTick = true;
 }
