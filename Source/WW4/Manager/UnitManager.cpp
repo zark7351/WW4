@@ -7,24 +7,9 @@
 #include "WW4/Unit/Vehicle/VehicleBase.h"
 #include "WW4/Building/BuildingBase.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
-AUnitManager::AUnitManager()
-{
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AUnitManager::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AUnitManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void AUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
+void UUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
 {
 	AUnitBase* Unit = nullptr;
 	if (SpawnBuilding)
@@ -41,7 +26,7 @@ void AUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> 
 	}
 }
 
-void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
+void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
 	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform);
 	if (Unit)
@@ -59,7 +44,22 @@ void AUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, 
 	}
 }
 
-void AUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
+bool UUnitManager::ShouldCreateSubsystem(UObject* Outer) const
+{
+	return UKismetSystemLibrary::IsServer(Outer);
+}
+
+void UUnitManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+}
+
+void UUnitManager::Deinitialize()
+{
+	Super::Deinitialize();
+}
+
+void UUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
 {
 	if (CurrentVehicleFactory)
 	{
@@ -67,7 +67,7 @@ void AUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
 	}
 }
 
-void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory)
+void UUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory)
 {
 	switch (Type)
 	{
@@ -86,7 +86,7 @@ void AUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 	}
 }
 
-void AUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void UUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
 	if (BuildingGridInfo)
 	{

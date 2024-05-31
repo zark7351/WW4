@@ -11,7 +11,7 @@ void AWW4GameModeBase::InitManager()
 		UWorld* World = GetWorld();
 		if (World && UnitManagerClass)
 		{
-			UnitManager = World->SpawnActor<AUnitManager>(UnitManagerClass);
+			UnitManager = Cast<UUnitManager>(World->GetSubsystemBase(UnitManagerClass));
 		}
 	}
 }

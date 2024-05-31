@@ -23,10 +23,10 @@ const FTransform AUnitFactoryBase::GetSpawnTransform()
 
 void AUnitFactoryBase::SetMainFactory()
 {
-	AUnitManager* Manager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
-	if (Manager)
+	UUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
+	if (UnitManager)
 	{
-		Manager->SetCurrentFactory(EContructItemType::ECT_Building, this);
+		UnitManager->SetCurrentFactory(EContructItemType::ECT_Building, this);
 	}
 }
 

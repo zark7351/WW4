@@ -24,5 +24,5 @@ public:
 	void ServerSpawnVehicle(EFaction Faction, UClass* VehicleType);
 
 private:
-	class AUnitManager* UnitManager;
+	class UUnitManager* UnitManager;
 };

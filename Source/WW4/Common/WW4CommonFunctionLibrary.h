@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "WW4/BaseTypes/BaseTypes.h"
+#include "WW4/Manager/UnitManager.h"
 #include "WW4CommonFunctionLibrary.generated.h"
 
 /**
@@ -22,7 +23,7 @@ class WW4_API UWW4CommonFunctionLibrary : public UBlueprintFunctionLibrary
 public:
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
-	static AUnitManager* GetUnitManager(const UObject* WorldContextObject);
+	static UUnitManager* GetUnitManager(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category = "Common")
 	static void PrintCommonMessage(const FString& Msg, FColor Color = FColor::Blue);

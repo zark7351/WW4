@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "WW4/Manager/UnitManager.h"
 #include "WW4GameModeBase.generated.h"
 
 /**
@@ -15,14 +16,14 @@ class WW4_API AWW4GameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUnitManager> UnitManagerClass;
+
 	UFUNCTION(BlueprintCallable)
 	void InitManager();
 
 	virtual void StartPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AUnitManager> UnitManagerClass;
-
 private:
-	class AUnitManager* UnitManager = nullptr;
+	class UUnitManager* UnitManager = nullptr;
 };

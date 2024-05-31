@@ -8,10 +8,10 @@
 #include "WW4/Unit/Vehicle/VehicleBase.h"
 #include "WW4/Core/WW4PlayerController.h"
 
-AUnitManager* UWW4CommonFunctionLibrary::GetUnitManager(const UObject* WorldContextObject)
+UUnitManager*  UWW4CommonFunctionLibrary::GetUnitManager(const UObject* WorldContextObject)
 {
-	AUnitManager* Manager = Cast<AUnitManager>(UGameplayStatics::GetActorOfClass(WorldContextObject, AUnitManager::StaticClass()));
-	return Manager;
+	UUnitManager* UnitManager = WorldContextObject->GetWorld()->GetSubsystem<UUnitManager>();
+	return UnitManager;
 }
 
 void UWW4CommonFunctionLibrary::PrintCommonMessage(const FString& Msg, FColor Color)

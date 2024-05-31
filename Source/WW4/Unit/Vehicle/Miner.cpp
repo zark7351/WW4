@@ -3,7 +3,6 @@
 
 #include "Miner.h"
 #include "WW4/AI/Controller/MinerAIController.h"
-#include "WW4/Manager/UnitManager.h"
 #include "WW4/Component/VehicleMovementComponent.h"
 
 void AMiner::OnInit()

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Subsystems/WorldSubsystem.h"
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "UnitManager.generated.h"
+
 
 class AUnitBase;
 class AUnitFactoryBase;
@@ -45,19 +46,23 @@ struct FUnitsInfo
 	}
 };
 
-UCLASS()
-class WW4_API AUnitManager : public AActor
+
+/**
+ * 
+ */
+UCLASS(Abstract, Blueprintable, BlueprintType)
+class WW4_API UUnitManager : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	
-public:	
-	AUnitManager();
+public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
-protected:
-	virtual void BeginPlay() override;
+	/** Implement this for initialization of instances of the system */
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	/** Implement this for deinitialization of instances of the system */
+	virtual void Deinitialize() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
@@ -71,18 +76,16 @@ public:
 	void SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
 	UFUNCTION()
 	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding = nullptr);
-	
+
 	UFUNCTION()
-	void SpawnBuilding(FName BuildingName,const FVector& Location, const FRotator& Rotation);
+	void SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
 	UPROPERTY()
-	TMap<EFaction,FUnitsInfo> Units;
+	TMap<EFaction, FUnitsInfo> Units;
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
-
-
 };
