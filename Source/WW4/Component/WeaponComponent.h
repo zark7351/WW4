@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Components/SceneComponent.h"
 #include "WeaponComponent.generated.h"
 
 class AProjectileBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class WW4_API UWeaponComponent : public UActorComponent
+class WW4_API UWeaponComponent : public USceneComponent
 {
 	GENERATED_BODY()
 

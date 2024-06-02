@@ -4,10 +4,11 @@
 #include "WeaponComponent.h"
 #include "TimerManager.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "WW4/Projectile/ProjectileBase.h"
 
 UWeaponComponent::UWeaponComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = false;	
 }
 
 void UWeaponComponent::BeginFire()
@@ -22,7 +23,10 @@ void UWeaponComponent::StopFire()
 
 void UWeaponComponent::Fire()
 {
-	UWW4CommonFunctionLibrary::PrintCommonMessage("Fire");
+	if (GetOwner()->HasAuthority())
+	{
+		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetComponentLocation(), FRotator());
+	}
 }
 
 void UWeaponComponent::BeginPlay()
