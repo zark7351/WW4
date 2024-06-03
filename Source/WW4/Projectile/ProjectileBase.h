@@ -17,8 +17,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UFUNCTION(BlueprintNativeEvent)
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 public:	
 	virtual void Tick(float DeltaTime) override;
@@ -31,4 +31,22 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UBoxComponent* CollisionBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bRangeDamage{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Damange{20.f};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MinimumDamange{ 5.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamageInnerRadius{ 50.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamageOuterRadius{ 200.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DamageFalloff{ 10.f };
 };

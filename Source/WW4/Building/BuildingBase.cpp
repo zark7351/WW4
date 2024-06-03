@@ -4,6 +4,8 @@
 #include "BuildingBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "WW4/Building/BuildingBase.h"
+#include "WW4/Component/HealthComponent.h"
+
 
 ABuildingBase::ABuildingBase()
 {
@@ -11,7 +13,8 @@ ABuildingBase::ABuildingBase()
 	PrimaryActorTick.bCanEverTick = true;
 	BuildingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BuildingMesh"));
 	BuildingMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
-	RootComponent = BuildingMesh;
+	SetRootComponent(BuildingMesh);
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 void ABuildingBase::BeginPlay()
@@ -24,6 +27,15 @@ void ABuildingBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+float ABuildingBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (HealthComponent)
+	{
+		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	}
+	return 0.0f;
 }
 
 void ABuildingBase::InitGrid()

@@ -30,6 +30,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UHealthComponent* HealthComponent;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -38,6 +41,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> BuildingGrid;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	UPROPERTY(EditAnywhere)
