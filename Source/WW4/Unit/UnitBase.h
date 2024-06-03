@@ -22,12 +22,17 @@ public:
 
 	virtual void OnInit();
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* UnitMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UHealthComponent* HealthComponent;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

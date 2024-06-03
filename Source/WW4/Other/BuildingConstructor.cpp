@@ -34,7 +34,6 @@ bool ABuildingConstructor::Construct()
 void ABuildingConstructor::BeginPlay()
 {
 	Super::BeginPlay();
-	InitCell();	
 }
 
 void ABuildingConstructor::Tick(float DeltaSeconds)

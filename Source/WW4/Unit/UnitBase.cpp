@@ -2,6 +2,7 @@
 
 
 #include "UnitBase.h"
+#include "WW4/Component/HealthComponent.h"
 
 AUnitBase::AUnitBase()
 {
@@ -18,6 +19,15 @@ void AUnitBase::BeginPlay()
 
 void AUnitBase::OnInit()
 {
+}
+
+float AUnitBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (HealthComponent)
+	{
+		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	}
+	return 0.0f;
 }
 
 void AUnitBase::Tick(float DeltaTime)
