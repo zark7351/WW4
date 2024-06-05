@@ -3,6 +3,7 @@
 
 #include "UnitBase.h"
 #include "WW4/Component/HealthComponent.h"
+#include "Components/WidgetComponent.h"
 
 AUnitBase::AUnitBase()
 {
@@ -10,12 +11,13 @@ AUnitBase::AUnitBase()
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);
 	RootComponent = UnitMesh;
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
+	HealthBar->SetupAttachment(RootComponent);
 }
 
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AUnitBase::OnInit()
