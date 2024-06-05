@@ -8,6 +8,7 @@ AUnitBase::AUnitBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
+	UnitMesh->SetCustomDepthStencilValue(1);
 	RootComponent = UnitMesh;
 }
 
@@ -28,6 +29,12 @@ float AUnitBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 	return 0.0f;
+}
+
+void AUnitBase::EnableOutline(bool bEnable)
+{
+	UnitMesh->MarkRenderStateDirty();
+	UnitMesh->bRenderCustomDepth = bEnable;
 }
 
 void AUnitBase::Tick(float DeltaTime)
