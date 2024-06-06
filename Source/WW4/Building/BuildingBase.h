@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WW4/BaseTypes/BaseTypes.h"
+#include "WW4/Interface/BaseObjectInterface.h"
 #include "BuildingBase.generated.h"
 
 
@@ -20,7 +21,7 @@ public:
 
 
 UCLASS()
-class WW4_API ABuildingBase : public AActor
+class WW4_API ABuildingBase : public AActor, public IBaseObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -33,6 +34,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* HealthBar;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -42,7 +46,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> BuildingGrid;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> HealthBarWidgetClass;
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	void ShowHealthBar(bool bShow);
+
+	void EnableOutline(bool bEnable);
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnSelected(bool bSelected);
+
+	virtual void OnTakeDamage();
 
 private:
 	UPROPERTY(EditAnywhere)

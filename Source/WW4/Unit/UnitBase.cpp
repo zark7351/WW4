@@ -30,15 +30,10 @@ float AUnitBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 {
 	if (HealthComponent)
 	{
+		OnTakeDamage();
 		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 	return 0.0f;
-}
-
-void AUnitBase::OnUnitSelected(bool bSelected)
-{
-	EnableOutline(bSelected);
-	ShowHealthBar(bSelected);
 }
 
 void AUnitBase::ShowHealthBar(bool bShow)
@@ -53,6 +48,17 @@ void AUnitBase::EnableOutline(bool bEnable)
 {
 	UnitMesh->MarkRenderStateDirty();
 	UnitMesh->bRenderCustomDepth = bEnable;
+}
+
+void AUnitBase::OnSelected(bool bSelected)
+{
+	EnableOutline(bSelected);
+	ShowHealthBar(bSelected);
+}
+
+void AUnitBase::OnTakeDamage()
+{
+	ShowHealthBar(true);
 }
 
 void AUnitBase::Tick(float DeltaTime)

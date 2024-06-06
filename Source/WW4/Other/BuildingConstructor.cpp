@@ -66,7 +66,7 @@ void ABuildingConstructor::InitCell()
 					Location.X = (i / 5 - 2) * 100;
 					Location.Y = (i % 5 - 2) * 100;
 					Location += Offset;
-					ABuildingGridCell* Cell = GetWorld()->SpawnActor<ABuildingGridCell>(CellClass, Location, FRotator());
+					ABuildingGridCell* Cell = GetWorld()->SpawnActor<ABuildingGridCell>(CellClass, Location, FRotator::ZeroRotator);
 					if (Cell)
 					{
 						Cell->SetMobility(EComponentMobility::Movable);

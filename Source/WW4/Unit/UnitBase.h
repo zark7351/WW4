@@ -4,10 +4,11 @@
 #include "GameFramework/Pawn.h"
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "WW4/Building/BuildingBase.h"
+#include "WW4/Interface/BaseObjectInterface.h"
 #include "UnitBase.generated.h"
 
 UCLASS()
-class WW4_API AUnitBase : public APawn
+class WW4_API AUnitBase : public APawn, public IBaseObjectInterface
 {
 	GENERATED_BODY()
 
@@ -24,12 +25,17 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	UFUNCTION(BlueprintCallable)
-	void OnUnitSelected(bool bSelected);
+	//UFUNCTION(BlueprintCallable)
+	//void OnUnitSelected(bool bSelected);
 
 	void ShowHealthBar(bool bShow);
 
 	void EnableOutline(bool bEnable);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnSelected(bool bSelected) override;
+
+	virtual void OnTakeDamage() override;
 
 protected:
 	virtual void BeginPlay() override;

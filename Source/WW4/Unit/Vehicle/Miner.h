@@ -27,7 +27,4 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-private:
-
-	void Rotate(float DeltaSeconds);
 };

@@ -9,3 +9,19 @@ AVehicleBase::AVehicleBase()
 	VehicleMovement = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("VehicleMovement"));
 	PrimaryActorTick.bCanEverTick = true;
 }
+
+void AVehicleBase::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	Rotate(DeltaSeconds);
+}
+
+void AVehicleBase::Rotate(float DeltaSeconds)
+{
+	if (VehicleMovement && FMath::IsNearlyEqual(VehicleMovement->Velocity.Size(),VehicleMovement->MaxSpeed))
+	{
+		FRotator NewRotation = VehicleMovement->Velocity.Rotation();
+		FRotator CurRotation = GetActorRotation();
+		SetActorRotation(FMath::RInterpTo(CurRotation, NewRotation, DeltaSeconds, TurnSpeed));
+	}
+}
