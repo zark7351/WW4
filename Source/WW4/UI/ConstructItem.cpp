@@ -6,7 +6,10 @@
 
 void UConstructItem::NativeConstruct()
 {
-	Button->OnClicked.AddDynamic(this, &UConstructItem::OnClicked);
+	if (!Button->OnClicked.IsBound())
+	{
+		Button->OnClicked.AddDynamic(this, &UConstructItem::OnClicked);
+	}
 }
 
 void UConstructItem::OnClicked()

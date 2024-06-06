@@ -61,12 +61,12 @@ void UConstructMenu::InitConstructionList(UUniformGridPanel* UniformGridPanel, U
 	{
 		TArray<FItemProductionInfoBase*> ItemProductionInfo;
 		Datatable->GetAllRows("", ItemProductionInfo);
-		UClass* ItemClass = LoadClass<UConstructItem>(nullptr, TEXT("/Game/WW4/UI/WBP_ConstructItem.WBP_ConstructItem_C"));
+		if (!ConstructItemClass)	return;
 		for (int32 i = 0; i < ItemProductionInfo.Num(); i++)
 		{
 			if (ItemProductionInfo[i])
 			{
-				UConstructItem* Item = CreateWidget<UConstructItem>(GetWorld(), ItemClass);
+				UConstructItem* Item = CreateWidget<UConstructItem>(GetWorld(), ConstructItemClass);
 				if (Item)
 				{
 					UniformGridPanel->AddChildToUniformGrid(Item, i / 2, i % 2);

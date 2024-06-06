@@ -27,8 +27,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
-	bool TracePos(FHitResult& OutHitResult);
-
 public:	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

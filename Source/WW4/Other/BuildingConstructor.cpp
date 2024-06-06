@@ -40,23 +40,13 @@ void ABuildingConstructor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	FHitResult HitResult;
-	if (TracePos(HitResult))
+	if (UWW4CommonFunctionLibrary::TraceFloorUnderCursor(this, HitResult))
 	{
 		HitPos = HitResult.ImpactPoint;
 		SetActorLocation(HitPos);
 	}
 }
 
-
-bool ABuildingConstructor::TracePos(FHitResult& OutHitResult)
-{
-	FVector2D ScreenPos = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld()) * UWidgetLayoutLibrary::GetViewportScale(GetWorld());
-	FVector WorldPos = FVector::ZeroVector;
-	FVector WorldDir = FVector::ZeroVector;
-	UGameplayStatics::DeprojectScreenToWorld(GetWorld()->GetFirstPlayerController(), ScreenPos, WorldPos, WorldDir);
-	UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), WorldPos, WorldPos + WorldDir * 100000.f, TArray<TEnumAsByte<EObjectTypeQuery>>({ EObjectTypeQuery::ObjectTypeQuery7 }),false, TArray<AActor*>(),EDrawDebugTrace::Type::None, OutHitResult, true);
-	return OutHitResult.bBlockingHit;
-}
 
 void ABuildingConstructor::InitCell()
 {

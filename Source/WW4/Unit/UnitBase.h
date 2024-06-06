@@ -25,6 +25,10 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
+	void OnUnitSelected(bool bSelected);
+
+	void ShowHealthBar(bool bShow);
+
 	void EnableOutline(bool bEnable);
 
 protected:

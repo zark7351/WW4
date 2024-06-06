@@ -7,6 +7,7 @@
 #include "WW4/Unit/UnitBase.h"
 #include "WW4/Unit/Vehicle/VehicleBase.h"
 #include "WW4/Core/WW4PlayerController.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 UUnitManager*  UWW4CommonFunctionLibrary::GetUnitManager(const UObject* WorldContextObject)
 {
@@ -36,4 +37,19 @@ void UWW4CommonFunctionLibrary::SpawnUnit(const UObject* WorldContextObject, con
 	{
 		PlayerController->ServerSpawnUnit(InFaction, InUnitClass, InTransform, InOwnerBuilding);
 	}
+}
+
+bool UWW4CommonFunctionLibrary::TraceFloorUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult)
+{
+	UWorld* World = WorldContextObject->GetWorld();
+	if (!World)
+	{
+		return false;
+	}
+	FVector2D ScreenPos = UWidgetLayoutLibrary::GetMousePositionOnViewport(World) * UWidgetLayoutLibrary::GetViewportScale(World);
+	FVector WorldPos = FVector::ZeroVector;
+	FVector WorldDir = FVector::ZeroVector;
+	UGameplayStatics::DeprojectScreenToWorld(World->GetFirstPlayerController(), ScreenPos, WorldPos, WorldDir);
+	UKismetSystemLibrary::LineTraceSingleForObjects(World, WorldPos, WorldPos + WorldDir * 100000.f, TArray<TEnumAsByte<EObjectTypeQuery>>({ EObjectTypeQuery::ObjectTypeQuery7 }), false, TArray<AActor*>(), EDrawDebugTrace::Type::None, OutHitResult, true);
+	return OutHitResult.bBlockingHit;
 }

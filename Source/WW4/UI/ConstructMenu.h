@@ -37,6 +37,9 @@ protected:
 	UDataTable* VehicleInfo = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UConstructItem> ConstructItemClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ABuildingConstructor> ConstructorcClass;
 
 	void InitConstructionList(UUniformGridPanel* UniformGridPanel, UDataTable* Datatable, EContructItemType ItemType);

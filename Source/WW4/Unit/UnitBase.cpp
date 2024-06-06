@@ -13,6 +13,8 @@ AUnitBase::AUnitBase()
 	RootComponent = UnitMesh;
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
 	HealthBar->SetupAttachment(RootComponent);
+	ShowHealthBar(false);
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AUnitBase::BeginPlay()
@@ -31,6 +33,20 @@ float AUnitBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 	return 0.0f;
+}
+
+void AUnitBase::OnUnitSelected(bool bSelected)
+{
+	EnableOutline(bSelected);
+	ShowHealthBar(bSelected);
+}
+
+void AUnitBase::ShowHealthBar(bool bShow)
+{
+	if (HealthBar)
+	{
+		HealthBar->SetVisibility(bShow);
+	}
 }
 
 void AUnitBase::EnableOutline(bool bEnable)
