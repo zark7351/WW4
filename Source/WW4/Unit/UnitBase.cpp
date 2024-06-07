@@ -11,9 +11,9 @@ AUnitBase::AUnitBase()
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);
 	RootComponent = UnitMesh;
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
-	HealthBar->SetupAttachment(RootComponent);
-	ShowHealthBar(false);
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
+	HealthComponent->SetupAttachment(RootComponent);
+	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 500.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
@@ -30,18 +30,9 @@ float AUnitBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 {
 	if (HealthComponent)
 	{
-		OnTakeDamage();
 		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 	return 0.0f;
-}
-
-void AUnitBase::ShowHealthBar(bool bShow)
-{
-	if (HealthBar)
-	{
-		HealthBar->SetVisibility(bShow);
-	}
 }
 
 void AUnitBase::EnableOutline(bool bEnable)
@@ -50,15 +41,13 @@ void AUnitBase::EnableOutline(bool bEnable)
 	UnitMesh->bRenderCustomDepth = bEnable;
 }
 
-void AUnitBase::OnSelected(bool bSelected)
+void AUnitBase::OnSelected_Implementation(bool bSelected)
 {
 	EnableOutline(bSelected);
-	ShowHealthBar(bSelected);
-}
-
-void AUnitBase::OnTakeDamage()
-{
-	ShowHealthBar(true);
+	if (HealthComponent)
+	{
+		HealthComponent->ShowHealthBar(true);
+	}
 }
 
 void AUnitBase::Tick(float DeltaTime)

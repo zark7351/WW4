@@ -34,9 +34,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UWidgetComponent* HealthBar;
-
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -46,19 +43,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> BuildingGrid;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UUserWidget> HealthBarWidgetClass;
-
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
-	void ShowHealthBar(bool bShow);
 
 	void EnableOutline(bool bEnable);
 	
-	UFUNCTION(BlueprintCallable)
-	virtual void OnSelected(bool bSelected);
-
-	virtual void OnTakeDamage();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnSelected(bool bSelected);
+	virtual void OnSelected_Implementation(bool bSelected);
 
 private:
 	UPROPERTY(EditAnywhere)

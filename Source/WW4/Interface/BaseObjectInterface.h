@@ -7,7 +7,7 @@
 #include "BaseObjectInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, Blueprintable)
 class UBaseObjectInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -22,8 +22,7 @@ class WW4_API IBaseObjectInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnSelected(bool bSelected);
 
-	virtual void OnSelected(bool bSelected);
-
-	virtual void OnTakeDamage();
 };

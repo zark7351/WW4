@@ -25,17 +25,11 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	//UFUNCTION(BlueprintCallable)
-	//void OnUnitSelected(bool bSelected);
-
-	void ShowHealthBar(bool bShow);
-
 	void EnableOutline(bool bEnable);
 
-	UFUNCTION(BlueprintCallable)
-	virtual void OnSelected(bool bSelected) override;
-
-	virtual void OnTakeDamage() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnSelected(bool bSelected);
+	virtual void OnSelected_Implementation(bool bSelected) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -46,9 +40,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UWidgetComponent* HealthBar;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

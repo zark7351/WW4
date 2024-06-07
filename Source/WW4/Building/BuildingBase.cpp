@@ -16,15 +16,8 @@ ABuildingBase::ABuildingBase()
 	BuildingMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
 	SetRootComponent(BuildingMesh);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
-	HealthBar->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FClassFinder<UUserWidget>WidgetClass(TEXT("Blueprint'/Game/WW4/Blueprint/UI/WBP_HealthBar.WBP_HealthBar_C'"));
-	if (WidgetClass.Succeeded())
-	{
-		HealthBarWidgetClass = WidgetClass.Class;
-	}
-	HealthBar->SetWidgetClass(HealthBarWidgetClass);
-	ShowHealthBar(false);
+	HealthComponent->SetupAttachment(RootComponent);
+	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 250.f));
 }
 
 void ABuildingBase::BeginPlay()
@@ -43,18 +36,9 @@ float ABuildingBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 {
 	if (HealthComponent)
 	{
-		OnTakeDamage();
 		return HealthComponent->OnTakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	}
 	return 0.0f;
-}
-
-void ABuildingBase::ShowHealthBar(bool bShow)
-{
-	if (HealthBar)
-	{
-		HealthBar->SetVisibility(bShow);
-	}
 }
 
 void ABuildingBase::EnableOutline(bool bEnable)
@@ -63,15 +47,13 @@ void ABuildingBase::EnableOutline(bool bEnable)
 	BuildingMesh->bRenderCustomDepth = bEnable;
 }
 
-void ABuildingBase::OnSelected(bool bSelected)
+void ABuildingBase::OnSelected_Implementation(bool bSelected)
 {
 	EnableOutline(bSelected);
-	ShowHealthBar(bSelected);
-}
-
-void ABuildingBase::OnTakeDamage()
-{
-	ShowHealthBar(true);
+	if (HealthComponent)
+	{
+		HealthComponent->ShowHealthBar(true);
+	}
 }
 
 void ABuildingBase::InitGrid()
@@ -85,6 +67,5 @@ void ABuildingBase::InitGrid()
 			BuildingGrid = Row->Grid;
 		}
 	}
-	
 }
 
