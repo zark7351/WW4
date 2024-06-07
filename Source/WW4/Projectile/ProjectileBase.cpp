@@ -3,7 +3,7 @@
 
 #include "ProjectileBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AProjectileBase::AProjectileBase()
@@ -11,11 +11,11 @@ AProjectileBase::AProjectileBase()
 	PrimaryActorTick.bCanEverTick = true;
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->bRotationFollowsVelocity = true;
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
-	SetRootComponent(CollisionBox);
-	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-	CollisionBox->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
+	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
+	SetRootComponent(CollisionSphere);
+	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollisionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);

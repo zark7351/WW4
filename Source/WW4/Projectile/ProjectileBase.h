@@ -30,7 +30,7 @@ public:
 	UStaticMeshComponent* ProjectileMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UBoxComponent* CollisionBox;
+	class USphereComponent* CollisionSphere;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bRangeDamage{ false };

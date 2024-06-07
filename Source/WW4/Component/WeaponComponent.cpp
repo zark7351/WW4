@@ -8,7 +8,7 @@
 
 UWeaponComponent::UWeaponComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;	
+	PrimaryComponentTick.bCanEverTick = true;	
 }
 
 void UWeaponComponent::BeginFire()
