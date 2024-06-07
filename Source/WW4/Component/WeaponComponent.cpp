@@ -25,7 +25,7 @@ void UWeaponComponent::Fire()
 {
 	if (GetOwner()->HasAuthority())
 	{
-		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetComponentLocation(), FRotator());
+		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetComponentLocation(), GetComponentRotation());
 	}
 }
 
