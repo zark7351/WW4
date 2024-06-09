@@ -49,4 +49,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DamageFalloff{ 10.f };
+
+	UFUNCTION()
+	void SetProjectileSpeedOverride(float InSpeed);
 };

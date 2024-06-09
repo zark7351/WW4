@@ -33,4 +33,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static bool TraceFloorUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
+	static bool TraceTargetUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
+
+	/*
+	* 抛体运动，根据落地水平距离，出射角度和高度，计算出射速度。GPT给的算法！牛逼，一次验证通过！
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Math")
+	static float SolveInitialVelocity(float x, float theta, float h, float g = 9.8f);
 };

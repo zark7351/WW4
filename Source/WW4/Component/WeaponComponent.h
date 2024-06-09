@@ -8,7 +8,7 @@
 
 class AProjectileBase;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class WW4_API UWeaponComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -21,6 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StopFire();
+
 	virtual void Fire();
 
 protected:
@@ -29,13 +30,13 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool Firing{ false };
+
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
 	float FireDelay = 1.0f;
-		
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AProjectileBase> ProjectileClass;
 
 	UPROPERTY()
 	FTimerHandle FireTimer;

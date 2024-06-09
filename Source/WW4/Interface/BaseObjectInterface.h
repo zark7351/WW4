@@ -25,4 +25,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnSelected(bool bSelected);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetTarget(AActor* Targetactor);
+
 };

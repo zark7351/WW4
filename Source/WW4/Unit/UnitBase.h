@@ -31,6 +31,10 @@ public:
 	void OnSelected(bool bSelected);
 	virtual void OnSelected_Implementation(bool bSelected) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetTarget(AActor* Targetactor);
+	virtual void SetTarget_Implementation(AActor* Targetactor) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

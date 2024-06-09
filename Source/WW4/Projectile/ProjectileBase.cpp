@@ -39,3 +39,12 @@ void AProjectileBase::Tick(float DeltaTime)
 
 }
 
+void AProjectileBase::SetProjectileSpeedOverride(float InSpeed)
+{
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->InitialSpeed = InSpeed;
+		ProjectileMovement->MaxSpeed = InSpeed;
+	}
+}
+

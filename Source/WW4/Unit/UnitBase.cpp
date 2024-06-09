@@ -50,6 +50,11 @@ void AUnitBase::OnSelected_Implementation(bool bSelected)
 	}
 }
 
+void AUnitBase::SetTarget_Implementation(AActor* Targetactor)
+{
+
+}
+
 void AUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

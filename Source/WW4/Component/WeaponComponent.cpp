@@ -13,26 +13,23 @@ UWeaponComponent::UWeaponComponent()
 
 void UWeaponComponent::BeginFire()
 {
-	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &UWeaponComponent::Fire, FireDelay, true);
+	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &UWeaponComponent::Fire, FireDelay, true, 0.f);
+	Firing = true;
 }
 
 void UWeaponComponent::StopFire()
 {
 	GetWorld()->GetTimerManager().ClearTimer(FireTimer);
+	Firing = false;
 }
 
 void UWeaponComponent::Fire()
 {
-	if (GetOwner()->HasAuthority())
-	{
-		AProjectileBase* Projectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, GetComponentLocation(), GetComponentRotation());
-	}
 }
 
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	BeginFire();
 }
 
 
