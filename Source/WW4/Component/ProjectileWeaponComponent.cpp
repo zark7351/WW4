@@ -19,6 +19,7 @@ void UProjectileWeaponComponent::Fire()
 			if (bOverrideProjectileSpeed)
 			{
 				Projectile->SetProjectileSpeedOverride(ProjectileSpeedOverride);
+				Projectile->SetFireRange(GetFireRange());
 			}
 			Projectile->FinishSpawning(Transform);
 		}

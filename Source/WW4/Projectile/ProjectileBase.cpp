@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Gameframework/DamageType.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -25,7 +26,6 @@ AProjectileBase::AProjectileBase()
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -36,7 +36,7 @@ void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AA
 void AProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	CheckFireRange();
 }
 
 void AProjectileBase::SetProjectileSpeedOverride(float InSpeed)
@@ -45,6 +45,32 @@ void AProjectileBase::SetProjectileSpeedOverride(float InSpeed)
 	{
 		ProjectileMovement->InitialSpeed = InSpeed;
 		ProjectileMovement->MaxSpeed = InSpeed;
+	}
+}
+
+void AProjectileBase::CheckFireRange()
+{
+	FVector CurPos = GetActorLocation();
+	FVector MoveVector = CurPos - StartPos;
+	MoveVector.Z = 0.f;
+	if (MoveVector.Length() >= FireRange)
+	{
+		if (bRangeDamage && DamageTypeClass)
+		{
+			UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>());
+		}
+		if (HitParticle)
+		{
+			FTransform Transform;
+			Transform.SetLocation(GetActorLocation());
+			Transform.SetRotation(FRotator(FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f)).Quaternion());
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Transform);
+		}
+		if (HitSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+		}
+		Destroy();
 	}
 }
 

@@ -36,10 +36,13 @@ public:
 	bool bRangeDamage{ false };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Damange{20.f};
+	float Damage{20.f};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MinimumDamange{ 5.f };
+	TSubclassOf<UDamageType> DamageTypeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MinimumDamage{ 5.f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DamageInnerRadius{ 50.f };
@@ -50,6 +53,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DamageFalloff{ 10.f };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UParticleSystem* HitParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USoundBase* HitSound;
+
 	UFUNCTION()
 	void SetProjectileSpeedOverride(float InSpeed);
+
+	UFUNCTION()
+	FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
+
+private:
+
+	FVector StartPos;
+
+	float FireRange{ 1500.0f };
+
+	void CheckFireRange();
 };

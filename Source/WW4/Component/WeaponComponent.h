@@ -33,10 +33,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Firing{ false };
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE float GetFireRange() const { return FireRange; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
+
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
 	float FireDelay = 1.0f;
+
+	float FireRange = 1500.0f;
 
 	UPROPERTY()
 	FTimerHandle FireTimer;
