@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Gameframework/DamageType.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -48,7 +49,9 @@ void AProjectileBase::Explode()
 	}
 	if (HasAuthority() && bRangeDamage && DamageTypeClass)
 	{
-		UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>());
+		//UKismetSystemLibrary::DrawDebugSphere(this, GetActorLocation(), DamageInnerRadius, 12, FLinearColor::Red, 10.f);
+		//UKismetSystemLibrary::DrawDebugSphere(this, GetActorLocation(), DamageOuterRadius, 12,FLinearColor::Blue, 10.f);
+		UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>({this}));
 	}
 	Destroy();
 }
