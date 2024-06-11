@@ -23,7 +23,7 @@ void UWeaponComponent::StopFire()
 	Firing = false;
 }
 
-void UWeaponComponent::Fire()
+void UWeaponComponent::Fire_Implementation()
 {
 }
 

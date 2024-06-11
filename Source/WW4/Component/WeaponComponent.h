@@ -8,7 +8,7 @@
 
 class AProjectileBase;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class WW4_API UWeaponComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -22,7 +22,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopFire();
 
-	virtual void Fire();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Fire();
 
 protected:
 	virtual void BeginPlay() override;

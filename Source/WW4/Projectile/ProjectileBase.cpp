@@ -20,7 +20,7 @@ AProjectileBase::AProjectileBase()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan =5.0f;
 }
 
 void AProjectileBase::BeginPlay()
@@ -30,47 +30,67 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	Explode();
+}
+
+void AProjectileBase::Explode()
+{
+	if (HitParticle)
+	{
+		FTransform Transform;
+		Transform.SetLocation(GetActorLocation());
+		Transform.SetRotation(FRotator(FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f)).Quaternion());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Transform);
+	}
+	if (HitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+	}
+	if (HasAuthority() && bRangeDamage && DamageTypeClass)
+	{
+		UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>());
+	}
 	Destroy();
 }
 
 void AProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CheckFireRange();
+	//CheckFireRange();
 }
 
-void AProjectileBase::SetProjectileSpeedOverride(float InSpeed)
-{
-	if (ProjectileMovement)
-	{
-		ProjectileMovement->InitialSpeed = InSpeed;
-		ProjectileMovement->MaxSpeed = InSpeed;
-	}
-}
+//void AProjectileBase::SetProjectileSpeedOverride(float InSpeed)
+//{
+//	if (ProjectileMovement)
+//	{
+//		ProjectileMovement->InitialSpeed = InSpeed;
+//		ProjectileMovement->MaxSpeed = InSpeed;
+//	}
+//}
 
-void AProjectileBase::CheckFireRange()
-{
-	FVector CurPos = GetActorLocation();
-	FVector MoveVector = CurPos - StartPos;
-	MoveVector.Z = 0.f;
-	if (MoveVector.Length() >= FireRange)
-	{
-		if (bRangeDamage && DamageTypeClass)
-		{
-			UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>());
-		}
-		if (HitParticle)
-		{
-			FTransform Transform;
-			Transform.SetLocation(GetActorLocation());
-			Transform.SetRotation(FRotator(FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f)).Quaternion());
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Transform);
-		}
-		if (HitSound)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-		}
-		Destroy();
-	}
-}
+//void AProjectileBase::CheckFireRange()
+//{
+//	FVector CurPos = GetActorLocation();
+//	FVector MoveVector = CurPos - StartPos;
+//	MoveVector.Z = 0.f;
+//	if (MoveVector.Length() >= FireRange)
+//	{
+//		if (bRangeDamage && DamageTypeClass)
+//		{
+//			UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>());
+//		}
+//		if (HitParticle)
+//		{
+//			FTransform Transform;
+//			Transform.SetLocation(GetActorLocation());
+//			Transform.SetRotation(FRotator(FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f), FMath::FRandRange(0.f, 360.f)).Quaternion());
+//			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Transform);
+//		}
+//		if (HitSound)
+//		{
+//			UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
+//		}
+//		Destroy();
+//	}
+//}
 

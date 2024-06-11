@@ -23,6 +23,8 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	//void SetProjectileSpeedOverride(float InSpeed);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UProjectileMovementComponent* ProjectileMovement;
 
@@ -59,17 +61,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USoundBase* HitSound;
 
-	UFUNCTION()
-	void SetProjectileSpeedOverride(float InSpeed);
+	UFUNCTION(BlueprintCallable)
+	void Explode();
 
-	UFUNCTION()
-	FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
+	//UFUNCTION()
+	//FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
 
 private:
 
-	FVector StartPos;
+	//FVector StartPos;
 
-	float FireRange{ 1500.0f };
+	//float FireRange{ 1500.0f };
 
-	void CheckFireRange();
+	//void CheckFireRange();
 };
