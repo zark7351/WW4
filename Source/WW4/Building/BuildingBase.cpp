@@ -13,6 +13,7 @@ ABuildingBase::ABuildingBase()
 	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = true;
 	BuildingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BuildingMesh"));
+	BuildingMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BuildingMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
 	SetRootComponent(BuildingMesh);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));

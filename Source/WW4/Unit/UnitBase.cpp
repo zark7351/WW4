@@ -10,7 +10,9 @@ AUnitBase::AUnitBase()
 	PrimaryActorTick.bCanEverTick = true;
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);
-	RootComponent = UnitMesh;
+	UnitMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UnitMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+	SetRootComponent(UnitMesh);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 500.f));
@@ -46,7 +48,7 @@ void AUnitBase::OnSelected_Implementation(bool bSelected)
 	EnableOutline(bSelected);
 	if (HealthComponent)
 	{
-		HealthComponent->ShowHealthBar(true);
+		HealthComponent->ShowHealthBar(bSelected);
 	}
 }
 

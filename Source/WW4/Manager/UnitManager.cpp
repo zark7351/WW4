@@ -9,12 +9,14 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-void UUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
+void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
 {
 	AUnitBase* Unit = nullptr;
 	if (SpawnBuilding)
 	{
-		Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, SpawnBuilding->GetSpawnTransform());
+		FActorSpawnParameters Params;
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, SpawnBuilding->GetSpawnTransform(),Params);
 		if (Units.Contains(Faction))
 		{
 			Units[Faction].Units.Add(FUnitInfoBase(Unit));
@@ -28,7 +30,9 @@ void UUnitManager::SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> 
 
 void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
-	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform);
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform, Params);
 	if (Unit)
 	{
 		Unit->SetOwnerBuilding(OwnerBuilding);
@@ -63,7 +67,7 @@ void UUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
 {
 	if (CurrentVehicleFactory)
 	{
-		SpawnUnitAtBuilding(Faction, VehicleType, CurrentVehicleFactory);
+		SpawnUnit(Faction, VehicleType, CurrentVehicleFactory);
 	}
 }
 
@@ -93,7 +97,9 @@ void UUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, co
 		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");
 		if (Row && Row->ItemClass)
 		{
-			GetWorld()->SpawnActor<AActor>(Row->ItemClass, Location, Rotation);
+			FActorSpawnParameters Params;
+			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			GetWorld()->SpawnActor<AActor>(Row->ItemClass, Location, Rotation, Params);
 		}
 	}
 }

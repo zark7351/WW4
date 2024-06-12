@@ -31,22 +31,35 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float FireRange{ 1500.0f };
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class AUnitBase* OwnerUnit{ nullptr };
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool Firing{ false };
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	FORCEINLINE float GetFireRange() const { return FireRange; }
-
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
+	FORCEINLINE void SetTarget(AActor* InTarget) { Target = InTarget; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE AActor* GetTarget() const { return Target; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE bool HasTarget() const { return IsValid(Target); }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsTargetInRange() const;
 
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
 	float FireDelay = 1.0f;
 
-	float FireRange = 1500.0f;
-
 	UPROPERTY()
 	FTimerHandle FireTimer;
+
+	UPROPERTY()
+	AActor* Target{ nullptr };
 };

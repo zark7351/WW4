@@ -10,6 +10,15 @@ AVehicleBase::AVehicleBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AVehicleBase::StopMoving()
+{
+	if (VehicleMovement)
+	{
+		VehicleMovement->StopMovementImmediately();
+		bMoving = false;
+	}
+}
+
 void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -18,7 +27,7 @@ void AVehicleBase::Tick(float DeltaSeconds)
 
 void AVehicleBase::Rotate(float DeltaSeconds)
 {
-	if (VehicleMovement && FMath::IsNearlyEqual(VehicleMovement->Velocity.Size(),VehicleMovement->MaxSpeed))
+	if (VehicleMovement && bMoving)
 	{
 		FRotator NewRotation = VehicleMovement->Velocity.Rotation();
 		FRotator CurRotation = GetActorRotation();

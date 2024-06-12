@@ -27,13 +27,19 @@ public:
 
 	void EnableOutline(bool bEnable);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnSelected(bool bSelected);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void OnSelected(bool bSelected);
 	virtual void OnSelected_Implementation(bool bSelected) override;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetTarget(AActor* Targetactor);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void SetTarget(AActor* Targetactor);
 	virtual void SetTarget_Implementation(AActor* Targetactor) override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void StopMoving() {};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bMoving{ false };
 
 protected:
 	virtual void BeginPlay() override;

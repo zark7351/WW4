@@ -67,15 +67,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
 
-	UFUNCTION(BlueprintCallable)
 	void SpawnVehicle(EFaction Faction, UClass* VehicleType);
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
 
-	UFUNCTION()
-	void SpawnUnitAtBuilding(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
-	UFUNCTION()
-	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding = nullptr);
+	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
+	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
 
 	UFUNCTION()
 	void SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation);

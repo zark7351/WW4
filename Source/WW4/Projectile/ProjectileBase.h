@@ -64,14 +64,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Explode();
 
-	//UFUNCTION()
-	//FORCEINLINE void SetFireRange(float InRange) { FireRange = InRange; }
+	//不使用ProjectileMovementComponent, 自定义移动
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCustomMovement{ false };
 
 private:
 
-	//FVector StartPos;
-
-	//float FireRange{ 1500.0f };
-
-	//void CheckFireRange();
 };

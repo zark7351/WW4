@@ -21,6 +21,7 @@ UHealthComponent::UHealthComponent()
 
 void UHealthComponent::ShowHealthBar(bool bShow)
 {
+	UpdateHealth();
 	if (bShow != bShowing)
 	{
 		SetVisibility(bShow);
