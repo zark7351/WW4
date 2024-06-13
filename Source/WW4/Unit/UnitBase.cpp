@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
+//#include "WW4/AI/Controller/UnitAIControllerBase.h"
 
 AUnitBase::AUnitBase()
 {
@@ -21,6 +22,8 @@ AUnitBase::AUnitBase()
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	//Pawn不支持避障？那没事了
+	//AIControllerClass = AUnitAIControllerBase::StaticClass();	
 }
 
 void AUnitBase::BeginPlay()

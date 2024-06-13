@@ -6,16 +6,21 @@
 #include "WW4/Building/BuildingBase.h"
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Components/BoxComponent.h"
 
 
 ABuildingBase::ABuildingBase()
 {
 	bReplicates = true;
 	PrimaryActorTick.bCanEverTick = true;
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+	CollisionBox->bDynamicObstacle = true;
+	SetRootComponent(CollisionBox);
 	BuildingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BuildingMesh"));
-	BuildingMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	BuildingMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
-	SetRootComponent(BuildingMesh);
+	BuildingMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	BuildingMesh->SetupAttachment(RootComponent);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 250.f));

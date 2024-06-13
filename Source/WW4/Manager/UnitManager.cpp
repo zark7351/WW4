@@ -98,7 +98,7 @@ void UUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, co
 		if (Row && Row->ItemClass)
 		{
 			FActorSpawnParameters Params;
-			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			GetWorld()->SpawnActor<AActor>(Row->ItemClass, Location, Rotation, Params);
 		}
 	}
