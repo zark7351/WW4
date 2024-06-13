@@ -10,15 +10,6 @@ AVehicleBase::AVehicleBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AVehicleBase::StopMoving()
-{
-	if (VehicleMovement)
-	{
-		VehicleMovement->StopMovementImmediately();
-		bMoving = false;
-	}
-}
-
 void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

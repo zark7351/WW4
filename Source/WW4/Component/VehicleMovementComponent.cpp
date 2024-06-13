@@ -2,8 +2,9 @@
 
 
 #include "VehicleMovementComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
-FVector UVehicleMovementComponent::GetActorFeetLocation() const
-{
-	return UpdatedComponent ? UpdatedComponent->GetComponentLocation() : FNavigationSystem::InvalidLocation;
-}
+//FVector UVehicleMovementComponent::GetActorFeetLocation() const
+//{
+//	return UpdatedComponent ? UpdatedComponent->GetComponentLocation() : FNavigationSystem::InvalidLocation;
+//}

@@ -21,8 +21,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurnSpeed{20.f};
 
-	void StopMoving() override;
-
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

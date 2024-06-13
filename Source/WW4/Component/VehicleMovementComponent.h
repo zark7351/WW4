@@ -15,5 +15,5 @@ class WW4_API UVehicleMovementComponent : public UFloatingPawnMovement
 	GENERATED_BODY()
 
 public:
-	virtual FVector GetActorFeetLocation() const override;
+	//virtual FVector GetActorFeetLocation() const override;
 };

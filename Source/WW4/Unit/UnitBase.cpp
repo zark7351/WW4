@@ -2,26 +2,35 @@
 
 
 #include "UnitBase.h"
+#include "Components/BoxComponent.h"
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
 
 AUnitBase::AUnitBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+	SetRootComponent(CollisionBox);
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);
 	UnitMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	UnitMesh->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
-	SetRootComponent(UnitMesh);
+	UnitMesh->SetupAttachment(RootComponent);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 	HealthComponent->SetupAttachment(RootComponent);
-	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 500.f));
+	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
+	AIController = Cast<AAIController>(GetController());
+	if (AIController)
+	{
+		AIController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
+	}
 }
 
 void AUnitBase::OnInit()
@@ -57,10 +66,25 @@ void AUnitBase::SetTarget_Implementation(AActor* Targetactor)
 
 }
 
+void AUnitBase::StopMoving()
+{
+	AIController = AIController == nullptr ? Cast<AAIController>(GetController()) : AIController;
+	if (AIController)
+	{
+		AIController->StopMovement();
+		bMoving = false;
+	}
+}
+
 void AUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)
+{
+	bMoving = false;
 }
 
 

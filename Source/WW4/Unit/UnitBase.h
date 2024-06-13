@@ -5,6 +5,7 @@
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "WW4/Building/BuildingBase.h"
 #include "WW4/Interface/BaseObjectInterface.h"
+#include "AIController.h"
 #include "UnitBase.generated.h"
 
 UCLASS()
@@ -36,7 +37,7 @@ public:
 	virtual void SetTarget_Implementation(AActor* Targetactor) override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void StopMoving() {};
+	void StopMoving();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bMoving{ false };
@@ -49,11 +50,20 @@ protected:
 	USkeletalMeshComponent* UnitMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UBoxComponent* CollisionBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
 private:
+
 	ABuildingBase* OwnerBuilding{ nullptr };
+
+	AAIController* AIController{ nullptr };
+
+	UFUNCTION()
+	void OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 };
