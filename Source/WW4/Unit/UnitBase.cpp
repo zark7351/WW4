@@ -5,7 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
-//#include "WW4/AI/Controller/UnitAIControllerBase.h"
+#include "WW4/AI/Controller/UnitAIControllerBase.h"
 
 AUnitBase::AUnitBase()
 {
@@ -22,17 +22,16 @@ AUnitBase::AUnitBase()
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	//Pawn不支持避障？那没事了
-	//AIControllerClass = AUnitAIControllerBase::StaticClass();	
+	AIControllerClass = AUnitAIControllerBase::StaticClass();	
 }
 
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
-	AIController = Cast<AAIController>(GetController());
-	if (AIController)
+	UnitController = Cast<AUnitAIControllerBase>(GetController());
+	if (UnitController)
 	{
-		AIController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
+		UnitController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
 	}
 }
 
@@ -71,11 +70,42 @@ void AUnitBase::SetTarget_Implementation(AActor* Targetactor)
 
 void AUnitBase::StopMoving()
 {
-	AIController = AIController == nullptr ? Cast<AAIController>(GetController()) : AIController;
-	if (AIController)
+	if (UnitController)
 	{
-		AIController->StopMovement();
-		bMoving = false;
+		UnitController->StopMovement();
+	}
+}
+
+void AUnitBase::PauseMoving()
+{
+	if (UnitController)
+	{
+		UnitController->PauseMove(UnitController->GetCurrentMoveRequestID());
+	}
+}
+
+void AUnitBase::ResumeMoving()
+{
+	if (UnitController)
+	{
+		UnitController->ResumeMove(UnitController->GetCurrentMoveRequestID());
+	}
+}
+
+bool AUnitBase::GetIsMoving() const
+{
+	if (UnitController)
+	{
+		return UnitController->bMoving;
+	}
+	return false;
+}
+
+void AUnitBase::SetIsMoving(bool InMoving)
+{
+	if (UnitController)
+	{
+		UnitController->bMoving = InMoving;
 	}
 }
 
@@ -87,7 +117,7 @@ void AUnitBase::Tick(float DeltaTime)
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
-	bMoving = false;
+	SetIsMoving(false);
 }
 
 

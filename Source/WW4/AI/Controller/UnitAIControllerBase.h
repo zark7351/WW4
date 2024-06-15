@@ -14,5 +14,14 @@ class WW4_API AUnitAIControllerBase : public AAIController
 {
 	GENERATED_BODY()
 public:
-	AUnitAIControllerBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	/*AUnitAIControllerBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());*/
+
+	UFUNCTION(BlueprintCallable)
+	bool PauseCurrentMove();
+
+	UFUNCTION(BlueprintCallable)
+	bool ReusmeCurrentMove();
+
+	UPROPERTY()
+	bool bMoving{ false };
 };

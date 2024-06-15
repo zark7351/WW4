@@ -39,8 +39,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopMoving();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bMoving{ false };
+	UFUNCTION(BlueprintCallable)
+	void PauseMoving();
+
+	UFUNCTION(BlueprintCallable)
+	void ResumeMoving();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool GetIsMoving() const;
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsMoving(bool InMoving);
 
 protected:
 	virtual void BeginPlay() override;
@@ -62,7 +71,7 @@ private:
 
 	ABuildingBase* OwnerBuilding{ nullptr };
 
-	AAIController* AIController{ nullptr };
+	class AUnitAIControllerBase* UnitController{ nullptr };
 
 	UFUNCTION()
 	void OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result);

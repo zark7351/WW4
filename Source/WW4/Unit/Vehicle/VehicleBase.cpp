@@ -18,7 +18,7 @@ void AVehicleBase::Tick(float DeltaSeconds)
 
 void AVehicleBase::Rotate(float DeltaSeconds)
 {
-	if (VehicleMovement && bMoving)
+	if (VehicleMovement && GetIsMoving())
 	{
 		FRotator NewRotation = VehicleMovement->Velocity.Rotation();
 		FRotator CurRotation = GetActorRotation();

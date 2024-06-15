@@ -2,9 +2,21 @@
 
 
 #include "UnitAIControllerBase.h"
-#include "Navigation/CrowdFollowingComponent.h"
+//#include "Navigation/CrowdFollowingComponent.h"
 
-AUnitAIControllerBase::AUnitAIControllerBase(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
+//AUnitAIControllerBase::AUnitAIControllerBase(const FObjectInitializer& ObjectInitializer)
+//	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
+//{
+//}
+
+bool AUnitAIControllerBase::PauseCurrentMove()
 {
+	bMoving = false;
+	return PauseMove(GetCurrentMoveRequestID());
+}
+
+bool AUnitAIControllerBase::ReusmeCurrentMove()
+{
+	bMoving = true;
+	return ResumeMove(GetCurrentMoveRequestID());
 }
