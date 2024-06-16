@@ -12,7 +12,8 @@ AUnitBase::AUnitBase()
 	PrimaryActorTick.bCanEverTick = true;
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3); 
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
 	SetRootComponent(CollisionBox);
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);

@@ -8,6 +8,9 @@
 /**
  * 
  */
+
+class AUnitBase;
+
 UCLASS()
 class WW4_API AWW4PlayerController : public APlayerController
 {
@@ -22,6 +25,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnVehicle(EFaction Faction, UClass* VehicleType);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ServerMoveUnits(const TArray<AUnitBase*>& InUnits, FVector Destination);
 
 private:
 	class UUnitManager* UnitManager;

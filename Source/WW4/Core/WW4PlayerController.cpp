@@ -3,6 +3,8 @@
 #include "WW4PlayerController.h"
 #include "WW4/Manager/UnitManager.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "WW4/Unit/UnitBase.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 void AWW4PlayerController::ServerSpawnBuilding_Implementation(FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
@@ -28,5 +30,15 @@ void AWW4PlayerController::ServerSpawnUnit_Implementation(EFaction Faction, TSub
 	if (UnitManager)
 	{
 		UnitManager->SpawnUnit(Faction, UnitType, Transform,OwnerBuilding);
+	}
+}
+
+void AWW4PlayerController::ServerMoveUnits_Implementation(const TArray<AUnitBase*>& InUnits, FVector Destination)
+{
+	
+	for (AUnitBase* Unit:InUnits)
+	{
+		UAIBlueprintHelperLibrary::CreateMoveToProxyObject(this, Unit, Destination);
+		Unit->SetIsMoving(true);
 	}
 }
