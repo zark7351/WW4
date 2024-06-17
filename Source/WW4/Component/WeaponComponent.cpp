@@ -38,6 +38,27 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (HasTarget() && IsTargetInRange())
+	{
+		if (OwnerUnit)
+		{
+			if (OwnerUnit->GetIsMoving())
+			{
+				OwnerUnit->StopMoving();
+			}
+			if (TurnToTarget(DeltaTime))
+			{
+				if (!Firing)
+				{
+					BeginFire();
+				}
+			}
+		}
+	}
+	else if (Firing)
+	{
+		StopFire();
+	}
 }
 
 bool UWeaponComponent::IsTargetInRange() const
@@ -48,6 +69,38 @@ bool UWeaponComponent::IsTargetInRange() const
 		Temp.Z = 0.f;
 		float Distance = Temp.Length();
 		return Distance <= FireRange;
+	}
+	return false;
+}
+
+bool UWeaponComponent::TurnToTarget(float DeltaTime)
+{
+	if (!OwnerUnit)
+	{
+		return false;
+	}
+	if (OwnerUnit->GetIsMoving())
+	{
+		return false;
+	}
+	else
+	{
+		FVector LookAtVector = GetTarget()->GetActorLocation() - OwnerUnit->GetActorLocation();
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
+		if (!bSelfRotate)
+		{
+			FRotator CurRot = OwnerUnit->GetActorRotation();
+			float TempYaw = FMath::FInterpTo(CurRot.Yaw, LookAtRotation.Yaw, DeltaTime, TurnSpeed);
+			OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch, TempYaw, CurRot.Roll));
+			if (FMath::IsNearlyEqual(CurRot.Yaw, LookAtRotation.Yaw, 3.0f))
+			{
+				return true;
+			}
+		}
+		else
+		{
+			//TODO: ×Ô×ªÎäÆ÷
+		}
 	}
 	return false;
 }

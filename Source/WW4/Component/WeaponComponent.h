@@ -34,6 +34,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float FireRange{ 1500.0f };
 
+	//武器是否能自转
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSelfRotate{ false };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TurnSpeed{ 20.f };
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AUnitBase* OwnerUnit{ nullptr };
 
@@ -51,6 +58,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsTargetInRange() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool TurnToTarget(float DeltaTime);
 
 private:
 

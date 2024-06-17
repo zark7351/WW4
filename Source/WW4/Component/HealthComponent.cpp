@@ -4,7 +4,7 @@
 #include "HealthComponent.h"
 #include "WW4/UI/HealthBar.h"
 
-PRAGMA_DISABLE_OPTIMIZATION
+//UE_DISABLE_OPTIMIZATION
 
 UHealthComponent::UHealthComponent()
 {
@@ -55,4 +55,4 @@ float UHealthComponent::OnTakeDamage(float DamageAmount, FDamageEvent const& Dam
 	return FinalDamage;
 }
 
-PRAGMA_ENABLE_OPTIMIZATION
+//UE_ENABLE_OPTIMIZATION
