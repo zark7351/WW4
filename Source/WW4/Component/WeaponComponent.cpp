@@ -46,7 +46,8 @@ bool UWeaponComponent::IsTargetInRange() const
 	{
 		FVector Temp = Target->GetActorLocation() - GetOwner()->GetActorLocation();
 		Temp.Z = 0.f;
-		return Temp.Length() <= FireRange;
+		float Distance = Temp.Length();
+		return Distance <= FireRange;
 	}
 	return false;
 }
