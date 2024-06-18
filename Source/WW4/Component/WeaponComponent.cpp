@@ -90,8 +90,8 @@ bool UWeaponComponent::TurnToTarget(float DeltaTime)
 		if (!bSelfRotate)
 		{
 			FRotator CurRot = OwnerUnit->GetActorRotation();
-			float TempYaw = FMath::FInterpTo(CurRot.Yaw, LookAtRotation.Yaw, DeltaTime, TurnSpeed);
-			OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch, TempYaw, CurRot.Roll));
+			FRotator TempRot = FMath::RInterpTo(CurRot, LookAtRotation, DeltaTime, TurnSpeed);
+			OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch, TempRot.Yaw, CurRot.Roll));
 			if (FMath::IsNearlyEqual(CurRot.Yaw, LookAtRotation.Yaw, 3.0f))
 			{
 				return true;

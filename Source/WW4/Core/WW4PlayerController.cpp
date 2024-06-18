@@ -42,3 +42,11 @@ void AWW4PlayerController::ServerMoveUnits_Implementation(const TArray<AUnitBase
 		Unit->SetIsMoving(true);
 	}
 }
+
+void AWW4PlayerController::ServerSetTarget_Implementation(const TArray<AUnitBase*>& Actors, AActor* TargetActor)
+{
+	for (AUnitBase* Unit : Actors)
+	{
+		Unit->Execute_SetTarget(Unit, TargetActor);
+	}
+}

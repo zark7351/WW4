@@ -29,6 +29,10 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerMoveUnits(const TArray<AUnitBase*>& InUnits, FVector Destination);
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ServerSetTarget(const TArray<AUnitBase*>& Actors, AActor* TargetActor);
+
+
 private:
 	class UUnitManager* UnitManager;
 };
