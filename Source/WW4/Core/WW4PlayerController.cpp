@@ -33,14 +33,10 @@ void AWW4PlayerController::ServerSpawnUnit_Implementation(EFaction Faction, TSub
 	}
 }
 
-void AWW4PlayerController::ServerMoveUnits_Implementation(const TArray<AUnitBase*>& InUnits, FVector Destination)
+void AWW4PlayerController::ServerMoveUnit_Implementation(AUnitBase* InUnit, FVector Destination)
 {
-	
-	for (AUnitBase* Unit:InUnits)
-	{
-		UAIBlueprintHelperLibrary::CreateMoveToProxyObject(this, Unit, Destination);
-		Unit->SetIsMoving(true);
-	}
+	UAIBlueprintHelperLibrary::CreateMoveToProxyObject(this, InUnit, Destination);
+	InUnit->SetIsMoving(true);
 }
 
 void AWW4PlayerController::ServerSetTarget_Implementation(const TArray<AUnitBase*>& Actors, AActor* TargetActor)

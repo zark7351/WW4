@@ -32,14 +32,21 @@ public:
 	static void SpawnUnit(const UObject* WorldContextObject, const EFaction& InFaction, TSubclassOf<AUnitBase> InUnitClass, const FTransform& InTransform, class ABuildingBase* InOwnerBuilding);
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
+	static bool TraceFloorUnderScreenPosition(const UObject* WorldContextObject, FVector2D ScreenPos, FHitResult& OutHitResult);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static bool TraceFloorUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static bool TraceTargetUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
 
 	/*
-	* 抛体运动，根据落地水平距离，出射角度和高度，计算出射速度。GPT给的算法！牛逼，一次验证通过！
+	* 抛体运动，根据落地水平距离，出射角度和高度，计算出射速度。GPT给的算法
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Math")
 	static float SolveInitialVelocity(float x, float theta, float h, float g = 9.8f);
+
+	//计算以目标点为中心的矩形点阵
+	UFUNCTION(BlueprintCallable, Category = "Math")
+	static TArray<FVector2D> CalcTargetPointsInRec(int32 Num, const FVector2D& TargetPoint, float Spacing);
 };

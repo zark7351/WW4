@@ -39,6 +39,20 @@ void UWW4CommonFunctionLibrary::SpawnUnit(const UObject* WorldContextObject, con
 	}
 }
 
+bool UWW4CommonFunctionLibrary::TraceFloorUnderScreenPosition(const UObject* WorldContextObject, FVector2D ScreenPos, FHitResult& OutHitResult)
+{
+	UWorld* World = WorldContextObject->GetWorld();
+	if (!World)
+	{
+		return false;
+	}
+	FVector WorldPos = FVector::ZeroVector;
+	FVector WorldDir = FVector::ZeroVector;
+	UGameplayStatics::DeprojectScreenToWorld(World->GetFirstPlayerController(), ScreenPos, WorldPos, WorldDir);
+	UKismetSystemLibrary::LineTraceSingleForObjects(World, WorldPos, WorldPos + WorldDir * 100000.f, TArray<TEnumAsByte<EObjectTypeQuery>>({ EObjectTypeQuery::ObjectTypeQuery7 }), false, TArray<AActor*>(), EDrawDebugTrace::Type::None, OutHitResult, true);
+	return OutHitResult.bBlockingHit;
+}
+
 bool UWW4CommonFunctionLibrary::TraceFloorUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult)
 {
 	UWorld* World = WorldContextObject->GetWorld();
@@ -47,11 +61,7 @@ bool UWW4CommonFunctionLibrary::TraceFloorUnderCursor(const UObject* WorldContex
 		return false;
 	}
 	FVector2D ScreenPos = UWidgetLayoutLibrary::GetMousePositionOnViewport(World) * UWidgetLayoutLibrary::GetViewportScale(World);
-	FVector WorldPos = FVector::ZeroVector;
-	FVector WorldDir = FVector::ZeroVector;
-	UGameplayStatics::DeprojectScreenToWorld(World->GetFirstPlayerController(), ScreenPos, WorldPos, WorldDir);
-	UKismetSystemLibrary::LineTraceSingleForObjects(World, WorldPos, WorldPos + WorldDir * 100000.f, TArray<TEnumAsByte<EObjectTypeQuery>>({ EObjectTypeQuery::ObjectTypeQuery7 }), false, TArray<AActor*>(), EDrawDebugTrace::Type::None, OutHitResult, true);
-	return OutHitResult.bBlockingHit;
+	return TraceFloorUnderScreenPosition(WorldContextObject, ScreenPos, OutHitResult);
 }
 
 bool UWW4CommonFunctionLibrary::TraceTargetUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult)
@@ -108,4 +118,56 @@ float UWW4CommonFunctionLibrary::SolveInitialVelocity(float x, float theta, floa
 		UE_LOG(LogTemp, Warning, TEXT("Maximum iterations reached without convergence."));
 	}
 	return v0 * 100.0f;
+}
+
+TArray<FVector2D> UWW4CommonFunctionLibrary::CalcTargetPointsInRec(int32 Num, const FVector2D& TargetPoint, float Spacing)
+{
+	TArray<FVector2D> OutPoints;
+	int32 Row = FMath::Floor(FMath::Sqrt((float)Num));
+	int32 Col = Row;
+	FVector2D MaxPoint = FVector2D(TargetPoint.X + (Col - 1) * Spacing, TargetPoint.Y + (Row - 1) * Spacing);
+	FVector2d MidPoint = (TargetPoint + MaxPoint) / 2;
+	FVector2D Offset = MidPoint - TargetPoint;
+	//先以目标点为第一个点的位置，计算正方形点阵
+	for (int32 i = 0; i < Row; i++)
+	{
+		float OffsetY = i * Spacing;
+		for (int32 j = 0; j < Col; j++)
+		{
+			float OffsetX = j * Spacing;
+			OutPoints.Add(FVector2D(TargetPoint.X + OffsetX, TargetPoint.Y + OffsetY));
+		}
+	}
+	int32 Rest = Num - Row * Col;
+	//如果有多余的，先在右边加一列
+	if (Rest > 0)
+	{
+		for (int32 i = 0; i < Row; i++)
+		{
+			float OffsetX = Col * Spacing;
+			float OffsetY = i * Spacing;
+			OutPoints.Add(FVector2D(TargetPoint.X + OffsetX, TargetPoint.Y + OffsetY));
+			Rest--;
+			if (Rest <= 0)  break;
+		}
+	}
+	//还有多余的话，再在下面加一行
+	if (Rest > 0)
+	{
+		Col += 1;
+		for (int32 i = 0; i < Col; i++)
+		{
+			float OffsetX = i * Spacing;
+			float OffsetY = Row * Spacing;
+			OutPoints.Add(FVector2D(TargetPoint.X + OffsetX, TargetPoint.Y + OffsetY));
+			Rest--;
+			if (Rest <= 0)  break;
+		}
+	}
+	//整体往中心偏移
+	for (int32 i = 0; i < OutPoints.Num(); i++)
+	{
+		OutPoints[i] -= Offset;
+	}
+	return OutPoints;
 }

@@ -13,7 +13,8 @@ AUnitBase::AUnitBase()
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	CollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionBox->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3); 
-	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
+	CollisionBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECR_Block);
 	SetRootComponent(CollisionBox);
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
 	UnitMesh->SetCustomDepthStencilValue(1);

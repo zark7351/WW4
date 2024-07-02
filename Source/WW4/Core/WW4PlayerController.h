@@ -27,7 +27,7 @@ public:
 	void ServerSpawnVehicle(EFaction Faction, UClass* VehicleType);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void ServerMoveUnits(const TArray<AUnitBase*>& InUnits, FVector Destination);
+	void ServerMoveUnit(AUnitBase* InUnit, FVector Destination);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerSetTarget(const TArray<AUnitBase*>& Actors, AActor* TargetActor);
