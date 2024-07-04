@@ -55,7 +55,7 @@ void ABuildingBase::EnableOutline(bool bEnable)
 
 void ABuildingBase::OnSelected_Implementation(bool bSelected)
 {
-	//EnableOutline(bSelected);
+	EnableOutline(bSelected);
 	if (HealthComponent)
 	{
 		HealthComponent->ShowHealthBar(true);

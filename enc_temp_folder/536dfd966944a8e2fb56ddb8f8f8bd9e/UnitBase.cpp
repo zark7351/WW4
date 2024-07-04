@@ -17,7 +17,7 @@ AUnitBase::AUnitBase()
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECR_Block);
 	SetRootComponent(CollisionBox);
 	UnitMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Unit Mesh"));
-	//UnitMesh->SetCustomDepthStencilValue(1);
+	UnitMesh->SetCustomDepthStencilValue(1);
 	UnitMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	UnitMesh->SetupAttachment(RootComponent);
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
@@ -58,7 +58,7 @@ void AUnitBase::EnableOutline(bool bEnable)
 
 void AUnitBase::OnSelected_Implementation(bool bSelected)
 {
-	//EnableOutline(bSelected);
+	EnableOutline(bSelected);
 	if (HealthComponent)
 	{
 		HealthComponent->ShowHealthBar(bSelected);
