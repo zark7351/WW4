@@ -6,7 +6,7 @@
 #include "WW4/Unit/UnitBase.h"
 #include "VehicleBase.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE(FOnTurnInPlaceFinished);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurnInPlaceFinished, AVehicleBase*, Vehicle);
 
 /**
  * 
@@ -23,8 +23,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurnSpeed{500.f};
 
+	UPROPERTY(BlueprintAssignable)
 	FOnTurnInPlaceFinished OnTurnInPlaceFinished;
 
+	UFUNCTION(BlueprintCallable)
 	void SetTurnInPlaceTarget(const FVector& InTargetLocation);
 
 protected:

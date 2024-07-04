@@ -20,6 +20,7 @@ void AVehicleBase::SetTurnInPlaceTarget(const FVector& InTargetLocation)
 void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	TurnInPlace(DeltaSeconds);
 	Rotate(DeltaSeconds);
 }
 
@@ -42,7 +43,7 @@ void AVehicleBase::TurnInPlace(float DeltaSeconds)
 		SetActorRotation(FMath::RInterpConstantTo(CurRotation, LookAtRotation, DeltaSeconds, TurnSpeed));
 		if (FMath::IsNearlyEqual(CurRotation.Yaw, LookAtRotation.Yaw, 3.0f))
 		{
-			OnTurnInPlaceFinished.Execute();
+			OnTurnInPlaceFinished.Broadcast(this);
 			TurningInPlace = false;
 		}
 	}
