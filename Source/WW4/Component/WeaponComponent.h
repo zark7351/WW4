@@ -39,7 +39,7 @@ public:
 	bool bSelfRotate{ false };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TurnSpeed{ 20.f };
+	float TurnSpeed{ 500.f };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class AUnitBase* OwnerUnit{ nullptr };

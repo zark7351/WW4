@@ -6,6 +6,8 @@
 #include "WW4/Unit/UnitBase.h"
 #include "VehicleBase.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE(FOnTurnInPlaceFinished);
+
 /**
  * 
  */
@@ -21,6 +23,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurnSpeed{500.f};
 
+	FOnTurnInPlaceFinished OnTurnInPlaceFinished;
+
+	void SetTurnInPlaceTarget(const FVector& InTargetLocation);
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -29,7 +35,12 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 	void Rotate(float DeltaSeconds);
+	
+	void TurnInPlace(float DeltaSeconds);
 
 private:
 
+	bool TurningInPlace{ false };
+
+	FVector TargetLocation;
 };
