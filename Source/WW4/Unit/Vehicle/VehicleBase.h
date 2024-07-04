@@ -19,7 +19,7 @@ public:
 	AVehicleBase();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TurnSpeed{20.f};
+	float TurnSpeed{500.f};
 
 protected:
 

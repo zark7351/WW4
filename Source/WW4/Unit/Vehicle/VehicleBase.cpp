@@ -22,6 +22,6 @@ void AVehicleBase::Rotate(float DeltaSeconds)
 	{
 		FRotator NewRotation = VehicleMovement->Velocity.Rotation();
 		FRotator CurRotation = GetActorRotation();
-		SetActorRotation(FMath::RInterpTo(CurRotation, NewRotation, DeltaSeconds, TurnSpeed));
+		SetActorRotation(FMath::RInterpConstantTo(CurRotation, NewRotation, DeltaSeconds, TurnSpeed));
 	}
 }

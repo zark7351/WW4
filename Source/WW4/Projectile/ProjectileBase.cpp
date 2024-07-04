@@ -16,8 +16,10 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
 	SetRootComponent(CollisionSphere);
+	CollisionSphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel4);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	CollisionSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECR_Ignore);
 	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
