@@ -10,6 +10,7 @@
 
 class AUnitBase;
 class AUnitFactoryBase;
+class ABuildingBase;
 
 USTRUCT(BlueprintType)
 struct FUnitInfoBase
@@ -26,7 +27,7 @@ struct FUnitInfoBase
 	AUnitBase* Unit;
 
 	FUnitInfoBase() = default;
-	FUnitInfoBase(AUnitBase* InUnit, EFaction InFaction = EFaction::EF_RedTeam) { ID = FGuid::NewGuid(); Faction = InFaction; Unit = InUnit; }
+	FUnitInfoBase(AUnitBase* InUnit, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Unit = InUnit; }
 };
 
 USTRUCT(BlueprintType)
@@ -46,6 +47,40 @@ struct FUnitsInfo
 	}
 };
 
+USTRUCT(BlueprintType)
+struct FBuildingInfoBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGuid ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EFaction Faction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ABuildingBase* Building;
+
+	FBuildingInfoBase() = default;
+	FBuildingInfoBase(ABuildingBase* InBuilding, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Building = InBuilding; }
+};
+
+USTRUCT(BlueprintType)
+struct FBuildingsInfo
+{
+	GENERATED_BODY()
+
+	TArray<FBuildingInfoBase> Buildings;
+
+	FBuildingsInfo() = default;
+	FBuildingsInfo(TArray<FBuildingInfoBase> InBuildings) { Buildings = InBuildings; }
+	FBuildingsInfo(ABuildingBase* InBuilding)
+	{
+		TArray<FBuildingInfoBase> BuildingssInfo;
+		BuildingssInfo.Add(FBuildingInfoBase(InBuilding));
+		Buildings = BuildingssInfo;
+	}
+};
 
 /**
  * 
@@ -75,10 +110,12 @@ public:
 	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
 
 	UFUNCTION()
-	void SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation);
+	void SpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	TMap<EFaction, FUnitsInfo> Units;
+	UPROPERTY(BlueprintReadWrite)
+	TMap<EFaction, FBuildingsInfo> Buildings;
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;

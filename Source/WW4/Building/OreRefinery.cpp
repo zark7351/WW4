@@ -17,6 +17,6 @@ void AOreRefinery::BeginPlay()
 	if (MinerClass)
 	{
 		FTransform Transform = MinerSpawnPoint->GetComponentTransform();
-		UWW4CommonFunctionLibrary::SpawnUnit(GetWorld(), EFaction::EF_RedTeam, MinerClass, Transform, this);
+		UWW4CommonFunctionLibrary::SpawnUnit(GetWorld(), EFaction::EF_Red, MinerClass, Transform, this);
 	}
 }

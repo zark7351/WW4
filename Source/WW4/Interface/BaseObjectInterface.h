@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WW4/BaseTypes/BaseTypes.h"
 #include "BaseObjectInterface.generated.h"
 
 // This class does not need to be modified.
@@ -27,5 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetTarget(AActor* Targetactor);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetFaction(EFaction InFaction);
 
 };

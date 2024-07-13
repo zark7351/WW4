@@ -6,8 +6,9 @@
 UENUM(BlueprintType)
 enum class EFaction: uint8
 {
-	EF_RedTeam	UMETA(DisplayName = "RedTeam"),
-	ET_BlueTeam	UMETA(DisplayName = "BlueTeam"),
+	EF_None	UMETA(DisplayName = "NoneFaction"),
+	EF_Red	UMETA(DisplayName = "RedFaction"),
+	ET_Blue	UMETA(DisplayName = "BlueFaction"),
 
 	ET_Max	UMETA(DisplayName = "DefaultMax"),
 };

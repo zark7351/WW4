@@ -41,6 +41,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* BuildingMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString BuildingName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -54,9 +57,15 @@ public:
 	void OnSelected(bool bSelected);
 	virtual void OnSelected_Implementation(bool bSelected);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetFaction(EFaction InFaction);
+	virtual void SetFaction_Implementation(EFaction InFaction) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
+
 private:
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* BuildingMesh;
+
 
 	UFUNCTION(BlueprintCallable)
 	void InitGrid();

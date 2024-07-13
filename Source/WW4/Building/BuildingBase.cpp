@@ -62,6 +62,14 @@ void ABuildingBase::OnSelected_Implementation(bool bSelected)
 	}
 }
 
+void ABuildingBase::SetFaction_Implementation(EFaction InFaction)
+{
+	if (FactionMaterialMap.Contains(InFaction))
+	{
+		BuildingMesh->SetMaterial(0, FactionMaterialMap[InFaction]);
+	}
+}
+
 void ABuildingBase::InitGrid()
 {
 	UDataTable* BuildingGridInfoTable = LoadObject<UDataTable>(nullptr,TEXT("DataTable'/Game/WW4/Datatable/DT_GridInfo.DT_GridInfo'"));

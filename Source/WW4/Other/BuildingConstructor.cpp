@@ -23,7 +23,7 @@ bool ABuildingConstructor::Construct()
 		AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
 		if (PlayerController)
 		{
-			PlayerController->ServerSpawnBuilding(FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
+			PlayerController->ServerSpawnBuilding(PlayerController->GetFaction(), FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}

@@ -9,6 +9,8 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+UE_DISABLE_OPTIMIZATION
+
 void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
 {
 	AUnitBase* Unit = nullptr;
@@ -90,7 +92,7 @@ void UUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 	}
 }
 
-void UUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void UUnitManager::SpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
 	if (BuildingGridInfo)
 	{
@@ -99,8 +101,21 @@ void UUnitManager::SpawnBuilding(FName BuildingName, const FVector& Location, co
 		{
 			FActorSpawnParameters Params;
 			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			GetWorld()->SpawnActor<AActor>(Row->ItemClass, Location, Rotation, Params);
+			ABuildingBase* Building = GetWorld()->SpawnActor<ABuildingBase>(Row->ItemClass, Location, Rotation, Params);
+			if (Building)
+			{
+				Building->SetFaction(InFaction);
+				if (Buildings.Contains(InFaction))
+				{
+					Buildings[InFaction].Buildings.Add(FBuildingInfoBase(Building));
+				}
+				else
+				{
+					Buildings.Add(InFaction, FBuildingsInfo(Building));
+				}
+			}
 		}
 	}
 }
 
+UE_ENABLE_OPTIMIZATION
