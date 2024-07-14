@@ -22,7 +22,7 @@ class WW4_API UWW4CommonFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static UUnitManager* GetUnitManager(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category = "Common")

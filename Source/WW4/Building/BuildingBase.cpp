@@ -7,6 +7,7 @@
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/BoxComponent.h"
+#include "WW4/Common/WW4CommonFunctionLibrary.h"
 
 
 ABuildingBase::ABuildingBase()
@@ -30,6 +31,11 @@ void ABuildingBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitGrid();
+}
+
+void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	UWW4CommonFunctionLibrary::GetUnitManager()
 }
 
 void ABuildingBase::Tick(float DeltaTime)
