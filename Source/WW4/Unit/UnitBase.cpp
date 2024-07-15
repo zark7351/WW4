@@ -37,6 +37,10 @@ void AUnitBase::BeginPlay()
 	}
 }
 
+void AUnitBase::Deploy_Implementation()
+{
+}
+
 void AUnitBase::OnInit()
 {
 }

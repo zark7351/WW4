@@ -18,7 +18,7 @@ class WW4_API AWW4PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void ServerSpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
 	UFUNCTION(Server, Reliable)

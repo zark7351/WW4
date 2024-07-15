@@ -35,7 +35,7 @@ void ABuildingBase::BeginPlay()
 
 void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	UWW4CommonFunctionLibrary::GetUnitManager()
+	
 }
 
 void ABuildingBase::Tick(float DeltaTime)

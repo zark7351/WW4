@@ -22,6 +22,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE ABuildingBase* GetOwnerBuilding() { return OwnerBuilding; }
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Deploy();
+
+	virtual void Deploy_Implementation();
+
 	virtual void OnInit();
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
