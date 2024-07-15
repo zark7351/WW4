@@ -62,6 +62,9 @@ public:
 	void SetFaction(EFaction InFaction);
 	virtual void SetFaction_Implementation(EFaction InFaction) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EFaction Faction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
 

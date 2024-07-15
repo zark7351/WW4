@@ -47,38 +47,36 @@ struct FUnitsInfo
 	}
 };
 
+//USTRUCT(BlueprintType)
+//struct FBuildingInfoBase
+//{
+//	GENERATED_BODY()
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	FGuid ID;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	EFaction Faction;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	ABuildingBase* Building;
+//
+//	FBuildingInfoBase() = default;
+//	FBuildingInfoBase(ABuildingBase* InBuilding, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Building = InBuilding; }
+//};
+
 USTRUCT(BlueprintType)
-struct FBuildingInfoBase
+struct FBuildingArr
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGuid ID;
+	TArray<ABuildingBase*> Buildings;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EFaction Faction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ABuildingBase* Building;
-
-	FBuildingInfoBase() = default;
-	FBuildingInfoBase(ABuildingBase* InBuilding, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Building = InBuilding; }
-};
-
-USTRUCT(BlueprintType)
-struct FBuildingsInfo
-{
-	GENERATED_BODY()
-
-	TArray<FBuildingInfoBase> Buildings;
-
-	FBuildingsInfo() = default;
-	FBuildingsInfo(TArray<FBuildingInfoBase> InBuildings) { Buildings = InBuildings; }
-	FBuildingsInfo(ABuildingBase* InBuilding)
+	FBuildingArr() = default;
+	FBuildingArr(const TArray<ABuildingBase*>& InBuildings) { Buildings = InBuildings; }
+	FBuildingArr(ABuildingBase* InBuilding)
 	{
-		TArray<FBuildingInfoBase> BuildingssInfo;
-		BuildingssInfo.Add(FBuildingInfoBase(InBuilding));
-		Buildings = BuildingssInfo;
+		Buildings.Add(InBuilding);
 	}
 };
 
@@ -112,10 +110,12 @@ public:
 	UFUNCTION()
 	void SpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
+	void OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuilding);
+
 	UPROPERTY(BlueprintReadWrite)
 	TMap<EFaction, FUnitsInfo> Units;
 	UPROPERTY(BlueprintReadWrite)
-	TMap<EFaction, FBuildingsInfo> Buildings;
+	TMap<EFaction, FBuildingArr> Buildings;
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;

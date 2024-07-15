@@ -8,6 +8,7 @@
 #include "WW4/Building/BuildingBase.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "WW4/Core/WW4GameModeBase.h"
 
 UE_DISABLE_OPTIMIZATION
 
@@ -107,12 +108,28 @@ void UUnitManager::SpawnBuilding(EFaction InFaction, FName BuildingName, const F
 				Building->SetFaction(InFaction);
 				if (Buildings.Contains(InFaction))
 				{
-					Buildings[InFaction].Buildings.Add(FBuildingInfoBase(Building));
+					Buildings[InFaction].Buildings.Add(Building);
 				}
 				else
 				{
-					Buildings.Add(InFaction, FBuildingsInfo(Building));
+					Buildings.Add(InFaction, Building);
 				}
+			}
+		}
+	}
+}
+
+void UUnitManager::OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuilding)
+{
+	if (Buildings[InFaction].Buildings.Contains(InBuilding))
+	{
+		Buildings[InFaction].Buildings.Remove(InBuilding);
+		if (Buildings[InFaction].Buildings.Num() <= 0)
+		{
+			AWW4GameModeBase* WW4GM = UWW4CommonFunctionLibrary::GetWW4GameMode(GetWorld());
+			if (WW4GM)
+			{
+				WW4GM->OnFactionEliminated(InFaction);
 			}
 		}
 	}

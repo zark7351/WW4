@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "WW4/Manager/UnitManager.h"
+#include "WW4/BaseTypes/BaseTypes.h"
 #include "WW4GameModeBase.generated.h"
+
+class AWW4PlayerController;
 
 /**
  * 
@@ -23,6 +26,14 @@ public:
 	void InitManager();
 
 	virtual void StartPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TMap<EFaction, AWW4PlayerController*>FactionPlayerMap;
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerFaction(EFaction InFaction, AWW4PlayerController* InPlayer);
+
+	void OnFactionEliminated(EFaction InFaction);
 
 private:
 	class UUnitManager* UnitManager = nullptr;

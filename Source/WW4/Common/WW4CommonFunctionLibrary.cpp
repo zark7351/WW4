@@ -8,11 +8,17 @@
 #include "WW4/Unit/Vehicle/VehicleBase.h"
 #include "WW4/Core/WW4PlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "WW4/Core/WW4GameModeBase.h"
 
 UUnitManager*  UWW4CommonFunctionLibrary::GetUnitManager(const UObject* WorldContextObject)
 {
 	UUnitManager* UnitManager = WorldContextObject->GetWorld()->GetSubsystem<UUnitManager>();
 	return UnitManager;
+}
+
+AWW4GameModeBase* UWW4CommonFunctionLibrary::GetWW4GameMode(const UObject* WorldContextObject)
+{
+	return Cast<AWW4GameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 }
 
 void UWW4CommonFunctionLibrary::PrintCommonMessage(const FString& Msg, FColor Color)

@@ -35,7 +35,11 @@ void ABuildingBase::BeginPlay()
 
 void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	
+	auto UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
+	if (UnitManager)
+	{
+		UnitManager->OnBuildingDestroy(Faction,this);
+	}
 }
 
 void ABuildingBase::Tick(float DeltaTime)
@@ -70,6 +74,7 @@ void ABuildingBase::OnSelected_Implementation(bool bSelected)
 
 void ABuildingBase::SetFaction_Implementation(EFaction InFaction)
 {
+	Faction = InFaction;
 	if (FactionMaterialMap.Contains(InFaction))
 	{
 		BuildingMesh->SetMaterial(0, FactionMaterialMap[InFaction]);

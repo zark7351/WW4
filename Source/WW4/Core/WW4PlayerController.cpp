@@ -46,3 +46,8 @@ void AWW4PlayerController::ServerSetTarget_Implementation(const TArray<AUnitBase
 		Unit->Execute_SetTarget(Unit, TargetActor);
 	}
 }
+
+void AWW4PlayerController::Defeated_Implementation()
+{
+
+}
