@@ -43,7 +43,10 @@ void AWW4PlayerController::ServerSetTarget_Implementation(const TArray<AUnitBase
 {
 	for (AUnitBase* Unit : Actors)
 	{
-		Unit->Execute_SetTarget(Unit, TargetActor);
+		if (TargetActor != Unit)
+		{
+			Unit->Execute_SetTarget(Unit, TargetActor);
+		}
 	}
 }
 
