@@ -175,5 +175,12 @@ TArray<FVector2D> UWW4CommonFunctionLibrary::CalcTargetPointsInRec(int32 Num, co
 	{
 		OutPoints[i] -= Offset;
 	}
+	//ÈÆÖÐÐÄÐý×ª45¡ã
+	//float RotDegree = 45.f;
+	//for (int32 i = 0; i < OutPoints.Num(); i++)
+	//{
+	//	OutPoints[i].X = (OutPoints[i].X - MidPoint.X) * FMath::Cos(FMath::DegreesToRadians(RotDegree)) - (OutPoints[i].Y - MidPoint.Y) * FMath::Sin(FMath::DegreesToRadians(RotDegree)) + MidPoint.X;
+	//	OutPoints[i].Y = (OutPoints[i].X - MidPoint.X) * FMath::Sin(FMath::DegreesToRadians(RotDegree)) + (OutPoints[i].Y - MidPoint.Y) * FMath::Cos(FMath::DegreesToRadians(RotDegree)) + MidPoint.Y;
+	//}
 	return OutPoints;
 }
