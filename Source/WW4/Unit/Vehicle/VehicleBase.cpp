@@ -40,7 +40,7 @@ void AVehicleBase::TurnInPlace(float DeltaSeconds)
 	{
 		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 		FRotator CurRotation = GetActorRotation();
-		SetActorRotation(FMath::RInterpConstantTo(CurRotation, LookAtRotation, DeltaSeconds, TurnSpeed));
+		SetActorRotation(FMath::RInterpConstantTo(CurRotation, FRotator(CurRotation.Pitch, LookAtRotation.Yaw, CurRotation.Roll), DeltaSeconds, TurnSpeed));
 		if (FMath::IsNearlyEqual(CurRotation.Yaw, LookAtRotation.Yaw, 3.0f))
 		{
 			OnTurnInPlaceFinished.Broadcast(this);
