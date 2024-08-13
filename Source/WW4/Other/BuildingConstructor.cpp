@@ -2,7 +2,7 @@
 
 
 #include "BuildingConstructor.h"
-#include "WW4/Other/BuildingGridCell.h"
+#include "WW4/Other/ConstructGridCell.h"
 #include "WW4/Building/BuildingBase.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -66,10 +66,10 @@ void ABuildingConstructor::InitCell()
 					Location.X = (i / 5 - 2) * 100;
 					Location.Y = (i % 5 - 2) * 100;
 					Location += Offset;
-					ABuildingGridCell* Cell = GetWorld()->SpawnActor<ABuildingGridCell>(CellClass, Location, FRotator::ZeroRotator);
+					AConstructGridCell* Cell = GetWorld()->SpawnActor<AConstructGridCell>(CellClass, Location, FRotator::ZeroRotator);
 					if (Cell)
 					{
-						Cell->SetMobility(EComponentMobility::Movable);
+						//Cell->SetMobility(EComponentMobility::Movable);
 						CellArr.Add(Cell);
 						bool Contains = row->Grid.Contains(i);
 						Cell->bEnabled = Contains;

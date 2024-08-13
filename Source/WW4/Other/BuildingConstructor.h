@@ -19,7 +19,7 @@ public:
 	bool Construct();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class ABuildingGridCell> CellClass;
+	TSubclassOf<class AConstructGridCell> CellClass;
 
 	void InitCell();
 
@@ -39,7 +39,7 @@ public:
 	TArray<int32> CellGrid;
 
 	UPROPERTY(BlueprintReadWrite)
-	TArray<ABuildingGridCell*> CellArr;
+	TArray<AConstructGridCell*> CellArr;
 
 	UPROPERTY()
 	FString CurBuilding;
