@@ -20,14 +20,17 @@ void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, 
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, SpawnBuilding->GetSpawnTransform(),Params);
-		Unit->SetFaction(Faction);
-		if (Units.Contains(Faction))
+		if (Unit)
 		{
-			Units[Faction].Units.Add(FUnitInfoBase(Unit));
-		}
-		else
-		{
-			Units.Add(Faction, FUnitsInfo(Unit));
+			Unit->SetFaction(Faction);
+			if (Units.Contains(Faction))
+			{
+				Units[Faction].Units.Add(FUnitInfoBase(Unit));
+			}
+			else
+			{
+				Units.Add(Faction, FUnitsInfo(Unit));
+			}
 		}
 	}
 }
@@ -39,6 +42,7 @@ void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, 
 	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform, Params);
 	if (Unit)
 	{
+		Unit->SetFaction(Faction);
 		Unit->SetOwnerBuilding(OwnerBuilding);
 		if (Units.Contains(Faction))
 		{
