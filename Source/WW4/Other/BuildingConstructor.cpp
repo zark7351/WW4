@@ -10,6 +10,8 @@
 #include "WW4/Manager/UnitManager.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "WW4/Core/WW4PlayerController.h"
+#include "EngineUtils.h"
+
 
 ABuildingConstructor::ABuildingConstructor()
 {
@@ -20,7 +22,7 @@ bool ABuildingConstructor::Construct()
 {
 	if (CanConstruct())
 	{
-		AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
+		AWW4PlayerController* PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 		if (PlayerController)
 		{
 			PlayerController->ServerSpawnBuilding(PlayerController->GetFaction(), FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
@@ -34,6 +36,14 @@ bool ABuildingConstructor::Construct()
 void ABuildingConstructor::BeginPlay()
 {
 	Super::BeginPlay();
+	FactionBuildings.Empty();
+	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
+	{
+		if (BuildingItr->Faction == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->GetFaction())
+		{
+			FactionBuildings.Add(*BuildingItr);
+		}
+	}
 }
 
 void ABuildingConstructor::Tick(float DeltaSeconds)
@@ -44,6 +54,18 @@ void ABuildingConstructor::Tick(float DeltaSeconds)
 	{
 		HitPos = HitResult.ImpactPoint;
 		SetActorLocation(HitPos);
+	}
+	bool OutOfRange = true;
+	for (auto Building : FactionBuildings)
+	{
+		if (FVector::Dist2D(GetActorLocation(), Building->GetActorLocation()) < Building->BuildDistance)
+		{
+			OutOfRange = false;
+		}
+	}
+	for (auto Cell: CellArr)
+	{
+		Cell->bOutOfRange = OutOfRange;
 	}
 }
 
@@ -72,7 +94,7 @@ void ABuildingConstructor::InitCell()
 						//Cell->SetMobility(EComponentMobility::Movable);
 						CellArr.Add(Cell);
 						bool Contains = row->Grid.Contains(i);
-						Cell->bEnabled = Contains;
+						Cell->bActive = Contains;
 						Cell->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 						Cell->SetActorHiddenInGame(!Contains);
 					}
@@ -90,7 +112,7 @@ bool ABuildingConstructor::CanConstruct()
 	{
 		if (Cell)
 		{
-			if (Cell->bEnabled && Cell->bBlock)
+			if (Cell->bActive && (Cell->bBlock || Cell->bOutOfRange))
 			{
 				Can = false;
 			}

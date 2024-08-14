@@ -9,8 +9,8 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "WW4/Core/WW4GameModeBase.h"
+#include "EngineUtils.h"
 
-UE_DISABLE_OPTIMIZATION
 
 void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
 {
@@ -20,6 +20,7 @@ void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, 
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, SpawnBuilding->GetSpawnTransform(),Params);
+		Unit->SetFaction(Faction);
 		if (Units.Contains(Faction))
 		{
 			Units[Faction].Units.Add(FUnitInfoBase(Unit));
@@ -59,6 +60,7 @@ bool UUnitManager::ShouldCreateSubsystem(UObject* Outer) const
 void UUnitManager::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	CollectBuildingsAndUnits();
 }
 
 void UUnitManager::Deinitialize()
@@ -121,6 +123,10 @@ void UUnitManager::SpawnBuilding(EFaction InFaction, FName BuildingName, const F
 
 void UUnitManager::OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuilding)
 {
+	if (!Buildings.Contains(InFaction))
+	{
+		return;
+	}
 	if (Buildings[InFaction].Buildings.Contains(InBuilding))
 	{
 		Buildings[InFaction].Buildings.Remove(InBuilding);
@@ -135,4 +141,16 @@ void UUnitManager::OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuildi
 	}
 }
 
-UE_ENABLE_OPTIMIZATION
+void UUnitManager::CollectBuildingsAndUnits()
+{
+	Buildings.Empty();
+	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
+	{
+		Buildings.Add(BuildingItr->Faction, *BuildingItr);
+	}
+	Units.Empty();
+	for (TActorIterator<AUnitBase> UnitItr(GetWorld()); UnitItr; ++UnitItr)
+	{
+		Units.Add(UnitItr->Faction, *UnitItr);
+	}
+}

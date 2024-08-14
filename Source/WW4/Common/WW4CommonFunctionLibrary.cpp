@@ -21,6 +21,12 @@ AWW4GameModeBase* UWW4CommonFunctionLibrary::GetWW4GameMode(const UObject* World
 	return Cast<AWW4GameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 }
 
+AWW4PlayerController* UWW4CommonFunctionLibrary::GetWW4PlayerController(const UObject* WorldContextObject)
+{
+	AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(WorldContextObject->GetWorld()->GetFirstPlayerController());
+	return PlayerController;
+}
+
 void UWW4CommonFunctionLibrary::PrintCommonMessage(const FString& Msg, FColor Color)
 {
 	if (GEngine)

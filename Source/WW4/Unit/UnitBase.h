@@ -25,6 +25,16 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Deploy();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EFaction Faction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetFaction(EFaction InFaction);
+	virtual void SetFaction_Implementation(EFaction InFaction) override;
+
 	virtual void Deploy_Implementation();
 
 	virtual void OnInit();

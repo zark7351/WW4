@@ -41,7 +41,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Defeated();
 
-
 private:
 	class UUnitManager* UnitManager;
 

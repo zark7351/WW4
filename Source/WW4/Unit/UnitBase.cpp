@@ -41,6 +41,16 @@ void AUnitBase::Deploy_Implementation()
 {
 }
 
+void AUnitBase::SetFaction_Implementation(EFaction InFaction)
+{
+	Faction = InFaction;
+	if (FactionMaterialMap.Contains(InFaction))
+	{
+		UnitMesh->SetMaterial(0, FactionMaterialMap[InFaction]);
+	}
+}
+
+
 void AUnitBase::OnInit()
 {
 }

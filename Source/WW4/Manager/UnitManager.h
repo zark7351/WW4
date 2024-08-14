@@ -122,4 +122,8 @@ public:
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
+
+private:
+
+	void CollectBuildingsAndUnits();
 };

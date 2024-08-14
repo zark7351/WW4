@@ -12,25 +12,38 @@ AConstructGridCell::AConstructGridCell()
 }
 
 
+void AConstructGridCell::SetEnabled(bool bEnabled)
+{
+	SetStyle(bEnabled);
+	CurStyle = bEnabled;
+}
+
 void AConstructGridCell::BeginPlay()
 {
 	Super::BeginPlay();
-	SetStyle(false);
+	SetStyle(true);
 }
 
 void AConstructGridCell::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (CurStyle != TraceBlock())
+	if (bOutOfRange)
 	{
-		SetStyle(bBlock);
-		CurStyle = bBlock;
+		SetEnabled(false);
+	}
+	else
+	{
+		TraceBlock();
+		if (CurStyle == bBlock)
+		{
+			SetEnabled(!bBlock);
+		}
 	}
 }
 
-void AConstructGridCell::SetStyle(bool bBlocked)
+void AConstructGridCell::SetStyle(bool bEnabled)
 {
-	SetDecalMaterial(bBlocked ? RedMaterial : GreenMaterial);
+	SetDecalMaterial(bEnabled ? GreenMaterial : RedMaterial);
 }
 
 bool AConstructGridCell::TraceBlock()

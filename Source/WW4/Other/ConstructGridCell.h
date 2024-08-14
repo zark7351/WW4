@@ -19,16 +19,22 @@ public:
 	AConstructGridCell();
 
 	UPROPERTY()
-	bool bEnabled{ true };
+	bool bActive{ true };
 
 	UPROPERTY()
 	bool bBlock{ false };
+
+	UPROPERTY()
+	bool bOutOfRange{ true };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterialInterface* GreenMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterialInterface* RedMaterial;
+
+	UFUNCTION()
+	void SetEnabled(bool bEnabled);
 
 protected:
 
@@ -38,7 +44,7 @@ protected:
 
 private:
 
-	bool CurStyle{ false };
+	bool CurStyle{ true };
 
 	void SetStyle(bool bBlocked);
 

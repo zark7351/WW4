@@ -62,11 +62,14 @@ public:
 	void SetFaction(EFaction InFaction);
 	virtual void SetFaction_Implementation(EFaction InFaction) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFaction Faction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BuildDistance{ 1000 };
 
 private:
 
