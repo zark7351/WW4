@@ -76,6 +76,13 @@ bool UWW4CommonFunctionLibrary::TraceFloorUnderCursor(const UObject* WorldContex
 	return TraceFloorUnderScreenPosition(WorldContextObject, ScreenPos, OutHitResult);
 }
 
+bool UWW4CommonFunctionLibrary::TraceFloorUnderWorldLocation(const UObject* WorldContextObject, FHitResult& OutHitResult, const FVector& InLocation)
+{
+	UWorld* World = WorldContextObject->GetWorld();
+
+	return UKismetSystemLibrary::LineTraceSingleForObjects(World, InLocation, InLocation + FVector(0.f, 0.f, -5000.f), TArray<TEnumAsByte<EObjectTypeQuery>>({ EObjectTypeQuery::ObjectTypeQuery7 }), false, TArray<AActor*>(), EDrawDebugTrace::Type::None, OutHitResult, true);
+}
+
 bool UWW4CommonFunctionLibrary::TraceTargetUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult)
 {
 	UWorld* World = WorldContextObject->GetWorld();

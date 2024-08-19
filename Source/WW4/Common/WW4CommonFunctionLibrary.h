@@ -44,6 +44,9 @@ public:
 	static bool TraceFloorUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
+	static bool TraceFloorUnderWorldLocation(const UObject* WorldContextObject, FHitResult& OutHitResult, const FVector& InLocation);
+
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static bool TraceTargetUnderCursor(const UObject* WorldContextObject, FHitResult& OutHitResult);
 
 	/*
