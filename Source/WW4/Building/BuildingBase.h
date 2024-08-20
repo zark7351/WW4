@@ -9,15 +9,15 @@
 #include "BuildingBase.generated.h"
 
 
-USTRUCT(BlueprintType)
-struct WW4_API FBuildingProductionInfo : public FItemProductionInfoBase
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<int32> Grid;
-};
+//USTRUCT(BlueprintType)
+//struct WW4_API FItemProductionInfoBase : public FItemProductionInfoBase
+//{
+//	GENERATED_BODY()
+//
+//public:
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+//	TArray<int32> Grid;
+//};
 
 
 UCLASS()

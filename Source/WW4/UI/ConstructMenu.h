@@ -28,21 +28,16 @@ public:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
+	UFUNCTION(BlueprintCallable)
+	void InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items);
+
 protected:
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDataTable* BuildingInfo = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UDataTable* VehicleInfo = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UConstructItem> ConstructItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ABuildingConstructor> ConstructorcClass;
-
-	void InitConstructionList(UUniformGridPanel* UniformGridPanel, UDataTable* Datatable, EContructItemType ItemType);
 
 private:
 

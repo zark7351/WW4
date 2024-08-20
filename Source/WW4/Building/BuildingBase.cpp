@@ -86,7 +86,7 @@ void ABuildingBase::InitGrid()
 	UDataTable* BuildingGridInfoTable = LoadObject<UDataTable>(nullptr,TEXT("DataTable'/Game/WW4/Datatable/DT_GridInfo.DT_GridInfo'"));
 	if (BuildingGridInfoTable)
 	{
-		FBuildingProductionInfo* Row = BuildingGridInfoTable->FindRow<FBuildingProductionInfo>(FName(*BuildingName),TEXT("Look up for building grid."));
+		FItemProductionInfoBase* Row = BuildingGridInfoTable->FindRow<FItemProductionInfoBase>(FName(*BuildingName),TEXT("Look up for building grid."));
 		if (Row)
 		{
 			BuildingGrid = Row->Grid;

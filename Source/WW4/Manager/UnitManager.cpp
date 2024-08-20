@@ -103,7 +103,7 @@ void UUnitManager::SpawnBuilding(EFaction InFaction, FName BuildingName, const F
 {
 	if (BuildingGridInfo)
 	{
-		FBuildingProductionInfo* Row = BuildingGridInfo->FindRow<FBuildingProductionInfo>(BuildingName, "");
+		FItemProductionInfoBase* Row = BuildingGridInfo->FindRow<FItemProductionInfoBase>(BuildingName, "");
 		if (Row && Row->ItemClass)
 		{
 			FActorSpawnParameters Params;

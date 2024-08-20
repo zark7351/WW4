@@ -75,9 +75,9 @@ void ABuildingConstructor::InitCell()
 	CellArr.Empty();
 	if (BuildingGridInfo)
 	{
-		TArray<FBuildingProductionInfo*> BuildingInfoRows;
+		TArray<FItemProductionInfoBase*> BuildingInfoRows;
 		BuildingGridInfo->GetAllRows("", BuildingInfoRows);
-		for (FBuildingProductionInfo* row : BuildingInfoRows)
+		for (FItemProductionInfoBase* row : BuildingInfoRows)
 		{
 			if (UnitID == row->ItemID)
 			{

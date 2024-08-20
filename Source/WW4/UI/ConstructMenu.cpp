@@ -15,37 +15,37 @@
 
 UConstructMenu::UConstructMenu(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> BuildingDatatableFinder(TEXT("Datatable'/Game/WW4/Datatable/DT_BuildingInfo.DT_BuildingInfo'"));
-	if (BuildingDatatableFinder.Succeeded())
-	{
-		BuildingInfo = BuildingDatatableFinder.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Fail to load BuildingInfo datatable!"));
-	}
-	static ConstructorHelpers::FObjectFinder<UDataTable> VehicleDatatableFinder(TEXT("Datatable'/Game/WW4/Datatable/DT_VehicleInfo.DT_VehicleInfo'"));
-	if (VehicleDatatableFinder.Succeeded())
-	{
-		VehicleInfo = VehicleDatatableFinder.Object;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Fail to load VehicleInfo datatable!"));
-	}
+	//static ConstructorHelpers::FObjectFinder<UDataTable> BuildingDatatableFinder(TEXT("Datatable'/Game/WW4/Datatable/DT_BuildingInfo.DT_BuildingInfo'"));
+	//if (BuildingDatatableFinder.Succeeded())
+	//{
+	//	BuildingInfo = BuildingDatatableFinder.Object;
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Fail to load BuildingInfo datatable!"));
+	//}
+	//static ConstructorHelpers::FObjectFinder<UDataTable> VehicleDatatableFinder(TEXT("Datatable'/Game/WW4/Datatable/DT_VehicleInfo.DT_VehicleInfo'"));
+	//if (VehicleDatatableFinder.Succeeded())
+	//{
+	//	VehicleInfo = VehicleDatatableFinder.Object;
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Fail to load VehicleInfo datatable!"));
+	//}
 }
 
 void UConstructMenu::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	if (UGP_Building && BuildingInfo)
-	{
-		InitConstructionList(UGP_Building, BuildingInfo, EContructItemType::ECT_Building);
-	}
-	if (UGP_Vehicle && VehicleInfo)
-	{
-		InitConstructionList(UGP_Vehicle, VehicleInfo, EContructItemType::ECT_Vehicle);
-	}
+	//if (UGP_Building && BuildingInfo)
+	//{
+	//	InitConstructionList(UGP_Building, BuildingInfo, EContructItemType::ECT_Building);
+	//}
+	//if (UGP_Vehicle && VehicleInfo)
+	//{
+	//	InitConstructionList(UGP_Vehicle, VehicleInfo, EContructItemType::ECT_Vehicle);
+	//}
 	
 }
 
@@ -55,25 +55,36 @@ void UConstructMenu::NativeConstruct()
 
 }
 
-void UConstructMenu::InitConstructionList(UUniformGridPanel* UniformGridPanel, UDataTable* Datatable, EContructItemType ItemType)
+void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items)
 {
-	if (UniformGridPanel && Datatable)
+	UGP_Building->ClearChildren();
+	UGP_Vehicle->ClearChildren();
+	if (!ConstructItemClass)	return;
+	TMap<EContructItemType, int32>TypeNumMap;
+	for (int32 i = 0; i < Items.Num(); i++)
 	{
-		TArray<FItemProductionInfoBase*> ItemProductionInfo;
-		Datatable->GetAllRows("", ItemProductionInfo);
-		if (!ConstructItemClass)	return;
-		for (int32 i = 0; i < ItemProductionInfo.Num(); i++)
+		UConstructItem* Item = CreateWidget<UConstructItem>(GetWorld(), ConstructItemClass);
+		if (Item)
 		{
-			if (ItemProductionInfo[i])
+			EContructItemType Type = Items[i].ItemType;
+			if (!TypeNumMap.Contains(Type))
 			{
-				UConstructItem* Item = CreateWidget<UConstructItem>(GetWorld(), ConstructItemClass);
-				if (Item)
-				{
-					UniformGridPanel->AddChildToUniformGrid(Item, i / 2, i % 2);
-					Item->OnConstrcutItemClickedHandle.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
-					Item->ItemInfo = *(ItemProductionInfo[i]);
-				}
+				TypeNumMap.Add(Type, 0);
 			}
+			switch (Type)
+			{
+			case EContructItemType::ECT_Building:
+				UGP_Building->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
+				break;
+			case EContructItemType::ECT_Vehicle:
+				UGP_Vehicle->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
+				break;
+			default:
+				break;
+			}
+			TypeNumMap[Type] += 1;
+			Item->OnConstrcutItemClickedHandle.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
+			Item->ItemInfo = (Items[i]);
 		}
 	}
 }

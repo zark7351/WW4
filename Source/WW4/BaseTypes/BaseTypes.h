@@ -47,4 +47,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> ItemClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> Grid;
 };
