@@ -6,6 +6,7 @@
 #include "WW4/Component/HealthComponent.h"
 #include "Components/WidgetComponent.h"
 #include "WW4/AI/Controller/UnitAIControllerBase.h"
+#include "Net/UnrealNetwork.h"
 
 AUnitBase::AUnitBase()
 {
@@ -41,7 +42,7 @@ void AUnitBase::Deploy_Implementation()
 {
 }
 
-void AUnitBase::SetFaction_Implementation(EFaction InFaction)
+void AUnitBase::SetFactionStyle_Implementation(EFaction InFaction)
 {
 	Faction = InFaction;
 	if (FactionMaterialMap.Contains(InFaction))
@@ -125,10 +126,26 @@ void AUnitBase::SetIsMoving(bool InMoving)
 	}
 }
 
+void AUnitBase::SetOwningPlayerID(int32 InID)
+{
+	OwningPlayerID = InID;
+}
+
+int32 AUnitBase::GetOwningPlayerID()
+{
+	return OwningPlayerID;
+}
+
 void AUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AUnitBase, OwningPlayerID);
 }
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)

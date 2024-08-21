@@ -35,7 +35,7 @@ public:
 	static void PrintCommonMessage(const FString& Msg, FColor Color = FColor::Blue);
 	
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
-	static void SpawnUnit(const UObject* WorldContextObject, const EFaction& InFaction, TSubclassOf<AUnitBase> InUnitClass, const FTransform& InTransform, class ABuildingBase* InOwnerBuilding);
+	static void SpawnUnit(const UObject* WorldContextObject, FItemProductionInfoBase ItemInfo, const int32& InPlayerID, const FTransform& InTransform, class ABuildingBase* InOwnerBuilding);
 
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "Common")
 	static bool TraceFloorUnderScreenPosition(const UObject* WorldContextObject, FVector2D ScreenPos, FHitResult& OutHitResult);

@@ -21,18 +21,18 @@ void AWW4GameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	InitManager();
-	FactionPlayerMap.Empty();
+	PlayerIDMap.Empty();
 }
 
-void AWW4GameModeBase::SetPlayerFaction(EFaction InFaction, AWW4PlayerController* InPlayer)
+void AWW4GameModeBase::SetPlayerID(int32 InID, AWW4PlayerController* InPlayer)
 {
-	FactionPlayerMap.Add(InFaction, InPlayer);
+	PlayerIDMap.Add(InID, InPlayer);
 }
 
-void AWW4GameModeBase::OnFactionEliminated(EFaction InFaction)
+void AWW4GameModeBase::OnPlayerEliminated(int32 InID)
 {
-	if (FactionPlayerMap.Contains(InFaction))
+	if (PlayerIDMap.Contains(InID))
 	{
-		FactionPlayerMap[InFaction]->Defeated();
+		PlayerIDMap[InID]->Defeated();
 	}
 }

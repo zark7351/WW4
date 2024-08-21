@@ -40,14 +40,14 @@ void UWW4CommonFunctionLibrary::PrintCommonMessage(const FString& Msg, FColor Co
 	}
 }
 
-void UWW4CommonFunctionLibrary::SpawnUnit(const UObject* WorldContextObject, const EFaction& InFaction, TSubclassOf<AUnitBase> InUnitClass, const FTransform& InTransform, ABuildingBase* InOwnerBuilding)
+void UWW4CommonFunctionLibrary::SpawnUnit(const UObject* WorldContextObject, FItemProductionInfoBase ItemInfo, const int32& InPlayerID, const FTransform& InTransform, ABuildingBase* InOwnerBuilding)
 {
 	if (!WorldContextObject)	return;
 
 	AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(WorldContextObject->GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		PlayerController->ServerSpawnUnit(InFaction, InUnitClass, InTransform, InOwnerBuilding);
+		PlayerController->ServerSpawnUnit(ItemInfo, InPlayerID, InTransform, InOwnerBuilding);
 	}
 }
 

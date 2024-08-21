@@ -8,7 +8,8 @@
 #include "Components/WidgetComponent.h"
 #include "Components/BoxComponent.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
-
+#include "Net/UnrealNetwork.h"
+#include "WW4/Core/WW4PlayerController.h"
 
 ABuildingBase::ABuildingBase()
 {
@@ -31,6 +32,14 @@ void ABuildingBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitGrid();
+	AWW4PlayerController* WW4PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
+	if (WW4PlayerController)
+	{
+		if (WW4PlayerController->GetWW4PlayerID() == GetOwningPlayerID())
+		{
+			WW4PlayerController->OnBuildingConstructed(ItemInfo.ItemID);
+		}
+	}
 }
 
 void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -38,7 +47,7 @@ void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	auto UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
 	if (UnitManager)
 	{
-		UnitManager->OnBuildingDestroy(Faction,this);
+		UnitManager->OnBuildingDestroy(OwningPlayerID,this);
 	}
 }
 
@@ -46,6 +55,12 @@ void ABuildingBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABuildingBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABuildingBase, OwningPlayerID);
 }
 
 float ABuildingBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -72,13 +87,22 @@ void ABuildingBase::OnSelected_Implementation(bool bSelected)
 	}
 }
 
-void ABuildingBase::SetFaction_Implementation(EFaction InFaction)
+void ABuildingBase::SetFactionStyle_Implementation(EFaction InFaction)
 {
-	Faction = InFaction;
 	if (FactionMaterialMap.Contains(InFaction))
 	{
 		BuildingMesh->SetMaterial(0, FactionMaterialMap[InFaction]);
 	}
+}
+
+void ABuildingBase::SetOwningPlayerID(int32 InID)
+{
+	OwningPlayerID = InID;
+}
+
+int32 ABuildingBase::GetOwningPlayerID()
+{
+	return OwningPlayerID;
 }
 
 void ABuildingBase::InitGrid()

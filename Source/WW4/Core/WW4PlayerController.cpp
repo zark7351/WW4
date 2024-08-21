@@ -5,31 +5,32 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "WW4/Unit/UnitBase.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Net/UnrealNetwork.h"
 
-void AWW4PlayerController::ServerSpawnBuilding_Implementation(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void AWW4PlayerController::ServerSpawnBuilding_Implementation(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
 	UnitManager = UnitManager == nullptr ? UWW4CommonFunctionLibrary::GetUnitManager(GetWorld()) : UnitManager;
 	if (UnitManager)
 	{
-		UnitManager->SpawnBuilding(InFaction, BuildingName, Location, Rotation);
+		UnitManager->SpawnBuilding(InPlayerID, BuildingName, Location, Rotation);
 	}
 }
 
-void AWW4PlayerController::ServerSpawnVehicle_Implementation(EFaction InFaction, UClass* VehicleType)
+void AWW4PlayerController::ServerSpawnVehicle_Implementation(FItemProductionInfoBase ItemInfo, int32 InPlayerID)
 {
 	UnitManager = UnitManager == nullptr ? UWW4CommonFunctionLibrary::GetUnitManager(GetWorld()) : UnitManager;
 	if (UnitManager)
 	{
-		UnitManager->SpawnVehicle(InFaction, VehicleType);
+		UnitManager->SpawnVehicle(ItemInfo, InPlayerID);
 	}
 }
 
-void AWW4PlayerController::ServerSpawnUnit_Implementation(EFaction InFaction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
+void AWW4PlayerController::ServerSpawnUnit_Implementation(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
 	UnitManager = UnitManager == nullptr ? UWW4CommonFunctionLibrary::GetUnitManager(GetWorld()) : UnitManager;
 	if (UnitManager)
 	{
-		UnitManager->SpawnUnit(InFaction, UnitType, Transform,OwnerBuilding);
+		UnitManager->SpawnUnit(ItemInfo, InPlayerID, Transform, OwnerBuilding);
 	}
 }
 
@@ -53,4 +54,11 @@ void AWW4PlayerController::ServerSetTarget_Implementation(const TArray<AUnitBase
 void AWW4PlayerController::Defeated_Implementation()
 {
 
+}
+
+void AWW4PlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AWW4PlayerController, WW4PlayerID);
+	DOREPLIFETIME(AWW4PlayerController, Faction);
 }

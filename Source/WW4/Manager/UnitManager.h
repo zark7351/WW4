@@ -21,13 +21,13 @@ struct FUnitInfoBase
 	FGuid ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EFaction Faction;
+	int32 PlayerID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AUnitBase* Unit;
 
 	FUnitInfoBase() = default;
-	FUnitInfoBase(AUnitBase* InUnit, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Unit = InUnit; }
+	FUnitInfoBase(AUnitBase* InUnit, int32 InPlayerID) { ID = FGuid::NewGuid(); PlayerID = InPlayerID; Unit = InUnit; }
 };
 
 USTRUCT(BlueprintType)
@@ -39,31 +39,13 @@ struct FUnitsInfo
 
 	FUnitsInfo() = default;
 	FUnitsInfo(TArray<FUnitInfoBase> InUnits) { Units = InUnits; }
-	FUnitsInfo(AUnitBase* InUnit)
+	FUnitsInfo(AUnitBase* InUnit, int32 InPlayerID)
 	{
 		TArray<FUnitInfoBase> UnitsInfo;
-		UnitsInfo.Add(FUnitInfoBase(InUnit));
+		UnitsInfo.Add(FUnitInfoBase(InUnit, InPlayerID));
 		Units = UnitsInfo;
 	}
 };
-
-//USTRUCT(BlueprintType)
-//struct FBuildingInfoBase
-//{
-//	GENERATED_BODY()
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	FGuid ID;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	EFaction Faction;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	ABuildingBase* Building;
-//
-//	FBuildingInfoBase() = default;
-//	FBuildingInfoBase(ABuildingBase* InBuilding, EFaction InFaction = EFaction::EF_Red) { ID = FGuid::NewGuid(); Faction = InFaction; Building = InBuilding; }
-//};
 
 USTRUCT(BlueprintType)
 struct FBuildingArr
@@ -100,22 +82,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
 
-	void SpawnVehicle(EFaction Faction, UClass* VehicleType);
+	void SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID);
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
 
-	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding);
-	void SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
+	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding);
+	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
 
 	UFUNCTION()
-	void SpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation);
+	void SpawnBuilding(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation);
 
-	void OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuilding);
+	void OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding);
 
 	UPROPERTY(BlueprintReadWrite)
-	TMap<EFaction, FUnitsInfo> Units;
+	TMap<int32, FUnitsInfo> Units;
 	UPROPERTY(BlueprintReadWrite)
-	TMap<EFaction, FBuildingArr> Buildings;
+	TMap<int32, FBuildingArr> Buildings;
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;

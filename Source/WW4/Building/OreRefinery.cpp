@@ -14,9 +14,10 @@ AOreRefinery::AOreRefinery()
 
 void AOreRefinery::BeginPlay()
 {
-	if (MinerClass)
-	{
-		FTransform Transform = MinerSpawnPoint->GetComponentTransform();
-		UWW4CommonFunctionLibrary::SpawnUnit(GetWorld(), EFaction::EF_Red, MinerClass, Transform, this);
-	}
+	Super::BeginPlay();
+	//if (MinerClass)
+	//{
+	//	FTransform Transform = MinerSpawnPoint->GetComponentTransform();
+	//	UWW4CommonFunctionLibrary::SpawnUnit(GetWorld(), GetOwningPlayerID(), Transform, this);
+	//}
 }

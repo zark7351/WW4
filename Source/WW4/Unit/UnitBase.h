@@ -8,6 +8,8 @@
 #include "AIController.h"
 #include "UnitBase.generated.h"
 
+class AWW4PlayerController;
+
 UCLASS()
 class WW4_API AUnitBase : public APawn, public IBaseObjectInterface
 {
@@ -31,9 +33,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemProductionInfoBase ItemInfo;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetFaction(EFaction InFaction);
-	virtual void SetFaction_Implementation(EFaction InFaction) override;
+	void SetFactionStyle(EFaction InFaction);
+	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
 
 	virtual void Deploy_Implementation();
 
@@ -66,6 +71,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsMoving(bool InMoving);
 
+	virtual void SetOwningPlayerID(int32 InID) override;
+
+	virtual int32 GetOwningPlayerID() override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -82,6 +91,8 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
 
 	ABuildingBase* OwnerBuilding{ nullptr };
@@ -90,4 +101,7 @@ private:
 
 	UFUNCTION()
 	void OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+
+	UPROPERTY(Replicated)
+	int32 OwningPlayerID;
 };

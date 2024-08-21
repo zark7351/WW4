@@ -25,7 +25,7 @@ bool ABuildingConstructor::Construct()
 		AWW4PlayerController* PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 		if (PlayerController)
 		{
-			PlayerController->ServerSpawnBuilding(PlayerController->GetFaction(), FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
+			PlayerController->ServerSpawnBuilding(PlayerController->GetWW4PlayerID(), FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}
@@ -36,12 +36,12 @@ bool ABuildingConstructor::Construct()
 void ABuildingConstructor::BeginPlay()
 {
 	Super::BeginPlay();
-	FactionBuildings.Empty();
+	PlayerBuildings.Empty();
 	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
 	{
-		if (BuildingItr->Faction == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->GetFaction())
+		if (BuildingItr->GetOwningPlayerID() == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->GetWW4PlayerID())
 		{
-			FactionBuildings.Add(*BuildingItr);
+			PlayerBuildings.Add(*BuildingItr);
 		}
 	}
 }
@@ -56,7 +56,7 @@ void ABuildingConstructor::Tick(float DeltaSeconds)
 		SetActorLocation(HitPos);
 	}
 	bool OutOfRange = true;
-	for (auto Building : FactionBuildings)
+	for (auto Building : PlayerBuildings)
 	{
 		if (FVector::Dist2D(GetActorLocation(), Building->GetActorLocation()) < Building->BuildDistance)
 		{

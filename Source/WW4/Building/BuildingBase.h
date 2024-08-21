@@ -19,7 +19,6 @@
 //	TArray<int32> Grid;
 //};
 
-
 UCLASS()
 class WW4_API ABuildingBase : public AActor, public IBaseObjectInterface
 {
@@ -41,6 +40,8 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* BuildingMesh;
 
@@ -59,11 +60,8 @@ public:
 	virtual void OnSelected_Implementation(bool bSelected);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetFaction(EFaction InFaction);
-	virtual void SetFaction_Implementation(EFaction InFaction) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EFaction Faction;
+	void SetFactionStyle(EFaction InFaction);
+	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;
@@ -71,10 +69,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BuildDistance{ 1000 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItemProductionInfoBase ItemInfo;
+
+	virtual void SetOwningPlayerID(int32 InID) override;
+
+	virtual int32 GetOwningPlayerID() override;
+
 private:
 
 
 	UFUNCTION(BlueprintCallable)
 	void InitGrid();
+
+	UPROPERTY(Replicated)
+	int32 OwningPlayerID;
 
 };

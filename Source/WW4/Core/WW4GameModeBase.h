@@ -28,12 +28,12 @@ public:
 	virtual void StartPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TMap<EFaction, AWW4PlayerController*>FactionPlayerMap;
+	TMap<int32, AWW4PlayerController*>PlayerIDMap;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPlayerFaction(EFaction InFaction, AWW4PlayerController* InPlayer);
+	void SetPlayerID(int32 InID, AWW4PlayerController* InPlayer);
 
-	void OnFactionEliminated(EFaction InFaction);
+	void OnPlayerEliminated(int32 InID);
 
 private:
 	class UUnitManager* UnitManager = nullptr;

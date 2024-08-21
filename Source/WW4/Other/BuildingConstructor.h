@@ -55,6 +55,6 @@ private:
 
 	FVector HitPos{ FVector::ZeroVector };
 
-	TArray<class ABuildingBase*> FactionBuildings;
+	TArray<class ABuildingBase*> PlayerBuildings;
 
 };

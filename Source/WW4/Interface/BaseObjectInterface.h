@@ -30,6 +30,10 @@ public:
 	void SetTarget(AActor* Targetactor);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetFaction(EFaction InFaction);
+	void SetFactionStyle(EFaction InFaction);
+
+	virtual void SetOwningPlayerID(int32 InID);
+
+	virtual int32 GetOwningPlayerID();
 
 };

@@ -12,48 +12,49 @@
 #include "EngineUtils.h"
 
 
-void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, AUnitFactoryBase* SpawnBuilding)
+AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
 {
 	AUnitBase* Unit = nullptr;
 	if (SpawnBuilding)
 	{
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, SpawnBuilding->GetSpawnTransform(),Params);
+		Unit = GetWorld()->SpawnActor<AUnitBase>(ItemInfo.ItemClass, SpawnBuilding->GetSpawnTransform(),Params);
 		if (Unit)
 		{
-			Unit->SetFaction(Faction);
-			if (Units.Contains(Faction))
+			Unit->ItemInfo = ItemInfo;
+			if (Units.Contains(InPlayerID))
 			{
-				Units[Faction].Units.Add(FUnitInfoBase(Unit));
+				Units[InPlayerID].Units.Add(FUnitInfoBase(Unit, InPlayerID));
 			}
 			else
 			{
-				Units.Add(Faction, FUnitsInfo(Unit));
+				Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 			}
 		}
 	}
+	return Unit;
 }
 
-void UUnitManager::SpawnUnit(EFaction Faction, TSubclassOf<AUnitBase> UnitType, const FTransform& Transform, ABuildingBase* OwnerBuilding)
+AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
 	FActorSpawnParameters Params;
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(UnitType, Transform, Params);
+	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(ItemInfo.ItemClass , Transform, Params);
 	if (Unit)
 	{
-		Unit->SetFaction(Faction);
 		Unit->SetOwnerBuilding(OwnerBuilding);
-		if (Units.Contains(Faction))
+		if (Units.Contains(InPlayerID))
 		{
-			Units[Faction].Units.Add(FUnitInfoBase(Unit));
+			Units[InPlayerID].Units.Add(FUnitInfoBase(Unit, InPlayerID));
 		}
 		else
 		{
-			Units.Add(Faction, FUnitsInfo(Unit));
+			Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 		}
 		Unit->OnInit();
 	}
+	return Unit;
 }
 
 bool UUnitManager::ShouldCreateSubsystem(UObject* Outer) const
@@ -72,11 +73,11 @@ void UUnitManager::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UUnitManager::SpawnVehicle(EFaction Faction, UClass* VehicleType)
+void UUnitManager::SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID)
 {
 	if (CurrentVehicleFactory)
 	{
-		SpawnUnit(Faction, VehicleType, CurrentVehicleFactory);
+		SpawnUnit(ItemInfo, InPlayerID, CurrentVehicleFactory);
 	}
 }
 
@@ -99,47 +100,46 @@ void UUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* I
 	}
 }
 
-void UUnitManager::SpawnBuilding(EFaction InFaction, FName BuildingName, const FVector& Location, const FRotator& Rotation)
+void UUnitManager::SpawnBuilding(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {
 	if (BuildingGridInfo)
 	{
 		FItemProductionInfoBase* Row = BuildingGridInfo->FindRow<FItemProductionInfoBase>(BuildingName, "");
 		if (Row && Row->ItemClass)
 		{
-			FActorSpawnParameters Params;
-			Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			ABuildingBase* Building = GetWorld()->SpawnActor<ABuildingBase>(Row->ItemClass, Location, Rotation, Params);
+			ABuildingBase* Building = GetWorld()->SpawnActorDeferred<ABuildingBase>(Row->ItemClass, FTransform(Rotation, Location),nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 			if (Building)
 			{
-				Building->SetFaction(InFaction);
-				if (Buildings.Contains(InFaction))
+				Building->ItemInfo = *Row;
+				if (Buildings.Contains(InPlayerID))
 				{
-					Buildings[InFaction].Buildings.Add(Building);
+					Buildings[InPlayerID].Buildings.Add(Building);
 				}
 				else
 				{
-					Buildings.Add(InFaction, Building);
+					Buildings.Add(InPlayerID, Building);
 				}
+				Building->FinishSpawning(FTransform(Rotation, Location));
 			}
 		}
 	}
 }
 
-void UUnitManager::OnBuildingDestroy(EFaction InFaction, ABuildingBase* InBuilding)
+void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding)
 {
-	if (!Buildings.Contains(InFaction))
+	if (!Buildings.Contains(InPlayerID))
 	{
 		return;
 	}
-	if (Buildings[InFaction].Buildings.Contains(InBuilding))
+	if (Buildings[InPlayerID].Buildings.Contains(InBuilding))
 	{
-		Buildings[InFaction].Buildings.Remove(InBuilding);
-		if (Buildings[InFaction].Buildings.Num() <= 0)
+		Buildings[InPlayerID].Buildings.Remove(InBuilding);
+		if (Buildings[InPlayerID].Buildings.Num() <= 0)
 		{
 			AWW4GameModeBase* WW4GM = UWW4CommonFunctionLibrary::GetWW4GameMode(GetWorld());
 			if (WW4GM)
 			{
-				WW4GM->OnFactionEliminated(InFaction);
+				WW4GM->OnPlayerEliminated(InPlayerID);
 			}
 		}
 	}
@@ -150,11 +150,11 @@ void UUnitManager::CollectBuildingsAndUnits()
 	Buildings.Empty();
 	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
 	{
-		Buildings.Add(BuildingItr->Faction, *BuildingItr);
+		Buildings.Add(BuildingItr->GetOwningPlayerID(), *BuildingItr);
 	}
 	Units.Empty();
 	for (TActorIterator<AUnitBase> UnitItr(GetWorld()); UnitItr; ++UnitItr)
 	{
-		Units.Add(UnitItr->Faction, *UnitItr);
+		Units.Add(UnitItr->GetOwningPlayerID(), FUnitsInfo(*UnitItr, UnitItr->GetOwningPlayerID()));
 	}
 }

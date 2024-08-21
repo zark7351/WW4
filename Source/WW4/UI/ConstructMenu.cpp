@@ -106,7 +106,7 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 		AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
 		if (PlayerController)
 		{
-			PlayerController->ServerSpawnVehicle(EFaction::EF_Red, ItemInfo.ItemClass);
+			PlayerController->ServerSpawnVehicle(ItemInfo, PlayerController->GetWW4PlayerID());
 		}
 		
 	}

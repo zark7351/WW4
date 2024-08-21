@@ -37,6 +37,9 @@ public:
 	int32 ItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> PrerequisiteItemsID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString ItemName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
