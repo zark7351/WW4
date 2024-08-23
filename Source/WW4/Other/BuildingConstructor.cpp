@@ -84,7 +84,7 @@ void ABuildingConstructor::InitCell()
 				CurBuilding = row->ItemName;
 				for (int32 i = 0; i < 25; i++)
 				{
-					FVector Location;
+					FVector Location = FVector::ZeroVector;
 					Location.X = (i / 5 - 2) * 100;
 					Location.Y = (i % 5 - 2) * 100;
 					Location += Offset;
