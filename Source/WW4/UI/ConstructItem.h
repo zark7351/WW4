@@ -11,6 +11,17 @@
  * 
  */
 
+UENUM(BlueprintType)
+enum class EConstructItemState :uint8
+{
+	ECS_Normal	UMETA(DisplayName = "Normal"),
+	ECS_Building	UMETA(DisplayName = "Building"),
+	ECS_Ready	UMETA(DisplayName = "Ready"),
+	ECS_Disable	UMETA(DisplayName = "Disable"),
+
+	ECS_Max	UMETA(DisplayName = "DefaultMax"),
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info);
 
 UCLASS()
@@ -47,4 +58,6 @@ public:
 private:
 
 	UMaterialInstanceDynamic* MaskDynamicMaterialIns;
+
+	EConstructItemState ItemState{ EConstructItemState ::ECS_Normal};
 };
