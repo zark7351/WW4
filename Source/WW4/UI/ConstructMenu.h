@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items);
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateItemMask(const FItemProductionInfoBase& Info, float Ratio);
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -43,4 +46,6 @@ private:
 
 	UFUNCTION()
 	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo);
+
+	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
 };

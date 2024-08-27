@@ -57,6 +57,7 @@ void UConstructMenu::NativeConstruct()
 
 void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items)
 {
+	ItemInfoMap.Empty();
 	UGP_Building->ClearChildren();
 	UGP_Vehicle->ClearChildren();
 	if (!ConstructItemClass)	return;
@@ -66,6 +67,7 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 		UConstructItem* Item = CreateWidget<UConstructItem>(GetWorld(), ConstructItemClass);
 		if (Item)
 		{
+			ItemInfoMap.Add(Items[i], Item);
 			EContructItemType Type = Items[i].ItemType;
 			if (!TypeNumMap.Contains(Type))
 			{
@@ -86,6 +88,14 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 			Item->OnConstrcutItemClickedHandle.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
 			Item->ItemInfo = (Items[i]);
 		}
+	}
+}
+
+void UConstructMenu::UpdateItemMask(const FItemProductionInfoBase& Info, float Ratio)
+{
+	if (ItemInfoMap.Contains(Info))
+	{
+		ItemInfoMap[Info]->UpdateMask(Ratio);
 	}
 }
 

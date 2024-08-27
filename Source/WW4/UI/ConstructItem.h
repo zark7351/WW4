@@ -25,6 +25,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* Button;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Mask;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	struct FItemProductionInfoBase ItemInfo;
 
@@ -33,4 +36,15 @@ public:
 
 	UFUNCTION()
 	void OnClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void EnableMask(bool Enable);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateMask(float Ratio);
+
+
+private:
+
+	UMaterialInstanceDynamic* MaskDynamicMaterialIns;
 };

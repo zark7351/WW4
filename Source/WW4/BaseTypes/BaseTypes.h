@@ -53,4 +53,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> Grid;
+
+	friend inline bool operator==(const FItemProductionInfoBase& A, const FItemProductionInfoBase& B)
+	{
+		return A.ItemType == B.ItemType && A.ItemID == B.ItemID;
+	}
+
+	friend inline uint32 GetTypeHash(const FItemProductionInfoBase& Key)
+	{
+		return HashCombine(GetTypeHash(Key.ItemType), GetTypeHash(Key.ItemID));
+	}
 };
