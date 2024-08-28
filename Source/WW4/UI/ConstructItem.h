@@ -60,6 +60,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EConstructItemState GetState() const { return ItemState; }
 
+	bool bNeedDeploy{ true };
+
 private:
 
 	UMaterialInstanceDynamic* MaskDynamicMaterialIns;

@@ -8,7 +8,6 @@ UPlayerEconomyComponent::UPlayerEconomyComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.TickInterval = 0.2f;
-	Money = InitMoney;
 }
 
 void UPlayerEconomyComponent::InitializeComponent()
@@ -20,6 +19,7 @@ void UPlayerEconomyComponent::InitializeComponent()
 void UPlayerEconomyComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	Money = InitMoney;
 }
 
 

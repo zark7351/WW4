@@ -52,9 +52,11 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 			switch (Type)
 			{
 			case EContructItemType::ECT_Building:
+				Item->bNeedDeploy = true;
 				UGP_Building->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			case EContructItemType::ECT_Vehicle:
+				Item->bNeedDeploy = false;
 				UGP_Vehicle->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			default:
@@ -94,7 +96,14 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
 			if (Item)
 			{
-				Item->SetState(EConstructItemState::ECS_Normal);
+				if (bEnable)
+				{
+					Item->SetState(EConstructItemState::ECS_Normal);
+				}
+				else if (Item->GetState() == EConstructItemState::ECS_Normal)
+				{
+					Item->SetState(EConstructItemState::ECS_Disabled);
+				}
 			}
 		}
 		break;
@@ -114,6 +123,8 @@ void UConstructMenu::UpdateItemProgress(const FItemProductionInfoBase& Info, flo
 
 void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, bool bReady)
 {
+	AWW4PlayerController* PC = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
+
 	if (bReady)
 	{
 		if (ItemInfo.ItemType == EContructItemType::ECT_Building)
@@ -125,26 +136,23 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 				Constructor->InitCell();
 			}
 		}
-		else if (ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
+		else if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
 		{
-			AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(GetWorld()->GetFirstPlayerController());
-			if (PlayerController)
-			{
-				PlayerController->ServerSpawnVehicle(ItemInfo, PlayerController->GetWW4PlayerID());
-			}
-		}
-	}
-	else
-	{
-		AWW4PlayerController* PC = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
-		if (PC)
-		{
-			PC->EconomyComponent->AddOrRemoveCostItem(ItemInfo, true);
+			PC->ServerSpawnVehicle(ItemInfo, PC->GetWW4PlayerID());
 			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
 			if (HUD)
 			{
-				HUD->RefreshItemGroupState(ItemInfo, false);
+				HUD->RefreshItemGroupState(ItemInfo, true);
 			}
+		}
+	}
+	else if(PC)
+	{
+		PC->EconomyComponent->AddOrRemoveCostItem(ItemInfo, true);
+		AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
+		if (HUD)
+		{
+			HUD->RefreshItemGroupState(ItemInfo, false);
 		}
 	}
 }

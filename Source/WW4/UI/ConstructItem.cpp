@@ -57,7 +57,14 @@ void UConstructItem::UpdateProgress(float Ratio)
 	}
 	if (Ratio >= 1.f)
 	{
-		SetState(EConstructItemState::ECS_Ready);
+		if (bNeedDeploy)
+		{
+			SetState(EConstructItemState::ECS_Ready);
+		}
+		else
+		{
+			OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
+		}
 	}
 }
 
