@@ -6,6 +6,13 @@
 #include "WW4/Unit/UnitBase.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "WW4/Component/PlayerEconomyComponent.h"
+
+
+AWW4PlayerController::AWW4PlayerController()
+{
+	EconomyComponent = CreateDefaultSubobject<UPlayerEconomyComponent>(TEXT("EconomyComponent"));
+}
 
 void AWW4PlayerController::ServerSpawnBuilding_Implementation(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation)
 {

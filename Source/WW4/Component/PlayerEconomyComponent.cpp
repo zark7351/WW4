@@ -8,6 +8,12 @@ UPlayerEconomyComponent::UPlayerEconomyComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.TickInterval = 0.2f;
+	Money = InitMoney;
+}
+
+void UPlayerEconomyComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
 }
 
 
@@ -27,22 +33,23 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			bNoMoney = false;
 			NoMoneyDelegate.Broadcast(bNoMoney);
 		}
-		for (TPair<FItemProductionInfoBase, int32> Pair : ItemCostMap)
+		for (auto It = ItemCostMap.CreateIterator(); It; ++It)
 		{
-			int32 ConstPerTick = Pair.Key.ItemPrice / (Pair.Key.ItemProductTime = 0.f ? PrimaryComponentTick.TickInterval : Pair.Key.ItemProductTime) * PrimaryComponentTick.TickInterval;
+			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime = 0.f ? PrimaryComponentTick.TickInterval : It->Key.ItemProductTime) * PrimaryComponentTick.TickInterval;
 			if (Money > ConstPerTick)
 			{
 				Money -= ConstPerTick;
-				Pair.Value += ConstPerTick;
-				BuildingProgressDelegate.Broadcast(Pair.Key, Pair.Value / Pair.Key.ItemPrice);
-				if (Pair.Value >= Pair.Key.ItemPrice)
+				It->Value += ConstPerTick;
+				float Progress = (float)It->Value / (float)It->Key.ItemPrice;
+				BuildingProgressDelegate.Broadcast(It->Key, Progress);
+				if (It->Value >= It->Key.ItemPrice)
 				{
-					ItemCostMap.Remove(Pair.Key);
+					It.RemoveCurrent();
 				}
 			}
 			else
 			{
-				Pair.Value += Money;
+				It->Value += Money;
 				Money = 0;
 				bNoMoney = true;
 				NoMoneyDelegate.Broadcast(bNoMoney);

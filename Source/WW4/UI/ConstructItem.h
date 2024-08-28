@@ -17,12 +17,12 @@ enum class EConstructItemState :uint8
 	ECS_Normal	UMETA(DisplayName = "Normal"),
 	ECS_Building	UMETA(DisplayName = "Building"),
 	ECS_Ready	UMETA(DisplayName = "Ready"),
-	ECS_Disable	UMETA(DisplayName = "Disable"),
+	ECS_Disabled	UMETA(DisplayName = "Disable"),
 
 	ECS_Max	UMETA(DisplayName = "DefaultMax"),
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info, bool, bReady);
 
 UCLASS()
 class WW4_API UConstructItem : public UUserWidget
@@ -52,8 +52,13 @@ public:
 	void EnableMask(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateMask(float Ratio);
+	void UpdateProgress(float Ratio);
 
+	UFUNCTION(BlueprintCallable)
+	void SetState(const EConstructItemState& InState);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE EConstructItemState GetState() const { return ItemState; }
 
 private:
 

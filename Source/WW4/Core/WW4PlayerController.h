@@ -11,6 +11,7 @@
  */
 
 class AUnitBase;
+class UPlayerEconomyComponent;
 
 UCLASS()
 class WW4_API AWW4PlayerController : public APlayerController
@@ -18,6 +19,8 @@ class WW4_API AWW4PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+
+	AWW4PlayerController();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -51,6 +54,9 @@ public:
 	FORCEINLINE int32 GetWW4PlayerID() { return WW4PlayerID; }
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPlayerEconomyComponent* EconomyComponent;
 
 private:
 	class UUnitManager* UnitManager;

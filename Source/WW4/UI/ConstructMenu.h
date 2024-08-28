@@ -32,7 +32,10 @@ public:
 	void InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateItemMask(const FItemProductionInfoBase& Info, float Ratio);
+	void RefreshGroupState(const FItemProductionInfoBase& ItemInfo, bool bEnable);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio);
 
 protected:
 
@@ -45,7 +48,7 @@ protected:
 private:
 
 	UFUNCTION()
-	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo);
+	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, bool bReady);
 
 	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
 };

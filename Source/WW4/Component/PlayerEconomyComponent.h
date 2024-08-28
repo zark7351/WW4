@@ -18,6 +18,8 @@ class WW4_API UPlayerEconomyComponent : public UActorComponent
 public:	
 	UPlayerEconomyComponent();
 
+	virtual void InitializeComponent() override;
+
 protected:
 	virtual void BeginPlay() override;
 
