@@ -53,10 +53,12 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 			{
 			case EContructItemType::ECT_Building:
 				Item->bNeedDeploy = true;
+				Item->bUseCount = false;
 				UGP_Building->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			case EContructItemType::ECT_Vehicle:
 				Item->bNeedDeploy = false;
+				Item->bUseCount = true;
 				UGP_Vehicle->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			default:
@@ -79,11 +81,11 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
 			if (Item)
 			{
-				if (bEnable)
+				if (bEnable && Item->Count < 0)
 				{
 					Item->SetState(EConstructItemState::ECS_Normal);
 				}
-				else if(Item->GetState() == EConstructItemState::ECS_Normal)
+				else if(Item->ItemInfo.ItemID != ItemInfo.ItemID)
 				{
 					Item->SetState(EConstructItemState::ECS_Disabled);
 				}
@@ -96,11 +98,11 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
 			if (Item)
 			{
-				if (bEnable)
+				if (bEnable && Item->Count < 0)
 				{
 					Item->SetState(EConstructItemState::ECS_Normal);
 				}
-				else if (Item->GetState() == EConstructItemState::ECS_Normal)
+				else if (Item->ItemInfo.ItemID != ItemInfo.ItemID)
 				{
 					Item->SetState(EConstructItemState::ECS_Disabled);
 				}

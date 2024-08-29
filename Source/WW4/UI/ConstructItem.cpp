@@ -4,6 +4,7 @@
 #include "ConstructItem.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 
 void UConstructItem::NativeConstruct()
 {
@@ -13,7 +14,7 @@ void UConstructItem::NativeConstruct()
 	}
 	MaskDynamicMaterialIns = Mask->GetDynamicMaterial();
 	EnableMask(false);
-	UpdateProgress(0.f);
+	EnableCount(false);
 }
 
 void UConstructItem::OnClicked()
@@ -24,8 +25,20 @@ void UConstructItem::OnClicked()
 		OnConstrcutItemClickedHandle.Broadcast(ItemInfo, false);
 		SetState(EConstructItemState::ECS_Building);
 		EnableMask(true);
+		if (bUseCount)
+		{
+			Count = 0;
+		}
 		break;
 	case EConstructItemState::ECS_Building:
+		if (bUseCount)
+		{
+			Count++;
+			if (Count > 0)
+			{
+				EnableCount(true);
+			}
+		}
 		break;
 	case EConstructItemState::ECS_Ready:
 		OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
@@ -65,6 +78,22 @@ void UConstructItem::UpdateProgress(float Ratio)
 		{
 			OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
 		}
+		if (bUseCount)
+		{
+			Count--;
+			if (Count >= 0)
+			{
+				OnConstrcutItemClickedHandle.Broadcast(ItemInfo, false);
+				if (Count == 0)
+				{
+					EnableCount(false);
+				}
+			}
+			else
+			{
+				SetState(EConstructItemState::ECS_Normal);
+			}
+		}
 	}
 }
 
@@ -78,5 +107,21 @@ void UConstructItem::SetState(const EConstructItemState& InState)
 	else
 	{
 		Button->SetIsEnabled(true);
+	}
+}
+
+void UConstructItem::EnableCount(bool bEnable)
+{
+	if (CountText)
+	{
+		CountText->SetVisibility(bEnable ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
+
+void UConstructItem::SetCount(int32 inCount)
+{
+	if (CountText)
+	{
+		CountText->SetText(FText::AsNumber(inCount));
 	}
 }

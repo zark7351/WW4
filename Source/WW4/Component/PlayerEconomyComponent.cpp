@@ -7,7 +7,7 @@
 UPlayerEconomyComponent::UPlayerEconomyComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.TickInterval = 0.2f;
+	//PrimaryComponentTick.TickInterval = 0.1f;
 }
 
 void UPlayerEconomyComponent::InitializeComponent()
@@ -35,7 +35,7 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 		}
 		for (auto It = ItemCostMap.CreateIterator(); It; ++It)
 		{
-			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime = 0.f ? PrimaryComponentTick.TickInterval : It->Key.ItemProductTime) * PrimaryComponentTick.TickInterval;
+			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime = 0.f ? DeltaTime : It->Key.ItemProductTime) * DeltaTime;
 			if (Money > ConstPerTick)
 			{
 				Money -= ConstPerTick;

@@ -39,6 +39,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Mask;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* CountText;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	struct FItemProductionInfoBase ItemInfo;
 
@@ -57,10 +60,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetState(const EConstructItemState& InState);
 
+	UFUNCTION(BlueprintCallable)
+	void EnableCount(bool bEnable);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCount(int32 inCount);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EConstructItemState GetState() const { return ItemState; }
 
 	bool bNeedDeploy{ true };
+
+	bool bUseCount{ false };
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 Count{ -1 };
 
 private:
 
