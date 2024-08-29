@@ -81,9 +81,16 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
 			if (Item)
 			{
-				if (bEnable && Item->Count < 0)
+				if (bEnable)
 				{
-					Item->SetState(EConstructItemState::ECS_Normal);
+					if (Item->Count < 0)
+					{
+						Item->SetState(EConstructItemState::ECS_Normal);
+						if (Item->ItemInfo.ItemID == ItemInfo.ItemID)
+						{
+							Item->EnableMask1(false);
+						}
+					}
 				}
 				else if(Item->ItemInfo.ItemID != ItemInfo.ItemID)
 				{
@@ -98,9 +105,12 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
 			if (Item)
 			{
-				if (bEnable && Item->Count < 0)
+				if (bEnable)
 				{
-					Item->SetState(EConstructItemState::ECS_Normal);
+					if (Item->Count < 0)
+					{
+						Item->SetState(EConstructItemState::ECS_Normal);
+					}
 				}
 				else if (Item->ItemInfo.ItemID != ItemInfo.ItemID)
 				{

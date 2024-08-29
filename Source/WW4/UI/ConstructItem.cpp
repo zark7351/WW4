@@ -62,6 +62,14 @@ void UConstructItem::EnableMask(bool Enable)
 	}
 }
 
+void UConstructItem::EnableMask1(bool Enable)
+{
+	if (Mask_1)
+	{
+		Mask_1->SetVisibility(Enable ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
+
 void UConstructItem::UpdateProgress(float Ratio)
 {
 	if (MaskDynamicMaterialIns)
@@ -73,6 +81,7 @@ void UConstructItem::UpdateProgress(float Ratio)
 		if (bNeedDeploy)
 		{
 			SetState(EConstructItemState::ECS_Ready);
+			EnableMask1(true);
 		}
 		else
 		{

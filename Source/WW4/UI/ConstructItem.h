@@ -40,6 +40,9 @@ public:
 	class UImage* Mask;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Mask_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* CountText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -53,6 +56,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EnableMask(bool Enable);
+
+	UFUNCTION(BlueprintCallable)
+	void EnableMask1(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateProgress(float Ratio);
