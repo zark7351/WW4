@@ -90,6 +90,7 @@ void AUnitBase::StopMoving()
 	if (UnitController)
 	{
 		UnitController->StopMovement();
+		UnitController->SetMoving(false);
 	}
 }
 
@@ -113,7 +114,7 @@ bool AUnitBase::GetIsMoving() const
 {
 	if (UnitController)
 	{
-		return UnitController->bMoving;
+		return UnitController->GetMoving();
 	}
 	return false;
 }
@@ -122,7 +123,7 @@ void AUnitBase::SetIsMoving(bool InMoving)
 {
 	if (UnitController)
 	{
-		UnitController->bMoving = InMoving;
+		UnitController->SetMoving(InMoving);
 	}
 }
 

@@ -22,6 +22,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool ReusmeCurrentMove();
 
+	FORCEINLINE void SetMoving(bool Moving) { bMoving = Moving; }
+
+	FORCEINLINE bool GetMoving()const { return bMoving; }
+
+private:
+
 	UPROPERTY()
 	bool bMoving{ false };
 };
