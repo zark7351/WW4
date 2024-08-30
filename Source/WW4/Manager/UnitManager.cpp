@@ -81,46 +81,23 @@ void UUnitManager::SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayer
 	}
 }
 
-void UUnitManager::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory)
+void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation)
 {
-	switch (Type)
+	if (BuildingInfo.ItemClass)
 	{
-	case EContructItemType::ECT_Building:
-		CurrentVehicleFactory = InFactory;
-		break;
-	case EContructItemType::ECT_Infantry:
-		CurrentInfantryFactory = InFactory;
-		break;
-	case EContructItemType::ECT_Vehicle:
-		break;
-	case EContructItemType::ECT_Max:
-		break;
-	default:
-		break;
-	}
-}
-
-void UUnitManager::SpawnBuilding(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation)
-{
-	if (BuildingGridInfo)
-	{
-		FItemProductionInfoBase* Row = BuildingGridInfo->FindRow<FItemProductionInfoBase>(BuildingName, "");
-		if (Row && Row->ItemClass)
+		ABuildingBase* Building = GetWorld()->SpawnActorDeferred<ABuildingBase>(BuildingInfo.ItemClass, FTransform(Rotation, Location), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		if (Building)
 		{
-			ABuildingBase* Building = GetWorld()->SpawnActorDeferred<ABuildingBase>(Row->ItemClass, FTransform(Rotation, Location),nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-			if (Building)
+			Building->ItemInfo = BuildingInfo;
+			if (Buildings.Contains(InPlayerID))
 			{
-				Building->ItemInfo = *Row;
-				if (Buildings.Contains(InPlayerID))
-				{
-					Buildings[InPlayerID].Buildings.Add(Building);
-				}
-				else
-				{
-					Buildings.Add(InPlayerID, Building);
-				}
-				Building->FinishSpawning(FTransform(Rotation, Location));
+				Buildings[InPlayerID].Buildings.Add(Building);
 			}
+			else
+			{
+				Buildings.Add(InPlayerID, Building);
+			}
+			Building->FinishSpawning(FTransform(Rotation, Location));
 		}
 	}
 }

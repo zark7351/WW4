@@ -84,13 +84,11 @@ public:
 
 	void SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID);
 
-	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
-
 	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding);
 	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
 
 	UFUNCTION()
-	void SpawnBuilding(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation);
+	void SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation);
 
 	void OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding);
 
@@ -98,12 +96,6 @@ public:
 	TMap<int32, FUnitsInfo> Units;
 	UPROPERTY(BlueprintReadWrite)
 	TMap<int32, FBuildingArr> Buildings;
-
-	UPROPERTY()
-	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
-
-	UPROPERTY()
-	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
 
 private:
 

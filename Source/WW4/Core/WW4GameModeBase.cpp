@@ -3,7 +3,6 @@
 
 #include "WW4GameModeBase.h"
 #include "WW4/Manager/UnitManager.h"
-#include "WW4PlayerController.h"
 
 void AWW4GameModeBase::InitManager()
 {
@@ -24,9 +23,14 @@ void AWW4GameModeBase::StartPlay()
 	PlayerIDMap.Empty();
 }
 
-void AWW4GameModeBase::SetPlayerID(int32 InID, AWW4PlayerController* InPlayer)
+void AWW4GameModeBase::SetPlayerID(int32 InID, AController* InPlayer)
 {
 	PlayerIDMap.Add(InID, InPlayer);
+}
+
+AController* AWW4GameModeBase::FindPlayerByID(int32 InID) const
+{
+	return PlayerIDMap.Find(InID)
 }
 
 void AWW4GameModeBase::OnPlayerEliminated(int32 InID)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BuildingBase.h"
+#include "WW4/BaseTypes/BaseTypes.h"
 #include "UnitFactoryBase.generated.h"
 
 /**
@@ -27,6 +28,9 @@ private:
 public:
 	UFUNCTION()
 	const FTransform GetSpawnTransform();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EContructItemType FactoryType;
 
 protected:
 

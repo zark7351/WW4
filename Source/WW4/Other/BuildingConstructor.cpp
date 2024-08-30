@@ -26,7 +26,7 @@ bool ABuildingConstructor::Construct()
 		AWW4PlayerController* PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 		if (PlayerController)
 		{
-			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->PlayerBaseComponent->GetWW4PlayerID(), FName(*CurBuilding), HitPos, FRotator::ZeroRotator);
+			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->PlayerBaseComponent->GetWW4PlayerID(), CurBuildingInfo, HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}
@@ -82,7 +82,7 @@ void ABuildingConstructor::InitCell()
 		{
 			if (UnitID == row->ItemID)
 			{
-				CurBuilding = row->ItemName;
+				CurBuildingInfo = *row;
 				for (int32 i = 0; i < 25; i++)
 				{
 					FVector Location = FVector::ZeroVector;

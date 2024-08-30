@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WW4/BaseTypes/BaseTypes.h"
 #include "BuildingConstructor.generated.h"
 
 UCLASS()
@@ -42,7 +43,7 @@ public:
 	TArray<AConstructGridCell*> CellArr;
 
 	UPROPERTY()
-	FString CurBuilding;
+	FItemProductionInfoBase CurBuildingInfo;
 
 	bool CanConstruct();
 

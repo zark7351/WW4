@@ -7,6 +7,7 @@
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "PlayerBaseComponent.generated.h"
 
+//建造、单位控制等基本功能的组件，从WW4PlayerController里解耦出来方便AIController复用
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class WW4_API UPlayerBaseComponent : public UActorComponent
@@ -19,7 +20,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void ServerSpawnBuilding(int32 InPlayerID, FName BuildingName, const FVector& Location, const FRotator& Rotation);
+	void ServerSpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation);
 
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding);
@@ -44,11 +45,18 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void OnBuildingConstructed(int32 InItemID);
 
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE int32 GetWW4PlayerID() { return WW4PlayerID; }
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE int32 GetWW4PlayerID() const { return WW4PlayerID; }
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
 
+	UPROPERTY()
+	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
+
+	UPROPERTY()
+	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
+
+	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
 
 private:
 	class UUnitManager* UnitManager;

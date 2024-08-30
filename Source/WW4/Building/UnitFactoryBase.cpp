@@ -3,8 +3,8 @@
 
 #include "UnitFactoryBase.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
-#include "WW4/Manager/UnitManager.h"
-#include "WW4/BaseTypes/BaseTypes.h"
+#include "WW4/Component/PlayerBaseComponent.h"
+#include "WW4/Core/WW4GameModeBase.h"
 
 AUnitFactoryBase::AUnitFactoryBase()
 {
@@ -23,10 +23,18 @@ const FTransform AUnitFactoryBase::GetSpawnTransform()
 
 void AUnitFactoryBase::SetMainFactory()
 {
-	UUnitManager* UnitManager = UWW4CommonFunctionLibrary::GetUnitManager(GetWorld());
-	if (UnitManager)
+	AWW4GameModeBase* WW4GM = UWW4CommonFunctionLibrary::GetWW4GameMode(GetWorld());
+	if (WW4GM)
 	{
-		UnitManager->SetCurrentFactory(EContructItemType::ECT_Building, this);
+		AController* Controller = WW4GM->FindPlayerByID(GetOwningPlayerID());
+		if (Controller)
+		{
+			UPlayerBaseComponent* BaseComp = Controller->GetComponentByClass<UPlayerBaseComponent>();
+			if (BaseComp)
+			{
+				BaseComp->SetCurrentFactory(FactoryType, this);
+			}
+		}
 	}
 }
 

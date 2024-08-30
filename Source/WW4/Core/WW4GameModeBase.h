@@ -8,7 +8,6 @@
 #include "WW4/BaseTypes/BaseTypes.h"
 #include "WW4GameModeBase.generated.h"
 
-class AWW4PlayerController;
 
 /**
  * 
@@ -28,10 +27,13 @@ public:
 	virtual void StartPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TMap<int32, AWW4PlayerController*>PlayerIDMap;
+	TMap<int32, AController*>PlayerIDMap;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPlayerID(int32 InID, AWW4PlayerController* InPlayer);
+	void SetPlayerID(int32 InID, AController* InPlayer);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	AController* FindPlayerByID (int32 InID) const;
 
 	void OnPlayerEliminated(int32 InID);
 
