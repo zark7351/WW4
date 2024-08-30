@@ -1,17 +1,12 @@
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "WW4PlayerController.h"
+#include "AIPlayerController.h"
 #include "WW4/Component/PlayerEconomyComponent.h"
 #include "WW4/Component/PlayerBaseComponent.h"
 
-
-AWW4PlayerController::AWW4PlayerController()
+AAIPlayerController::AAIPlayerController()
 {
 	EconomyComponent = CreateDefaultSubobject<UPlayerEconomyComponent>(TEXT("EconomyComponent"));
 	PlayerBaseComponent = CreateDefaultSubobject<UPlayerBaseComponent>(TEXT("PlayerBaseComponent"));
-}
-
-void AWW4PlayerController::Defeated_Implementation()
-{
-
 }

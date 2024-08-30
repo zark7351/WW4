@@ -10,6 +10,7 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "WW4/Core/WW4PlayerController.h"
+#include "WW4/Component/PlayerBaseComponent.h"
 
 ABuildingBase::ABuildingBase()
 {
@@ -35,9 +36,9 @@ void ABuildingBase::BeginPlay()
 	AWW4PlayerController* WW4PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 	if (WW4PlayerController)
 	{
-		if (WW4PlayerController->GetWW4PlayerID() == GetOwningPlayerID())
+		if (WW4PlayerController->PlayerBaseComponent->GetWW4PlayerID() == GetOwningPlayerID())
 		{
-			WW4PlayerController->OnBuildingConstructed(ItemInfo.ItemID);
+			WW4PlayerController->PlayerBaseComponent->OnBuildingConstructed(ItemInfo.ItemID);
 		}
 	}
 }

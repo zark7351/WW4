@@ -9,6 +9,7 @@
 #include "WW4/Core/WW4PlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "WW4/Core/WW4GameModeBase.h"
+#include "WW4/Component/PlayerBaseComponent.h"
 
 UUnitManager*  UWW4CommonFunctionLibrary::GetUnitManager(const UObject* WorldContextObject)
 {
@@ -47,7 +48,7 @@ void UWW4CommonFunctionLibrary::SpawnUnit(const UObject* WorldContextObject, FIt
 	AWW4PlayerController* PlayerController = Cast<AWW4PlayerController>(WorldContextObject->GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		PlayerController->ServerSpawnUnit(ItemInfo, InPlayerID, InTransform, InOwnerBuilding);
+		PlayerController->PlayerBaseComponent->ServerSpawnUnit(ItemInfo, InPlayerID, InTransform, InOwnerBuilding);
 	}
 }
 
