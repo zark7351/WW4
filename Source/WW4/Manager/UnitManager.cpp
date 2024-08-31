@@ -73,14 +73,6 @@ void UUnitManager::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UUnitManager::SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID)
-{
-	if (CurrentVehicleFactory)
-	{
-		SpawnUnit(ItemInfo, InPlayerID, CurrentVehicleFactory);
-	}
-}
-
 void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation)
 {
 	if (BuildingInfo.ItemClass)

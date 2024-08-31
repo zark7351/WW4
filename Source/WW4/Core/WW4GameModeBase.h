@@ -30,10 +30,10 @@ public:
 	TMap<int32, AController*>PlayerIDMap;
 
 	UFUNCTION(BlueprintCallable)
-	void SetPlayerID(int32 InID, AController* InPlayer);
+	void RegPlayerID(int32 InID, AController* InPlayer);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
-	AController* FindPlayerByID (int32 InID) const;
+	AController* const FindPlayerByID (int32 InID) const;
 
 	void OnPlayerEliminated(int32 InID);
 

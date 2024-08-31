@@ -23,20 +23,28 @@ void AWW4GameModeBase::StartPlay()
 	PlayerIDMap.Empty();
 }
 
-void AWW4GameModeBase::SetPlayerID(int32 InID, AController* InPlayer)
+void AWW4GameModeBase::RegPlayerID(int32 InID, AController* InPlayer)
 {
 	PlayerIDMap.Add(InID, InPlayer);
 }
 
-AController* AWW4GameModeBase::FindPlayerByID(int32 InID) const
+AController* const AWW4GameModeBase::FindPlayerByID(int32 InID) const
 {
-	return PlayerIDMap.Find(InID)
+	if (PlayerIDMap.Contains(InID))
+	{
+		return PlayerIDMap[InID];
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Can not find player,ID: %d"), InID);
+		return nullptr;
+	}
 }
 
 void AWW4GameModeBase::OnPlayerEliminated(int32 InID)
 {
 	if (PlayerIDMap.Contains(InID))
 	{
-		PlayerIDMap[InID]->Defeated();
+		//PlayerIDMap[InID]->Defeated();
 	}
 }

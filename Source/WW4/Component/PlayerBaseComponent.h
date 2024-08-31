@@ -25,9 +25,6 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding);
 
-	UFUNCTION(Server, Reliable)
-	void ServerSpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID);
-
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerMoveUnit(AUnitBase* InUnit, FVector Destination);
 

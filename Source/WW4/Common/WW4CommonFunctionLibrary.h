@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Common", meta = (WorldContext = "WorldContextObject"))
 	static class AWW4PlayerController* GetWW4PlayerController(const UObject* WorldContextObject);
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Common", meta = (WorldContext = "WorldContextObject"))
+	static class AController* GetPlayerByID(const UObject* WorldContextObject, int32 ID);
+
 	UFUNCTION(BlueprintCallable, Category = "Common")
 	static void PrintCommonMessage(const FString& Msg, FColor Color = FColor::Blue);
 	

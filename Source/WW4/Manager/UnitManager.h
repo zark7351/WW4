@@ -82,8 +82,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UDataTable* BuildingGridInfo;
 
-	void SpawnVehicle(FItemProductionInfoBase ItemInfo, int32 InPlayerID);
-
 	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding);
 	AUnitBase* SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, class ABuildingBase* OwnerBuilding = nullptr);
 

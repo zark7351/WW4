@@ -11,6 +11,8 @@
 #include "Net/UnrealNetwork.h"
 #include "WW4/Core/WW4PlayerController.h"
 #include "WW4/Component/PlayerBaseComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "WW4/Interface/BasePlayerInterface.h"
 
 ABuildingBase::ABuildingBase()
 {
@@ -33,12 +35,17 @@ void ABuildingBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitGrid();
-	AWW4PlayerController* WW4PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
-	if (WW4PlayerController)
+	AController* Controller = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), OwningPlayerID);
+	if (Controller)
 	{
-		if (WW4PlayerController->PlayerBaseComponent->GetWW4PlayerID() == GetOwningPlayerID())
+		UPlayerBaseComponent* BaseComp = Controller->GetComponentByClass<UPlayerBaseComponent>();
+		if (BaseComp->GetWW4PlayerID() == GetOwningPlayerID())
 		{
-			WW4PlayerController->PlayerBaseComponent->OnBuildingConstructed(ItemInfo.ItemID);
+			IBasePlayerInterface* Player = Cast<IBasePlayerInterface>(Controller);
+			if (Player)
+			{
+				Player->Execute_OnBuildingConstructed(Controller, ItemInfo.ItemID);
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "WW4/Interface/BasePlayerInterface.h"
 #include "AIPlayerController.generated.h"
 
 /**
@@ -14,7 +15,7 @@ class UPlayerEconomyComponent;
 class UPlayerBaseComponent;
 
 UCLASS()
-class WW4_API AAIPlayerController : public AAIController
+class WW4_API AAIPlayerController : public AAIController, public IBasePlayerInterface
 {
 	GENERATED_BODY()
 

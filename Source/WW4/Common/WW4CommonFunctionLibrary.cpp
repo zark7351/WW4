@@ -28,6 +28,16 @@ AWW4PlayerController* UWW4CommonFunctionLibrary::GetWW4PlayerController(const UO
 	return PlayerController;
 }
 
+AController* UWW4CommonFunctionLibrary::GetPlayerByID(const UObject* WorldContextObject, int32 ID)
+{
+	AWW4GameModeBase* GM = UWW4CommonFunctionLibrary::GetWW4GameMode(WorldContextObject);
+	if (GM)
+	{
+		return GM->FindPlayerByID(ID);
+	}
+	return nullptr;
+}
+
 void UWW4CommonFunctionLibrary::PrintCommonMessage(const FString& Msg, FColor Color)
 {
 	if (GEngine)

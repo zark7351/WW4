@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "WW4/Interface/BasePlayerInterface.h"
 #include "WW4PlayerController.generated.h"
 
 /**
@@ -13,7 +14,7 @@ class UPlayerEconomyComponent;
 class UPlayerBaseComponent;
 
 UCLASS()
-class WW4_API AWW4PlayerController : public APlayerController
+class WW4_API AWW4PlayerController : public APlayerController, public IBasePlayerInterface
 {
 	GENERATED_BODY()
 	

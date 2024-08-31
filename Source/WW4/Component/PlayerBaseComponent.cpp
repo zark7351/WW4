@@ -45,15 +45,6 @@ void UPlayerBaseComponent::ServerSpawnBuilding_Implementation(int32 InPlayerID, 
 	}
 }
 
-void UPlayerBaseComponent::ServerSpawnVehicle_Implementation(FItemProductionInfoBase ItemInfo, int32 InPlayerID)
-{
-	UnitManager = UnitManager == nullptr ? UWW4CommonFunctionLibrary::GetUnitManager(GetWorld()) : UnitManager;
-	if (UnitManager)
-	{
-		UnitManager->SpawnVehicle(ItemInfo, InPlayerID);
-	}
-}
-
 void UPlayerBaseComponent::ServerSpawnUnit_Implementation(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
 	UnitManager = UnitManager == nullptr ? UWW4CommonFunctionLibrary::GetUnitManager(GetWorld()) : UnitManager;

@@ -15,6 +15,7 @@
 #include "WW4/Component/PlayerEconomyComponent.h"
 #include "WW4/Component/PlayerBaseComponent.h"
 #include "WW4/Core/WW4HUD.h"
+#include "WW4/Building/UnitFactoryBase.h"
 
 UConstructMenu::UConstructMenu(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -151,7 +152,12 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 		}
 		else if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
 		{
-			PC->PlayerBaseComponent->ServerSpawnVehicle(ItemInfo, PC->PlayerBaseComponent->GetWW4PlayerID());
+			PC->PlayerBaseComponent->ServerSpawnUnit(
+				ItemInfo,
+				PC->PlayerBaseComponent->GetWW4PlayerID(),
+				PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
+				PC->PlayerBaseComponent->CurrentVehicleFactory
+			);
 			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
 			if (HUD)
 			{
