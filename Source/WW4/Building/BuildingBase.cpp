@@ -103,12 +103,12 @@ void ABuildingBase::SetFactionStyle_Implementation(EFaction InFaction)
 	}
 }
 
-void ABuildingBase::SetOwningPlayerID(int32 InID)
+void ABuildingBase::SetOwningPlayerID_Implementation(int32 InID)
 {
 	OwningPlayerID = InID;
 }
 
-int32 ABuildingBase::GetOwningPlayerID()
+int32 ABuildingBase::GetOwningPlayerID_Implementation()
 {
 	return OwningPlayerID;
 }

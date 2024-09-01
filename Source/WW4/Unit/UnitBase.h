@@ -71,9 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsMoving(bool InMoving);
 
-	virtual void SetOwningPlayerID(int32 InID) override;
+	virtual void SetOwningPlayerID_Implementation(int32 InID) override;
 
-	virtual int32 GetOwningPlayerID() override;
+	virtual int32 GetOwningPlayerID_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;

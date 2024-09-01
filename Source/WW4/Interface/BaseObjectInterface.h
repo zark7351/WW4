@@ -32,8 +32,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetFactionStyle(EFaction InFaction);
 
-	virtual void SetOwningPlayerID(int32 InID);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetOwningPlayerID(int32 InID);
 
-	virtual int32 GetOwningPlayerID();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	int32 GetOwningPlayerID();
 
 };

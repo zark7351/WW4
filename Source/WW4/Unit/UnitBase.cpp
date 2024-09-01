@@ -127,12 +127,12 @@ void AUnitBase::SetIsMoving(bool InMoving)
 	}
 }
 
-void AUnitBase::SetOwningPlayerID(int32 InID)
+void AUnitBase::SetOwningPlayerID_Implementation(int32 InID)
 {
 	OwningPlayerID = InID;
 }
 
-int32 AUnitBase::GetOwningPlayerID()
+int32 AUnitBase::GetOwningPlayerID_Implementation()
 {
 	return OwningPlayerID;
 }
