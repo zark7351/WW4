@@ -152,12 +152,15 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 		}
 		else if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
 		{
-			PC->PlayerBaseComponent->ServerSpawnUnit(
-				ItemInfo,
-				PC->PlayerBaseComponent->GetWW4PlayerID(),
-				PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
-				PC->PlayerBaseComponent->CurrentVehicleFactory
-			);
+			if (PC->PlayerBaseComponent && PC->PlayerBaseComponent->CurrentVehicleFactory)
+			{
+				PC->PlayerBaseComponent->ServerSpawnUnit(
+					ItemInfo,
+					PC->PlayerBaseComponent->GetWW4PlayerID(),
+					PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
+					PC->PlayerBaseComponent->CurrentVehicleFactory
+				);
+			}
 			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
 			if (HUD)
 			{

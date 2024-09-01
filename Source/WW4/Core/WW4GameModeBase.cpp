@@ -4,6 +4,8 @@
 #include "WW4GameModeBase.h"
 #include "WW4/Manager/UnitManager.h"
 
+UE_DISABLE_OPTIMIZATION
+
 void AWW4GameModeBase::InitManager()
 {
 	if (!UnitManager)
@@ -20,7 +22,6 @@ void AWW4GameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	InitManager();
-	PlayerIDMap.Empty();
 }
 
 void AWW4GameModeBase::RegPlayerID(int32 InID, AController* InPlayer)
@@ -48,3 +49,5 @@ void AWW4GameModeBase::OnPlayerEliminated(int32 InID)
 		//PlayerIDMap[InID]->Defeated();
 	}
 }
+
+UE_ENABLE_OPTIMIZATION
