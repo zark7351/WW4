@@ -39,7 +39,7 @@ void ABuildingBase::BeginPlay()
 	if (Controller)
 	{
 		UPlayerBaseComponent* BaseComp = Controller->GetComponentByClass<UPlayerBaseComponent>();
-		if (BaseComp->GetWW4PlayerID() == GetOwningPlayerID())
+		if (BaseComp && BaseComp->GetWW4PlayerID() == GetOwningPlayerID())
 		{
 			IBasePlayerInterface* Player = Cast<IBasePlayerInterface>(Controller);
 			if (Player)
