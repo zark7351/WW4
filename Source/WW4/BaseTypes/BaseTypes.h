@@ -43,7 +43,7 @@ public:
 	FString ItemName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ItemPrice;
+	float ItemPrice;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float ItemProductTime;

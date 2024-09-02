@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void ServerSpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation);
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerSpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
@@ -47,10 +47,10 @@ public:
 	//UFUNCTION(BlueprintCallable)
 	//FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite)
 	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);

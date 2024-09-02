@@ -27,7 +27,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 InitMoney{ 10000 };
+	float InitMoney{ 10000 };
 
 	UFUNCTION(BlueprintCallable, Blueprintpure)
 	FORCEINLINE int32 GetMoney() const { return Money; }
@@ -46,9 +46,9 @@ public:
 private:
 
 	UPROPERTY(Replicated)
-	int32 Money;
+	float Money;
 
-	TMap<FItemProductionInfoBase, int32> ItemCostMap;
+	TMap<FItemProductionInfoBase, float> ItemCostMap;
 
 	float TimeElapsed;
 

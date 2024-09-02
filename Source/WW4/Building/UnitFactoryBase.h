@@ -26,7 +26,7 @@ private:
 	TSubclassOf<class AUnitBase> UnitType;
 
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	const FTransform GetSpawnTransform();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

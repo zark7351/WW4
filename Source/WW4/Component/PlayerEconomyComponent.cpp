@@ -40,7 +40,7 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			{
 				Money -= ConstPerTick;
 				It->Value += ConstPerTick;
-				float Progress = (float)It->Value / (float)It->Key.ItemPrice;
+				float Progress = It->Value / It->Key.ItemPrice;
 				BuildingProgressDelegate.Broadcast(It->Key, Progress);
 				if (It->Value >= It->Key.ItemPrice)
 				{
