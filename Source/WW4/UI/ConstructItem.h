@@ -79,6 +79,8 @@ public:
 
 	bool bUseCount{ false };
 
+	bool bIsDeploying{ false };
+
 	UPROPERTY(BlueprintReadWrite)
 	int32 Count{ -1 };
 

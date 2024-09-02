@@ -41,9 +41,13 @@ void UConstructItem::OnClicked()
 		}
 		break;
 	case EConstructItemState::ECS_Ready:
-		OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
-		SetState(EConstructItemState::ECS_Normal);
-		EnableMask(false);
+		if (!bIsDeploying)
+		{
+			OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
+			//SetState(EConstructItemState::ECS_Normal);
+			EnableMask(false);
+			bIsDeploying = true;
+		}
 		break;
 	case EConstructItemState::ECS_Disabled:
 		break;

@@ -40,7 +40,7 @@ void ABuildingConstructor::BeginPlay()
 	PlayerBuildings.Empty();
 	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
 	{
-		if (BuildingItr->GetOwningPlayerID() == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->PlayerBaseComponent->WW4PlayerID)
+		if (BuildingItr->OwningPlayerID == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->PlayerBaseComponent->WW4PlayerID)
 		{
 			PlayerBuildings.Add(*BuildingItr);
 		}
