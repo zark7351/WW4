@@ -31,4 +31,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UPlayerBaseComponent* PlayerBaseComponent;
 
+	virtual void SetPlayerFaction_Implementation(const EFaction& InFaction) override;
+	virtual EFaction GetPlayerFaction_Implementation() const override;
 };

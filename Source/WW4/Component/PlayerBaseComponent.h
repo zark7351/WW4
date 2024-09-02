@@ -32,7 +32,7 @@ public:
 	void ServerSetTarget(const TArray<AUnitBase*>& Actors, AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetFactionStyle(EFaction InFaction) { Faction = InFaction; }
+	FORCEINLINE void SetFaction(EFaction InFaction) { Faction = InFaction; }
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EFaction GetFaction() { return Faction; }
 
@@ -62,7 +62,7 @@ private:
 	class UUnitManager* UnitManager;
 
 	UPROPERTY(Replicated)
-	EFaction Faction{ EFaction::EF_Red };
+	EFaction Faction{ EFaction::EF_None };
 
 protected:
 	virtual void BeginPlay() override;

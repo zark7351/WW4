@@ -29,6 +29,7 @@ ABuildingBase::ABuildingBase()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 250.f));
+	SetFactionStyle_Implementation(Faction);
 }
 
 void ABuildingBase::BeginPlay()

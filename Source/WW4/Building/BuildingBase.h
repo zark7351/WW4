@@ -41,6 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> BuildingGrid;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EFaction Faction;
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	void EnableOutline(bool bEnable);

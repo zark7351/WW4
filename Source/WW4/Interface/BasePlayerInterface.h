@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "WW4/BaseTypes/BaseTypes.h"
 #include "BasePlayerInterface.generated.h"
 
 UINTERFACE(MinimalAPI)
@@ -23,4 +24,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void OnBuildingConstructed(int32 ItemID);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetPlayerFaction(const EFaction& InFaction);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	EFaction GetPlayerFaction() const;
 };

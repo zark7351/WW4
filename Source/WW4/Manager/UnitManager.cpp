@@ -10,6 +10,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "WW4/Core/WW4GameModeBase.h"
 #include "EngineUtils.h"
+#include "WW4/Interface/BasePlayerInterface.h"
 
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
@@ -17,12 +18,18 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 	AUnitBase* Unit = nullptr;
 	if (SpawnBuilding)
 	{
-		FActorSpawnParameters Params;
-		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		Unit = GetWorld()->SpawnActor<AUnitBase>(ItemInfo.ItemClass, SpawnBuilding->GetSpawnTransform(),Params);
+		Unit = GetWorld()->SpawnActorDeferred<AUnitBase>(ItemInfo.ItemClass, SpawnBuilding->GetSpawnTransform(), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		if (Unit)
 		{
 			Unit->ItemInfo = ItemInfo;
+			Unit->SetOwnerBuilding(SpawnBuilding);
+			Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
+			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			IBasePlayerInterface* PlayerInterface = Cast<IBasePlayerInterface>(Player);
+			if (PlayerInterface)
+			{
+				Unit->Execute_SetFactionStyle(Unit, PlayerInterface->Execute_GetPlayerFaction(Player));
+			}
 			if (Units.Contains(InPlayerID))
 			{
 				Units[InPlayerID].Units.Add(FUnitInfoBase(Unit, InPlayerID));
@@ -31,6 +38,7 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 			{
 				Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 			}
+			Unit->FinishSpawning(SpawnBuilding->GetSpawnTransform());
 		}
 	}
 	return Unit;
@@ -41,8 +49,15 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 	AUnitBase* Unit = GetWorld()->SpawnActorDeferred<AUnitBase>(ItemInfo.ItemClass , Transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	if (Unit)
 	{
+		Unit->ItemInfo = ItemInfo;
 		Unit->SetOwnerBuilding(OwnerBuilding);
 		Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
+		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+		IBasePlayerInterface* PlayerInterface = Cast<IBasePlayerInterface>(Player);
+		if (PlayerInterface)
+		{
+			Unit->Execute_SetFactionStyle(Unit, PlayerInterface->Execute_GetPlayerFaction(Player));
+		}
 		if (Units.Contains(InPlayerID))
 		{
 			Units[InPlayerID].Units.Add(FUnitInfoBase(Unit, InPlayerID));
@@ -82,6 +97,12 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 		{
 			Building->ItemInfo = BuildingInfo;
 			Building->Execute_SetOwningPlayerID(Building, InPlayerID);
+			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			IBasePlayerInterface* PlayerInterface =  Cast<IBasePlayerInterface>(Player);
+			if (PlayerInterface)
+			{
+				Building->Execute_SetFactionStyle(Building, PlayerInterface->Execute_GetPlayerFaction(Player));
+			}
 			if (Buildings.Contains(InPlayerID))
 			{
 				Buildings[InPlayerID].Buildings.Add(Building);

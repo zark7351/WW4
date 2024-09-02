@@ -26,6 +26,7 @@ AUnitBase::AUnitBase()
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	AIControllerClass = AUnitAIControllerBase::StaticClass();	
+	SetFactionStyle_Implementation(Faction);
 }
 
 void AUnitBase::BeginPlay()
