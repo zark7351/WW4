@@ -45,12 +45,12 @@ public:
 
 	void EnableOutline(bool bEnable);
 	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnSelected(bool bSelected);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void OnSelected(bool bSelected);
 	virtual void OnSelected_Implementation(bool bSelected);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetFactionStyle(EFaction InFaction);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void SetFactionStyle(EFaction InFaction);
 	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
