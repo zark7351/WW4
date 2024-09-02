@@ -52,6 +52,11 @@ void AUnitBase::SetFactionStyle_Implementation(EFaction InFaction)
 	}
 }
 
+EFaction AUnitBase::GetFaction_Implementation() const
+{
+	return Faction;
+}
+
 
 void AUnitBase::OnInit()
 {

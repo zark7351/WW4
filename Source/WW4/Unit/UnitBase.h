@@ -36,9 +36,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemProductionInfoBase ItemInfo;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetFactionStyle(EFaction InFaction);
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	//void SetFactionStyle(EFaction InFaction);
 	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
+
+	virtual EFaction GetFaction_Implementation() const override;
 
 	virtual void Deploy_Implementation();
 

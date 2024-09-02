@@ -98,10 +98,16 @@ void ABuildingBase::OnSelected_Implementation(bool bSelected)
 
 void ABuildingBase::SetFactionStyle_Implementation(EFaction InFaction)
 {
+	Faction = InFaction;
 	if (FactionMaterialMap.Contains(InFaction))
 	{
 		BuildingMesh->SetMaterial(0, FactionMaterialMap[InFaction]);
 	}
+}
+
+EFaction ABuildingBase::GetFaction_Implementation() const
+{
+	return Faction;
 }
 
 void ABuildingBase::SetOwningPlayerID_Implementation(int32 InID)

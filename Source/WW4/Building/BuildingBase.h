@@ -47,14 +47,11 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	void EnableOutline(bool bEnable);
-	
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void OnSelected(bool bSelected);
+
 	virtual void OnSelected_Implementation(bool bSelected);
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void SetFactionStyle(EFaction InFaction);
 	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
+	virtual EFaction GetFaction_Implementation() const override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFaction, UMaterialInterface*> FactionMaterialMap;

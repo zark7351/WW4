@@ -33,6 +33,9 @@ public:
 	void SetFactionStyle(EFaction InFaction);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	EFaction GetFaction() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetOwningPlayerID(int32 InID);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
