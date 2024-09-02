@@ -156,7 +156,7 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 			{
 				PC->PlayerBaseComponent->ServerSpawnUnit(
 					ItemInfo,
-					PC->PlayerBaseComponent->GetWW4PlayerID(),
+					PC->PlayerBaseComponent->WW4PlayerID,
 					PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
 					PC->PlayerBaseComponent->CurrentVehicleFactory
 				);

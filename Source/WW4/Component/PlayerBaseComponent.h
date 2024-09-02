@@ -42,10 +42,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void OnBuildingConstructed(int32 InItemID);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	FORCEINLINE int32 GetWW4PlayerID() const { return WW4PlayerID; }
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
+	//UFUNCTION(BlueprintCallable, BlueprintPure)
+	//FORCEINLINE int32 GetWW4PlayerID() const { return WW4PlayerID; }
+	//UFUNCTION(BlueprintCallable)
+	//FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
 
 	UPROPERTY()
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
@@ -55,14 +55,14 @@ public:
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
 
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+	int32 WW4PlayerID;
+
 private:
 	class UUnitManager* UnitManager;
 
 	UPROPERTY(Replicated)
 	EFaction Faction{ EFaction::EF_Red };
-
-	UPROPERTY(Replicated)
-	int32 WW4PlayerID;
 
 protected:
 	virtual void BeginPlay() override;

@@ -26,7 +26,7 @@ void AUnitFactoryBase::SetMainFactory()
 	AWW4GameModeBase* WW4GM = UWW4CommonFunctionLibrary::GetWW4GameMode(GetWorld());
 	if (WW4GM)
 	{
-		AController* Controller = WW4GM->FindPlayerByID(GetOwningPlayerID());
+		AController* Controller = WW4GM->FindPlayerByID(OwningPlayerID);
 		if (Controller)
 		{
 			UPlayerBaseComponent* BaseComp = Controller->GetComponentByClass<UPlayerBaseComponent>();

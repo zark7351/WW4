@@ -75,6 +75,9 @@ public:
 
 	virtual int32 GetOwningPlayerID_Implementation() override;
 
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+	int32 OwningPlayerID;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -102,6 +105,4 @@ private:
 	UFUNCTION()
 	void OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
-	UPROPERTY(Replicated)
-	int32 OwningPlayerID;
 };

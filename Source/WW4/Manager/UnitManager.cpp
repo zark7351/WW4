@@ -38,12 +38,11 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, const FTransform& Transform, ABuildingBase* OwnerBuilding)
 {
-	FActorSpawnParameters Params;
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AUnitBase* Unit = GetWorld()->SpawnActor<AUnitBase>(ItemInfo.ItemClass , Transform, Params);
+	AUnitBase* Unit = GetWorld()->SpawnActorDeferred<AUnitBase>(ItemInfo.ItemClass , Transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	if (Unit)
 	{
 		Unit->SetOwnerBuilding(OwnerBuilding);
+		Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
 		if (Units.Contains(InPlayerID))
 		{
 			Units[InPlayerID].Units.Add(FUnitInfoBase(Unit, InPlayerID));
@@ -52,6 +51,7 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 		{
 			Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 		}
+		Unit->FinishSpawning(Transform);
 		Unit->OnInit();
 	}
 	return Unit;
@@ -81,6 +81,7 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 		if (Building)
 		{
 			Building->ItemInfo = BuildingInfo;
+			Building->Execute_SetOwningPlayerID(Building, InPlayerID);
 			if (Buildings.Contains(InPlayerID))
 			{
 				Buildings[InPlayerID].Buildings.Add(Building);

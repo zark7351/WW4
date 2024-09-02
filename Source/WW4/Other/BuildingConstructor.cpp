@@ -26,7 +26,7 @@ bool ABuildingConstructor::Construct()
 		AWW4PlayerController* PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 		if (PlayerController)
 		{
-			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->PlayerBaseComponent->GetWW4PlayerID(), CurBuildingInfo, HitPos, FRotator::ZeroRotator);
+			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->PlayerBaseComponent->WW4PlayerID, CurBuildingInfo, HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}
@@ -40,7 +40,7 @@ void ABuildingConstructor::BeginPlay()
 	PlayerBuildings.Empty();
 	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
 	{
-		if (BuildingItr->GetOwningPlayerID() == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->PlayerBaseComponent->GetWW4PlayerID())
+		if (BuildingItr->GetOwningPlayerID() == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->PlayerBaseComponent->WW4PlayerID)
 		{
 			PlayerBuildings.Add(*BuildingItr);
 		}

@@ -9,16 +9,6 @@
 #include "BuildingBase.generated.h"
 
 
-//USTRUCT(BlueprintType)
-//struct WW4_API FItemProductionInfoBase : public FItemProductionInfoBase
-//{
-//	GENERATED_BODY()
-//
-//public:
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	TArray<int32> Grid;
-//};
-
 UCLASS()
 class WW4_API ABuildingBase : public AActor, public IBaseObjectInterface
 {
@@ -76,13 +66,14 @@ public:
 
 	virtual int32 GetOwningPlayerID_Implementation() override;
 
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
+	int32 OwningPlayerID;
+
 private:
 
 
 	UFUNCTION(BlueprintCallable)
 	void InitGrid();
-
-	UPROPERTY(Replicated)
-	int32 OwningPlayerID;
 
 };
