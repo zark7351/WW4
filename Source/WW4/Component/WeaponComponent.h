@@ -36,10 +36,10 @@ public:
 
 	//武器是否能自转
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bSelfRotate{ false };
+	bool bCanRotate{ false };
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float SelfRotateAngle;
+	float RotateAngle;
 
 	bool bAimReady{ false };
 

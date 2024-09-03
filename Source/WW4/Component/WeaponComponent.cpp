@@ -6,6 +6,7 @@
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "WW4/Projectile/ProjectileBase.h"
 #include "WW4/Unit/UnitBase.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 UWeaponComponent::UWeaponComponent()
 {
@@ -61,7 +62,7 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 bool UWeaponComponent::IsTargetInRange() const
 {
-	if (Target)
+	if (IsValid(Target))
 	{
 		FVector Temp = Target->GetActorLocation() - GetOwner()->GetActorLocation();
 		Temp.Z = 0.f;
@@ -73,31 +74,24 @@ bool UWeaponComponent::IsTargetInRange() const
 
 void UWeaponComponent::TurnToTarget(float DeltaTime)
 {
-	if (bAimReady)
-	{
-		return;
-	}
 	FRotator CurRot = OwnerUnit->GetActorRotation();
-	FRotator LookAtRotation = CurRot;
+	FRotator TargetRot = CurRot;
 	FRotator TempRot = CurRot;
 	if (HasTarget())
 	{
 		FVector LookAtVector = GetTarget()->GetActorLocation() - OwnerUnit->GetActorLocation();
-		LookAtRotation = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
-		TempRot = FMath::RInterpConstantTo(CurRot, LookAtRotation, DeltaTime, TurnSpeed);
+		TargetRot = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
+		//UKismetSystemLibrary::DrawDebugArrow(GetWorld(), OwnerUnit->GetActorLocation(), OwnerUnit->GetActorLocation() + TargetRot.Vector() * 200, 2.f, FLinearColor::Red);
+	}
+	TempRot = FMath::RInterpConstantTo(FRotator(CurRot.Pitch,RotateAngle,CurRot.Roll), TargetRot, DeltaTime, TurnSpeed);
+	bAimReady = FMath::IsNearlyEqual(RotateAngle,TargetRot.Yaw, 3.0f);
+	if (bAimReady)
+	{
+		return;
 	}
 	else
 	{
-		TempRot = CurRot;
-	}
-	bAimReady = FMath::IsNearlyEqual(CurRot.Yaw, LookAtRotation.Yaw, 3.0f);
-	if (!bSelfRotate && IsTargetInRange())
-	{
-		OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch,TempRot.Yaw,CurRot.Roll));
-	}
-	else
-	{
-		SelfRotateAngle = TempRot.Yaw;
+		RotateAngle = TempRot.Yaw;
+		//GEngine->AddOnScreenDebugMessage(1, 0.f, FColor::Red, FString::Printf(TEXT("%f"), TempRot.Yaw));
 	}
 }
-
