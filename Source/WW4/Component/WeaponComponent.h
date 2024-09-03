@@ -38,6 +38,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bSelfRotate{ false };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float SelfRotateAngle;
+
+	bool bAimReady{ false };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurnSpeed{ 500.f };
 
@@ -60,7 +65,7 @@ public:
 	bool IsTargetInRange() const;
 
 	UFUNCTION(BlueprintCallable)
-	bool TurnToTarget(float DeltaTime);
+	void TurnToTarget(float DeltaTime);
 
 private:
 

@@ -38,26 +38,24 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (HasTarget() && IsTargetInRange())
+	if (OwnerUnit)
 	{
-		if (OwnerUnit)
+		if (IsTargetInRange() && OwnerUnit->GetIsMoving())
 		{
-			if (OwnerUnit->GetIsMoving())
+			OwnerUnit->StopMoving();
+		}
+		TurnToTarget(DeltaTime);
+		if (IsTargetInRange() && bAimReady)
+		{
+			if (!Firing)
 			{
-				OwnerUnit->StopMoving();
-			}
-			if (TurnToTarget(DeltaTime))
-			{
-				if (!Firing)
-				{
-					BeginFire();
-				}
+				BeginFire();
 			}
 		}
-	}
-	else if (Firing)
-	{
-		StopFire();
+		else if(Firing)
+		{
+			StopFire();
+		}
 	}
 }
 
@@ -73,35 +71,33 @@ bool UWeaponComponent::IsTargetInRange() const
 	return false;
 }
 
-bool UWeaponComponent::TurnToTarget(float DeltaTime)
+void UWeaponComponent::TurnToTarget(float DeltaTime)
 {
-	if (!OwnerUnit)
+	if (bAimReady)
 	{
-		return false;
+		return;
 	}
-	if (OwnerUnit->GetIsMoving())
+	FRotator CurRot = OwnerUnit->GetActorRotation();
+	FRotator LookAtRotation = CurRot;
+	FRotator TempRot = CurRot;
+	if (HasTarget())
 	{
-		return false;
+		FVector LookAtVector = GetTarget()->GetActorLocation() - OwnerUnit->GetActorLocation();
+		LookAtRotation = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
+		TempRot = FMath::RInterpConstantTo(CurRot, LookAtRotation, DeltaTime, TurnSpeed);
 	}
 	else
 	{
-		FVector LookAtVector = GetTarget()->GetActorLocation() - OwnerUnit->GetActorLocation();
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
-		if (!bSelfRotate)
-		{
-			FRotator CurRot = OwnerUnit->GetActorRotation();
-			FRotator TempRot = FMath::RInterpConstantTo(CurRot, LookAtRotation, DeltaTime, TurnSpeed);
-			OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch, TempRot.Yaw, CurRot.Roll));
-			if (FMath::IsNearlyEqual(CurRot.Yaw, LookAtRotation.Yaw, 3.0f))
-			{
-				return true;
-			}
-		}
-		else
-		{
-			//TODO: ×Ô×ªÎäÆ÷
-		}
+		TempRot = CurRot;
 	}
-	return false;
+	bAimReady = FMath::IsNearlyEqual(CurRot.Yaw, LookAtRotation.Yaw, 3.0f);
+	if (!bSelfRotate && IsTargetInRange())
+	{
+		OwnerUnit->SetActorRotation(FRotator(CurRot.Pitch,TempRot.Yaw,CurRot.Roll));
+	}
+	else
+	{
+		SelfRotateAngle = TempRot.Yaw;
+	}
 }
 
