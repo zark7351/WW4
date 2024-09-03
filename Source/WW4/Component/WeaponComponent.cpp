@@ -46,6 +46,8 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			OwnerUnit->StopMoving();
 		}
 		TurnToTarget(DeltaTime);
+		//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerUnit->GetActorRotation().Yaw);
+
 		if (IsTargetInRange() && bAimReady)
 		{
 			if (!Firing)
@@ -82,6 +84,11 @@ void UWeaponComponent::TurnToTarget(float DeltaTime)
 		FVector LookAtVector = GetTarget()->GetActorLocation() - OwnerUnit->GetActorLocation();
 		TargetRot = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
 		//UKismetSystemLibrary::DrawDebugArrow(GetWorld(), OwnerUnit->GetActorLocation(), OwnerUnit->GetActorLocation() + TargetRot.Vector() * 200, 2.f, FLinearColor::Red);
+	}
+	if (OwnerUnit->bHasDestination)
+	{
+		FVector LookAtVector = OwnerUnit->GetDestination() - OwnerUnit->GetActorLocation();
+		TargetRot = FRotationMatrix::MakeFromX(LookAtVector).Rotator();
 	}
 	TempRot = FMath::RInterpConstantTo(FRotator(CurRot.Pitch,RotateAngle,CurRot.Roll), TargetRot, DeltaTime, TurnSpeed);
 	bAimReady = FMath::IsNearlyEqual(RotateAngle,TargetRot.Yaw, 3.0f);

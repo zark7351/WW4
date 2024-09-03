@@ -4,6 +4,7 @@
 #include "VehicleBase.h"
 #include "WW4/Component/VehicleMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 AVehicleBase::AVehicleBase()
 {
@@ -26,10 +27,24 @@ void AVehicleBase::Tick(float DeltaSeconds)
 
 void AVehicleBase::Rotate(float DeltaSeconds)
 {
-	if (VehicleMovement && GetIsMoving())
+	if (VehicleMovement && GetIsMoving() && !TurningInPlace)
 	{
 		FRotator NewRotation = VehicleMovement->Velocity.Rotation();
+		//UKismetSystemLibrary::DrawDebugArrow(GetWorld(),
+		//	GetActorLocation(),
+		//	GetActorLocation() + VehicleMovement->Velocity * 500,
+		//	5.f,
+		//	FLinearColor::Yellow,
+		//	1000.f
+		//);
 		FRotator CurRotation = GetActorRotation();
+		UKismetSystemLibrary::DrawDebugArrow(GetWorld(),
+			GetActorLocation(),
+			GetActorLocation() + GetActorRotation().Vector() * 500,
+			5.f,
+			FLinearColor::Yellow,
+			1000.f
+		);
 		SetActorRotation(FMath::RInterpConstantTo(CurRotation, NewRotation, DeltaSeconds, TurnSpeed));
 	}
 }
@@ -40,7 +55,8 @@ void AVehicleBase::TurnInPlace(float DeltaSeconds)
 	{
 		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 		FRotator CurRotation = GetActorRotation();
-		SetActorRotation(FMath::RInterpConstantTo(CurRotation, FRotator(CurRotation.Pitch, LookAtRotation.Yaw, CurRotation.Roll), DeltaSeconds, TurnSpeed));
+		FRotator TempRot = FMath::RInterpConstantTo(CurRotation, FRotator(CurRotation.Pitch, LookAtRotation.Yaw, CurRotation.Roll), DeltaSeconds, TurnSpeed);
+		SetActorRotation(TempRot);
 		if (FMath::IsNearlyEqual(CurRotation.Yaw, LookAtRotation.Yaw, 3.0f))
 		{
 			OnTurnInPlaceFinished.Broadcast(this);

@@ -38,10 +38,10 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Explode();
+	Explode(OtherActor);
 }
 
-void AProjectileBase::Explode()
+void AProjectileBase::Explode(AActor* HitActor)
 {
 	if (HitParticle)
 	{
@@ -54,9 +54,16 @@ void AProjectileBase::Explode()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 	}
-	if (HasAuthority() && bRangeDamage && DamageTypeClass)
+	if (HasAuthority() && DamageTypeClass)
 	{
-		UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>({this}));
+		if (bRangeDamage)
+		{
+			UGameplayStatics::ApplyRadialDamageWithFalloff(this, Damage, MinimumDamage, GetActorLocation(), DamageInnerRadius, DamageOuterRadius, DamageFalloff, DamageTypeClass, TArray<AActor*>({ this }));
+		}
+		else
+		{
+			UGameplayStatics::ApplyDamage(HitActor, Damage, nullptr, nullptr, DamageTypeClass);
+		}
 	}
 	Destroy();
 }

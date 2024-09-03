@@ -60,6 +60,7 @@ void UPlayerBaseComponent::ServerMoveUnit_Implementation(AUnitBase* InUnit, FVec
 {
 	UAIBlueprintHelperLibrary::CreateMoveToProxyObject(this, InUnit, Destination);
 	InUnit->SetIsMoving(true);
+	InUnit->SetDestication(Destination);
 }
 
 void UPlayerBaseComponent::ServerSetTarget_Implementation(const TArray<AUnitBase*>& Actors, AActor* TargetActor)

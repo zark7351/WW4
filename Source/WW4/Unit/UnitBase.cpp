@@ -29,6 +29,12 @@ AUnitBase::AUnitBase()
 	SetFactionStyle_Implementation(Faction);
 }
 
+void AUnitBase::SetDestication(const FVector& InDestination)
+{
+	bHasDestination = true;
+	Destination = InDestination;
+}
+
 void AUnitBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -93,6 +99,8 @@ void AUnitBase::SetTarget_Implementation(AActor* Targetactor)
 
 void AUnitBase::StopMoving()
 {
+	bHasDestination = false;
+	Destination = FVector::ZeroVector;
 	if (UnitController)
 	{
 		UnitController->StopMovement();
@@ -104,6 +112,7 @@ void AUnitBase::PauseMoving()
 {
 	if (UnitController)
 	{
+		UnitController->SetMoving(false);
 		UnitController->PauseMove(UnitController->GetCurrentMoveRequestID());
 	}
 }
@@ -112,6 +121,7 @@ void AUnitBase::ResumeMoving()
 {
 	if (UnitController)
 	{
+		UnitController->SetMoving(true);
 		UnitController->ResumeMove(UnitController->GetCurrentMoveRequestID());
 	}
 }
@@ -157,6 +167,8 @@ void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
+	bHasDestination = false;
+	Destination = FVector::ZeroVector;
 	SetIsMoving(false);
 }
 

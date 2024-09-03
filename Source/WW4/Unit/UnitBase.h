@@ -36,8 +36,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FItemProductionInfoBase ItemInfo;
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void SetFactionStyle(EFaction InFaction);
 	virtual void SetFactionStyle_Implementation(EFaction InFaction) override;
 
 	virtual EFaction GetFaction_Implementation() const override;
@@ -50,12 +48,8 @@ public:
 
 	void EnableOutline(bool bEnable);
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void OnSelected(bool bSelected);
 	virtual void OnSelected_Implementation(bool bSelected) override;
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void SetTarget(AActor* Targetactor);
 	virtual void SetTarget_Implementation(AActor* Targetactor) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -79,6 +73,15 @@ public:
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	int32 OwningPlayerID;
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	FORCEINLINE FVector GetDestination() const { return Destination; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	void SetDestication(const FVector& InDestination);
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bHasDestination{ false };
 
 protected:
 	virtual void BeginPlay() override;
@@ -106,5 +109,7 @@ private:
 
 	UFUNCTION()
 	void OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+
+	FVector Destination{FVector::ZeroVector};
 
 };

@@ -62,7 +62,7 @@ public:
 	class USoundBase* HitSound;
 
 	UFUNCTION(BlueprintCallable)
-	void Explode();
+	void Explode(AActor* HitActor);
 
 	//不使用ProjectileMovementComponent, 自定义移动
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
