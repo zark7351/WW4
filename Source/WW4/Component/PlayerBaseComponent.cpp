@@ -34,6 +34,8 @@ void UPlayerBaseComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UPlayerBaseComponent, WW4PlayerID);
 	DOREPLIFETIME(UPlayerBaseComponent, Faction);
+	DOREPLIFETIME(UPlayerBaseComponent, Buildings);
+	DOREPLIFETIME(UPlayerBaseComponent, Units);
 }
 
 void UPlayerBaseComponent::ServerSpawnBuilding_Implementation(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation)

@@ -10,7 +10,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "WW4/Core/WW4GameModeBase.h"
 #include "EngineUtils.h"
-#include "WW4/Interface/BasePlayerInterface.h"
+#include "WW4/Component/PlayerBaseComponent.h"
 
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
@@ -25,10 +25,14 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 			Unit->SetOwnerBuilding(SpawnBuilding);
 			Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
 			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
-			IBasePlayerInterface* PlayerInterface = Cast<IBasePlayerInterface>(Player);
-			if (PlayerInterface)
+			if (Player)
 			{
-				Unit->Execute_SetFactionStyle(Unit, PlayerInterface->Execute_GetPlayerFaction(Player));
+				UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
+				if (BaseComp)
+				{
+					BaseComp->Units.Add(Unit);
+					Unit->Execute_SetFactionStyle(Unit, BaseComp->GetFaction());
+				}
 			}
 			if (Units.Contains(InPlayerID))
 			{
@@ -53,10 +57,14 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 		Unit->SetOwnerBuilding(OwnerBuilding);
 		Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
 		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
-		IBasePlayerInterface* PlayerInterface = Cast<IBasePlayerInterface>(Player);
-		if (PlayerInterface)
+		if (Player)
 		{
-			Unit->Execute_SetFactionStyle(Unit, PlayerInterface->Execute_GetPlayerFaction(Player));
+			UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
+			if (BaseComp)
+			{
+				BaseComp->Units.Add(Unit);
+				Unit->Execute_SetFactionStyle(Unit, BaseComp->GetFaction());
+			}
 		}
 		if (Units.Contains(InPlayerID))
 		{
@@ -98,10 +106,14 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 			Building->ItemInfo = BuildingInfo;
 			Building->Execute_SetOwningPlayerID(Building, InPlayerID);
 			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
-			IBasePlayerInterface* PlayerInterface =  Cast<IBasePlayerInterface>(Player);
-			if (PlayerInterface)
+			if (Player)
 			{
-				Building->Execute_SetFactionStyle(Building, PlayerInterface->Execute_GetPlayerFaction(Player));
+				UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
+				if (BaseComp)
+				{
+					BaseComp->Buildings.Add(Building);
+					Building->Execute_SetFactionStyle(Building, BaseComp->GetFaction());
+				}
 			}
 			if (Buildings.Contains(InPlayerID))
 			{
@@ -125,6 +137,15 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 	if (Buildings[InPlayerID].Buildings.Contains(InBuilding))
 	{
 		Buildings[InPlayerID].Buildings.Remove(InBuilding);
+		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+		if (Player)
+		{
+			UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
+			if (BaseComp)
+			{
+				BaseComp->Buildings.Remove(InBuilding);
+			}
+		}
 		if (Buildings[InPlayerID].Buildings.Num() <= 0)
 		{
 			AWW4GameModeBase* WW4GM = UWW4CommonFunctionLibrary::GetWW4GameMode(GetWorld());

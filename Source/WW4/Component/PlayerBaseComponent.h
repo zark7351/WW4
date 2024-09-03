@@ -58,6 +58,12 @@ public:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	int32 WW4PlayerID;
 
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
+	TArray<ABuildingBase*>Buildings;
+
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
+	TArray<AUnitBase*>Units;
+
 private:
 	class UUnitManager* UnitManager;
 

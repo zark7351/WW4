@@ -20,4 +20,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void RefreshItemGroupState(const FItemProductionInfoBase& Info, bool bEnable);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void RefreshConstructItems(const TArray<FItemProductionInfoBase>& Items);
 };
