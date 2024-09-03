@@ -39,7 +39,7 @@ public:
 	TArray<int32> InitUnlockItemsID;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TArray<int32> BuiltItemsID;
+	TSet<int32> BuiltItemsID;
 
 	UFUNCTION(BlueprintCallable)
 	void OnNewItemConstructed(int32 InItemID);
