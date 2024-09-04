@@ -83,10 +83,6 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bHasDestination{ false };
 
-protected:
-	virtual void BeginPlay() override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USkeletalMeshComponent* UnitMesh;
 
@@ -95,6 +91,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 
 public:	
 	virtual void Tick(float DeltaTime) override;

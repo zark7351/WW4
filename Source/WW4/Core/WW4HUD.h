@@ -10,6 +10,9 @@
 /**
  * 
  */
+
+class AUnitBase;
+
 UCLASS()
 class WW4_API AWW4HUD : public AHUD
 {
@@ -23,4 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void RefreshConstructItems(const TArray<FItemProductionInfoBase>& Items);
+
+	UFUNCTION(BlueprintPure)
+	void GetUnitsInSelectionRectangle(const FVector2D& FirstPoint, const FVector2D& SecondPoint, TArray<AUnitBase*>& OutUnits, bool bActorMustBeFullyEnclosed = false);
+
 };

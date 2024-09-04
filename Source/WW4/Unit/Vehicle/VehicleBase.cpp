@@ -22,7 +22,7 @@ void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	TurnInPlace(DeltaSeconds);
-	Rotate(DeltaSeconds);
+	//Rotate(DeltaSeconds);
 }
 
 void AVehicleBase::Rotate(float DeltaSeconds)
