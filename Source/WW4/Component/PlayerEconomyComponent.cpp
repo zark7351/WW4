@@ -73,7 +73,11 @@ void UPlayerEconomyComponent::AddOrRemoveCostItem(const FItemProductionInfoBase&
 	}
 	else
 	{
-		ItemCostMap.Remove(Info);
+		if (ItemCostMap.Contains(Info))
+		{
+			Money += ItemCostMap[Info];
+			ItemCostMap.Remove(Info);
+		}
 	}
 }
 
