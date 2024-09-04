@@ -43,17 +43,17 @@ void AWW4HUD::GetUnitsInSelectionRectangle(const FVector2D& FirstPoint, const FV
 		AUnitBase* EachUnit = *Itr;
 
 		//Center
-		const FVector BoxCenter = EachUnit->CollisionBox->Bounds.Origin;
+		const FVector UnitCenter = EachUnit->CollisionBox->Bounds.Origin;
 
 		//Extents
-		const FVector BoxExtents = EachUnit->CollisionBox->GetScaledBoxExtent();
+		const FVector UnitExtent = FVector(50.f,50.f,50.f);
 
 		// Build 2D bounding box of actor in screen space
 		FBox2D ActorBox2D(ForceInit);
 		for (uint8 BoundsPointItr = 0; BoundsPointItr < 8; BoundsPointItr++)
 		{
 			// Project vert into screen space.
-			const FVector ProjectedWorldLocation = Project(BoxCenter + (BoundsPointMapping[BoundsPointItr] * BoxExtents), true);
+			const FVector ProjectedWorldLocation = Project(UnitCenter + (BoundsPointMapping[BoundsPointItr] * UnitExtent), true);
 			// Add to 2D bounding box if point is on the front side of the camera
 			if (ProjectedWorldLocation.Z > 0.f)
 			{

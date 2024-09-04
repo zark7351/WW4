@@ -67,7 +67,7 @@ void UPlayerBaseComponent::ServerSetTarget_Implementation(const TArray<AUnitBase
 {
 	for (AUnitBase* Unit : Actors)
 	{
-		if (TargetActor != Unit)
+		if (IsValid(Unit) && TargetActor != Unit)
 		{
 			Unit->Execute_SetTarget(Unit, TargetActor);
 		}

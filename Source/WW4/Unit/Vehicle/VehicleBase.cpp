@@ -22,7 +22,7 @@ void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	TurnInPlace(DeltaSeconds);
-	//Rotate(DeltaSeconds);
+	Rotate(DeltaSeconds);
 }
 
 void AVehicleBase::Rotate(float DeltaSeconds)
@@ -39,7 +39,7 @@ void AVehicleBase::Rotate(float DeltaSeconds)
 		//	FLinearColor::Yellow,
 		//	1000.f
 		//);
-		SetActorRotation(FMath::RInterpConstantTo(CurRotation, NewRotation, DeltaSeconds, TurnSpeed));
+		SetActorRotation(FMath::RInterpConstantTo(CurRotation, FRotator(CurRotation.Pitch,NewRotation.Yaw,CurRotation.Roll), DeltaSeconds, TurnSpeed));
 	}
 }
 
