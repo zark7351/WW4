@@ -19,9 +19,9 @@ AProjectileBase::AProjectileBase()
 	SetRootComponent(CollisionSphere);
 	CollisionSphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel4);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	CollisionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	CollisionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	CollisionSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECR_Ignore);
-	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnBeginOverlap);
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -37,7 +37,7 @@ void AProjectileBase::BeginPlay()
 	}
 }
 
-void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectileBase::OnBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == TargetActor)
 	{
