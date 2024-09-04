@@ -73,8 +73,8 @@ void AWW4HUD::GetUnitsInSelectionRectangle(const FVector2D& FirstPoint, const FV
 					Color1.A = 0.3f;
 					FLinearColor Color2 = FLinearColor::White;
 					Color2.A = 0.3f;
-					DrawRect(Color2, SelectionRectangle.GetCenter().X- SelectionRectangle.GetSize().X/2, SelectionRectangle.GetCenter().Y- SelectionRectangle.GetSize().Y/2, SelectionRectangle.GetSize().X, SelectionRectangle.GetSize().Y);
-					DrawRect(Color1, ActorBox2D.GetCenter().X - ActorBox2D.GetSize().X/2, ActorBox2D.GetCenter().Y - ActorBox2D.GetSize().Y/2, ActorBox2D.GetSize().X, ActorBox2D.GetSize().Y);
+					//DrawRect(Color2, SelectionRectangle.GetCenter().X- SelectionRectangle.GetSize().X/2, SelectionRectangle.GetCenter().Y- SelectionRectangle.GetSize().Y/2, SelectionRectangle.GetSize().X, SelectionRectangle.GetSize().Y);
+					//DrawRect(Color1, ActorBox2D.GetCenter().X - ActorBox2D.GetSize().X/2, ActorBox2D.GetCenter().Y - ActorBox2D.GetSize().Y/2, ActorBox2D.GetSize().X, ActorBox2D.GetSize().Y);
 				}
 			}
 			//Partial Intersection with Projected Actor Bounds
