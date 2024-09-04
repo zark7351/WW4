@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Gameframework/DamageType.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "WW4/Interface/BaseObjectInterface.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -38,7 +39,23 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Explode(OtherActor);
+	if (OtherActor == TargetActor)
+	{
+		Explode(OtherActor);
+	}
+	else
+	{
+		IBaseObjectInterface* HitObject = Cast<IBaseObjectInterface>(OtherActor);
+		IBaseObjectInterface* OwnerObject = GetOwner() ? Cast<IBaseObjectInterface>(GetOwner()) : nullptr;
+		if (HitObject && OwnerObject && HitObject->Execute_GetFaction(OtherActor) == OwnerObject->Execute_GetFaction(GetOwner()))
+		{
+			return;
+		}
+		else
+		{
+			Explode(OtherActor);
+		}
+	}
 }
 
 void AProjectileBase::Explode(AActor* HitActor)

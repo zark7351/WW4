@@ -68,6 +68,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCustomMovement{ false };
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	AActor* TargetActor;
+
+
 private:
 
 };
