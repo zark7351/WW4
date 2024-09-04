@@ -11,6 +11,7 @@
 #include "WW4/Core/WW4GameModeBase.h"
 #include "EngineUtils.h"
 #include "WW4/Component/PlayerBaseComponent.h"
+#include "WW4/Interface/BasePlayerInterface.h"
 
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
@@ -136,6 +137,15 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 	}
 	if (Buildings[InPlayerID].Buildings.Contains(InBuilding))
 	{
+		if (CheckIsUniqueBuilding(InPlayerID,InBuilding))
+		{
+			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			auto BasePlayer = Cast<IBasePlayerInterface>(Player);
+			if (BasePlayer)
+			{
+				BasePlayer->Execute_OnBuildingConstructed(Player,InBuilding->ItemInfo.ItemID, false);
+			}
+		}
 		Buildings[InPlayerID].Buildings.Remove(InBuilding);
 		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
 		if (Player)
@@ -155,6 +165,23 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 			}
 		}
 	}
+}
+
+bool UUnitManager::CheckIsUniqueBuilding(int32 InPlayerID, ABuildingBase* InBuilding)
+{
+	if (Buildings.Contains(InPlayerID))
+	{
+		uint8 Count = 0;
+		for (auto Building : Buildings[InPlayerID].Buildings)
+		{
+			if (Building->ItemInfo.ItemID == InBuilding->ItemInfo.ItemID)
+			{
+				Count += 1;
+				if (Count > 1) return false;
+			}
+		}
+	}
+	return true;
 }
 
 void UUnitManager::CollectBuildingsAndUnits()

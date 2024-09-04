@@ -1,3 +1,4 @@
+#include "TechTreeComponent.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -77,18 +78,40 @@ void UTechTreeComponent::OnNewItemConstructed(int32 InItemID)
 					if (CheckPrerequisite(Info))
 					{
 						UnlockedItems.Add(Info);
-						AWW4PlayerController* Player = Cast<AWW4PlayerController>(GetOwner());
-						if (Player)
-						{
-							AWW4HUD* HUD = Cast<AWW4HUD>(Player->GetHUD());
-							if (HUD)
-							{
-								HUD->RefreshConstructItems(UnlockedItems);
-							}
-						}
 					}
 				}
 			}
+		}
+		RefreshHUD();
+	}
+}
+
+
+void UTechTreeComponent::OnLastItemDestructed(int32 InItemID)
+{
+	if (BuiltItemsID.Contains(InItemID))
+	{
+		BuiltItemsID.Remove(InItemID);
+		for (int32 i = UnlockedItems.Num() - 1; i >= 0; --i)
+		{
+			if (UnlockedItems[i].PrerequisiteItemsID.Contains(InItemID))
+			{
+				UnlockedItems.RemoveAt(i);
+			}
+		}
+		RefreshHUD();
+	}
+}
+
+void UTechTreeComponent::RefreshHUD()
+{
+	AWW4PlayerController* Player = Cast<AWW4PlayerController>(GetOwner());
+	if (Player)
+	{
+		AWW4HUD* HUD = Cast<AWW4HUD>(Player->GetHUD());
+		if (HUD)
+		{
+			HUD->RefreshConstructItems(UnlockedItems);
 		}
 	}
 }

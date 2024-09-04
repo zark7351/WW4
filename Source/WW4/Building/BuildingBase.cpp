@@ -45,7 +45,7 @@ void ABuildingBase::BeginPlay()
 			IBasePlayerInterface* Player = Cast<IBasePlayerInterface>(Controller);
 			if (Player)
 			{
-				Player->Execute_OnBuildingConstructed(Controller, ItemInfo.ItemID);
+				Player->Execute_OnBuildingConstructed(Controller, ItemInfo.ItemID, true);
 			}
 		}
 	}

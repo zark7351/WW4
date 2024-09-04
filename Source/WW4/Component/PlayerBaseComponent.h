@@ -40,7 +40,7 @@ public:
 	//void Defeated();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void OnBuildingConstructed(int32 InItemID);
+	void OnBuildingConstructed(int32 InItemID, bool bConstructOrDestruct);
 
 	//UFUNCTION(BlueprintCallable, BlueprintPure)
 	//FORCEINLINE int32 GetWW4PlayerID() const { return WW4PlayerID; }

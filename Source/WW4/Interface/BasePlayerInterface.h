@@ -23,7 +23,7 @@ class WW4_API IBasePlayerInterface
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void OnBuildingConstructed(int32 ItemID);
+	void OnBuildingConstructed(int32 ItemID, bool bConstructOrDestruct = true);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetPlayerFaction(const EFaction& InFaction);

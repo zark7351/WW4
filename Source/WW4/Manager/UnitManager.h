@@ -90,6 +90,8 @@ public:
 
 	void OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding);
 
+	bool CheckIsUniqueBuilding(int32 InPlayerID, ABuildingBase* InBuilding);
+
 	UPROPERTY(BlueprintReadWrite)
 	TMap<int32, FUnitsInfo> Units;
 	UPROPERTY(BlueprintReadWrite)

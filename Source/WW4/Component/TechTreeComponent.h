@@ -44,6 +44,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnNewItemConstructed(int32 InItemID);
 
+	void RefreshHUD();
+
+	UFUNCTION(BlueprintCallable)
+	void OnLastItemDestructed(int32 InItemID);
+
 	bool CheckPrerequisite(const FItemProductionInfoBase& CheckItem);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
