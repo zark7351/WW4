@@ -131,12 +131,23 @@ void UConstructMenu::UpdateItemProgress(const FItemProductionInfoBase& Info, flo
 }
 
 
-void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, bool bReady)
+void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, EConstructOperationType Type)
 {
 	AWW4PlayerController* PC = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
-
-	if (bReady)
+	switch (Type)
 	{
+	case EConstructOperationType::Build:
+		if (PC)
+		{
+			PC->EconomyComponent->AddOrRemoveCostItem(ItemInfo, true);
+			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
+			if (HUD)
+			{
+				HUD->RefreshItemGroupState(ItemInfo, false);
+			}
+		}
+		break;
+	case EConstructOperationType::Deploy:
 		if (ItemInfo.ItemType == EContructItemType::ECT_Building)
 		{
 			if (ConstructorcClass)
@@ -146,31 +157,40 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 				Constructor->InitCell();
 			}
 		}
-		else if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
-		{
-			if (PC->PlayerBaseComponent && PC->PlayerBaseComponent->CurrentVehicleFactory)
-			{
-				PC->PlayerBaseComponent->ServerSpawnUnit(
-					ItemInfo,
-					PC->PlayerBaseComponent->WW4PlayerID,
-					PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
-					PC->PlayerBaseComponent->CurrentVehicleFactory
-				);
-			}
-			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
-			if (HUD)
-			{
-				HUD->RefreshItemGroupState(ItemInfo, true);
-			}
-		}
+		break;
+	case EConstructOperationType::AddWaitList:
+		WaitingItems.AddUnique(ItemInfo);
+		break;
+	case EConstructOperationType::Subtract:
+		break;
+	case EConstructOperationType::Canceled:
+		break;
+	case EConstructOperationType::OnHold:
+		break;
+	case EConstructOperationType::Resume:
+		break;
+	default:
+		break;
 	}
-	else if(PC)
+}
+
+void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo)
+{
+	if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
 	{
-		PC->EconomyComponent->AddOrRemoveCostItem(ItemInfo, true);
+		if (PC->PlayerBaseComponent && PC->PlayerBaseComponent->CurrentVehicleFactory)
+		{
+			PC->PlayerBaseComponent->ServerSpawnUnit(
+				ItemInfo,
+				PC->PlayerBaseComponent->WW4PlayerID,
+				PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
+				PC->PlayerBaseComponent->CurrentVehicleFactory
+			);
+		}
 		AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
 		if (HUD)
 		{
-			HUD->RefreshItemGroupState(ItemInfo, false);
+			HUD->RefreshItemGroupState(ItemInfo, true);
 		}
 	}
 }

@@ -28,7 +28,7 @@ enum class EConstructOperationType : uint8
 {
 	Build,
 	Deploy,
-	Add,
+	AddWaitList,
 	Subtract,
 	Canceled,
 	OnHold,

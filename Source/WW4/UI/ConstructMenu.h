@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "WW4/BaseTypes/BaseTypes.h"
+#include "WW4/UI/ConstructItem.h"
 #include "ConstructMenu.generated.h"
 
 /**
@@ -37,8 +38,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio);
 
-	TArray<FItemProductionInfoBase, Int32> WaitingItems;
-
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -50,7 +49,10 @@ protected:
 private:
 
 	UFUNCTION()
-	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, bool bReady);
+	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, EConstructOperationType Type);
+
+	void OnUnitReady(const FItemProductionInfoBase& ItemInfo);
 
 	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
+	TArray<FItemProductionInfoBase> WaitingItems;
 };
