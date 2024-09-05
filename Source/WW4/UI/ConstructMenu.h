@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio);
 
+	TArray<FItemProductionInfoBase, Int32> WaitingItems;
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

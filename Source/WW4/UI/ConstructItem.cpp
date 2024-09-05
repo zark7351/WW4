@@ -13,8 +13,8 @@ void UConstructItem::NativeConstruct()
 		Button->OnClicked.AddDynamic(this, &UConstructItem::OnClicked);
 	}
 	MaskDynamicMaterialIns = Mask->GetDynamicMaterial();
-	EnableMask(false);
-	EnableCount(false);
+	SetState(EConstructItemState::ECS_Normal);
+	ShowCount(false);
 }
 
 void UConstructItem::OnClicked()
@@ -22,12 +22,22 @@ void UConstructItem::OnClicked()
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
-		OnConstrcutItemClickedHandle.Broadcast(ItemInfo, false);
-		SetState(EConstructItemState::ECS_Building);
-		EnableMask(true);
-		if (bUseCount)
+		if (bUseCount && bWaiting)
 		{
-			Count = 0;
+			Count++;
+			if (Count == 1)
+			{
+				ShowCount(true);
+			}
+		}
+		else
+		{
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
+			SetState(EConstructItemState::ECS_Building);
+			if (bUseCount)
+			{
+				Count = 0;
+			}
 		}
 		break;
 	case EConstructItemState::ECS_Building:
@@ -36,18 +46,64 @@ void UConstructItem::OnClicked()
 			Count++;
 			if (Count > 0)
 			{
-				EnableCount(true);
+				ShowCount(true);
 			}
 		}
 		break;
 	case EConstructItemState::ECS_Ready:
 		if (!bIsDeploying)
 		{
-			OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Deploy);
 			//SetState(EConstructItemState::ECS_Normal);
-			EnableMask(false);
 			bIsDeploying = true;
 		}
+		break;
+	case EConstructItemState::ECS_Disabled:
+		break;
+	case EConstructItemState::ECS_Max:
+		break;
+	default:
+		break;
+	}
+}
+
+void UConstructItem::OnRightClicked()
+{
+	switch (ItemState)
+	{
+	case EConstructItemState::ECS_Normal:
+		if (bUseCount && Count > 0)
+		{
+			Count--;
+			if (Count == 0)
+			{
+				ShowCount(false);
+			}
+		}
+		break;
+	case EConstructItemState::ECS_Building:
+		if (!bOnHold)
+		{
+			bOnHold = true;
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
+		}
+		else
+		{
+			bOnHold = true;
+			if (bUseCount && Count > 0)
+			{
+				Count--;
+				if (Count == 0)
+				{
+					ShowCount(false);
+				}
+			}
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Canceled);	//取消建造
+		}
+		break;
+	case EConstructItemState::ECS_Ready:
+		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Canceled);	//取消建造
+		SetState(EConstructItemState::ECS_Normal);
 		break;
 	case EConstructItemState::ECS_Disabled:
 		break;
@@ -66,7 +122,7 @@ void UConstructItem::EnableMask(bool Enable)
 	}
 }
 
-void UConstructItem::EnableMask1(bool Enable)
+void UConstructItem::EnableBlink(bool Enable)
 {
 	if (Mask_1)
 	{
@@ -76,30 +132,27 @@ void UConstructItem::EnableMask1(bool Enable)
 
 void UConstructItem::UpdateProgress(float Ratio)
 {
+	CurRatio = Ratio;
 	if (MaskDynamicMaterialIns)
 	{
 		MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), Ratio);
 	}
 	if (Ratio >= 1.f)
 	{
+		OnUnitReady.Broadcast(ItemInfo);
 		if (bNeedDeploy)
 		{
 			SetState(EConstructItemState::ECS_Ready);
-			EnableMask1(true);
-		}
-		else
-		{
-			OnConstrcutItemClickedHandle.Broadcast(ItemInfo, true);
 		}
 		if (bUseCount)
 		{
 			Count--;
 			if (Count >= 0)
 			{
-				OnConstrcutItemClickedHandle.Broadcast(ItemInfo, false);
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
 				if (Count == 0)
 				{
-					EnableCount(false);
+					ShowCount(false);
 				}
 			}
 			else
@@ -121,9 +174,25 @@ void UConstructItem::SetState(const EConstructItemState& InState)
 	{
 		Button->SetIsEnabled(true);
 	}
+	if (InState == EConstructItemState::ECS_Ready)
+	{
+		EnableBlink(true);
+	}
+	else
+	{
+		EnableBlink(false);
+	}
+	if (InState == EConstructItemState::ECS_Building)
+	{
+		EnableMask(true);
+	}
+	else
+	{
+		EnableMask(false);
+	}
 }
 
-void UConstructItem::EnableCount(bool bEnable)
+void UConstructItem::ShowCount(bool bEnable)
 {
 	if (CountText)
 	{

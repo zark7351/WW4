@@ -67,7 +67,7 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 				break;
 			}
 			TypeNumMap[Type] += 1;
-			Item->OnConstrcutItemClickedHandle.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
+			Item->OnConstrcutItemClicked.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
 			Item->ItemInfo = (Items[i]);
 		}
 	}
@@ -88,10 +88,6 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 					if (Item->Count < 0)
 					{
 						Item->SetState(EConstructItemState::ECS_Normal);
-						if (Item->ItemInfo.ItemID == ItemInfo.ItemID)
-						{
-							Item->EnableMask1(false);
-						}
 					}
 				}
 				else if(Item->ItemInfo.ItemID != ItemInfo.ItemID)

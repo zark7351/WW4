@@ -17,12 +17,26 @@ enum class EConstructItemState :uint8
 	ECS_Normal	UMETA(DisplayName = "Normal"),
 	ECS_Building	UMETA(DisplayName = "Building"),
 	ECS_Ready	UMETA(DisplayName = "Ready"),
+	ECS_Waiting	UMETA(DisplayName = "Waiting"),
 	ECS_Disabled	UMETA(DisplayName = "Disable"),
 
 	ECS_Max	UMETA(DisplayName = "DefaultMax"),
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info, bool, bReady);
+UENUM()
+enum class EConstructOperationType : uint8
+{
+	Build,
+	Deploy,
+	Add,
+	Subtract,
+	Canceled,
+	OnHold,
+	Resume,
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info, EConstructOperationType, Type);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitReady, const FItemProductionInfoBase&, Info);
 
 UCLASS()
 class WW4_API UConstructItem : public UUserWidget
@@ -49,16 +63,22 @@ public:
 	struct FItemProductionInfoBase ItemInfo;
 
 	UPROPERTY()
-	FOnConstrcutItemClicked OnConstrcutItemClickedHandle;
+	FOnConstrcutItemClicked OnConstrcutItemClicked;
+
+	UPROPERTY()
+	FOnUnitReady OnUnitReady;
 
 	UFUNCTION()
 	void OnClicked();
 
 	UFUNCTION(BlueprintCallable)
+	void OnRightClicked();
+
+	UFUNCTION(BlueprintCallable)
 	void EnableMask(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
-	void EnableMask1(bool Enable);
+	void EnableBlink(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateProgress(float Ratio);
@@ -67,7 +87,7 @@ public:
 	void SetState(const EConstructItemState& InState);
 
 	UFUNCTION(BlueprintCallable)
-	void EnableCount(bool bEnable);
+	void ShowCount(bool bEnable);
 
 	UFUNCTION(BlueprintCallable)
 	void SetCount(int32 inCount);
@@ -75,16 +95,27 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EConstructItemState GetState() const { return ItemState; }
 
-	bool bNeedDeploy{ true };
-
-	bool bUseCount{ false };
-
-	bool bIsDeploying{ false };
-
 	UPROPERTY(BlueprintReadWrite)
 	int32 Count{ -1 };
 
 private:
+
+	//是否在等待
+	bool bWaiting{ false };
+
+	//是否暂停
+	bool bOnHold{ false };
+
+	//是否可以累加
+	bool bUseCount{ false };
+
+	//是否需要部署
+	bool bNeedDeploy{ true };
+
+	//是否正在部署
+	bool bIsDeploying{ false };
+
+	float CurRatio;
 
 	UMaterialInstanceDynamic* MaskDynamicMaterialIns;
 
