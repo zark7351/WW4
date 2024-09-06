@@ -16,6 +16,7 @@ enum class EConstructItemState :uint8
 {
 	ECS_Normal	UMETA(DisplayName = "Normal"),
 	ECS_Building	UMETA(DisplayName = "Building"),
+	ECS_OnHold	UMETA(DisplayName = "OnHold"),
 	ECS_Ready	UMETA(DisplayName = "Ready"),
 	ECS_Waiting	UMETA(DisplayName = "Waiting"),
 	ECS_Disabled	UMETA(DisplayName = "Disable"),
@@ -29,8 +30,9 @@ enum class EConstructOperationType : uint8
 	Build,
 	Deploy,
 	AddWaitList,
-	Subtract,
-	Canceled,
+	RemoveWaitList,
+	Cancele,
+	Return,
 	OnHold,
 	Resume,
 };
@@ -46,6 +48,7 @@ class WW4_API UConstructItem : public UUserWidget
 public:
 	
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* Button;
@@ -81,7 +84,7 @@ public:
 	void EnableBlink(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateProgress(float Ratio);
+	void UpdateProgress(float Ratio, bool bStart);
 
 	UFUNCTION(BlueprintCallable)
 	void SetState(const EConstructItemState& InState);
@@ -96,12 +99,10 @@ public:
 	FORCEINLINE EConstructItemState GetState() const { return ItemState; }
 
 	UPROPERTY(BlueprintReadWrite)
-	int32 Count{ -1 };
+	int32 Count{ 0 };
 
-private:
-
-	//是否在等待
-	bool bWaiting{ false };
+	//是否在等待队列中
+	bool bInWaitList{ false };
 
 	//是否暂停
 	bool bOnHold{ false };
@@ -114,6 +115,9 @@ private:
 
 	//是否正在部署
 	bool bIsDeploying{ false };
+
+private:
+
 
 	float CurRatio;
 

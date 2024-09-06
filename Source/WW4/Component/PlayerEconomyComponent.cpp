@@ -36,20 +36,22 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 		for (auto It = ItemCostMap.CreateIterator(); It; ++It)
 		{
 			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime = 0.f ? DeltaTime : It->Key.ItemProductTime) * DeltaTime;
+			float Progress = 0.f;
 			if (Money > ConstPerTick)
 			{
 				Money -= ConstPerTick;
-				It->Value += ConstPerTick;
-				float Progress = It->Value / It->Key.ItemPrice;
-				BuildingProgressDelegate.Broadcast(It->Key, Progress);
-				if (It->Value >= It->Key.ItemPrice)
+				It->Value.SpentMoney += ConstPerTick;
+				Progress = It->Value.SpentMoney / It->Key.ItemPrice;
+				BuildingProgressDelegate.Broadcast(It->Key, Progress, !It->Value.bInProgress);
+				It->Value.bInProgress = true;
+				if (It->Value.SpentMoney >= It->Key.ItemPrice)
 				{
 					It.RemoveCurrent();
 				}
 			}
 			else
 			{
-				It->Value += Money;
+				It->Value.SpentMoney += Money;
 				Money = 0;
 				bNoMoney = true;
 				NoMoneyDelegate.Broadcast(bNoMoney);
@@ -65,19 +67,35 @@ void UPlayerEconomyComponent::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	DOREPLIFETIME(UPlayerEconomyComponent, Money);
 }
 
-void UPlayerEconomyComponent::AddOrRemoveCostItem(const FItemProductionInfoBase& Info, bool bAdd)
+void UPlayerEconomyComponent::AddCostItem(const FItemProductionInfoBase& Info)
 {
-	if (bAdd)
+	if (OnHoldItems.Contains(Info))
 	{
-		ItemCostMap.Add(Info, 0);
+		ItemCostMap.Add(Info, OnHoldItems[Info]);
 	}
 	else
 	{
-		if (ItemCostMap.Contains(Info))
-		{
-			Money += ItemCostMap[Info];
-			ItemCostMap.Remove(Info);
-		}
+		ItemCostMap.Add(Info, ItemCostInfo());
 	}
 }
 
+void UPlayerEconomyComponent::RemoveCostItem(const FItemProductionInfoBase& Info, bool bCancele)
+{
+	if (ItemCostMap.Contains(Info))
+	{
+		if (bCancele)
+		{
+			Money += ItemCostMap[Info].SpentMoney;
+		}
+		else
+		{
+			OnHoldItems.Add(Info, ItemCostMap[Info]);
+		}
+		ItemCostMap.Remove(Info);
+	}
+}
+
+void UPlayerEconomyComponent::ReturnItemMoney(const FItemProductionInfoBase& Info)
+{
+	Money += Info.ItemPrice;
+}

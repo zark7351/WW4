@@ -8,7 +8,15 @@
 #include "PlayerEconomyComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNoMoneyDelegate, bool, bNoMoney);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FBuildingProgressDelegate, FItemProductionInfoBase, Info, float, Progress);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FBuildingProgressDelegate, FItemProductionInfoBase, Info, float, Progress, bool, bStart);
+
+struct ItemCostInfo
+{
+	float SpentMoney;
+	bool bInProgress;
+
+	ItemCostInfo(float Money = 0.f, bool InProgress = false) :SpentMoney(Money), bInProgress(InProgress) {}
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class WW4_API UPlayerEconomyComponent : public UActorComponent
@@ -34,8 +42,15 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UFUNCTION(BlueprintCallable)
-	void AddOrRemoveCostItem(const FItemProductionInfoBase& Info, bool bAdd);
+	UFUNCTION()
+	void AddCostItem(const FItemProductionInfoBase& Info);
+
+	UFUNCTION()
+	void RemoveCostItem(const FItemProductionInfoBase& Info, bool bCancele);
+
+	UFUNCTION()
+	void ReturnItemMoney(const FItemProductionInfoBase& Info);
+
 
 	UPROPERTY(BlueprintAssignable)
 	FNoMoneyDelegate NoMoneyDelegate;
@@ -48,7 +63,9 @@ private:
 	UPROPERTY(Replicated)
 	float Money;
 
-	TMap<FItemProductionInfoBase, float> ItemCostMap;
+	TMap<FItemProductionInfoBase, ItemCostInfo> ItemCostMap;
+
+	TMap<FItemProductionInfoBase, ItemCostInfo> OnHoldItems;
 
 	float TimeElapsed;
 

@@ -17,15 +17,28 @@ void UConstructItem::NativeConstruct()
 	ShowCount(false);
 }
 
+void UConstructItem::NativeDestruct()
+{
+	//不知道是否有必要？GPT说要
+	OnConstrcutItemClicked.Clear();
+	OnUnitReady.Clear();
+	Super::NativeDestruct();
+}
+
 void UConstructItem::OnClicked()
 {
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
-		if (bUseCount && bWaiting)
+		if (bUseCount)
 		{
 			Count++;
 			if (Count == 1)
+			{
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
+				SetState(EConstructItemState::ECS_Building);
+			}
+			if (Count > 1)
 			{
 				ShowCount(true);
 			}
@@ -34,13 +47,15 @@ void UConstructItem::OnClicked()
 		{
 			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
 			SetState(EConstructItemState::ECS_Building);
-			if (bUseCount)
-			{
-				Count = 0;
-			}
 		}
 		break;
 	case EConstructItemState::ECS_Building:
+		if (bOnHold)
+		{
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Resume);
+			SetState(EConstructItemState::ECS_Building);
+			bOnHold = false;
+		}
 		if (bUseCount)
 		{
 			Count++;
@@ -56,6 +71,17 @@ void UConstructItem::OnClicked()
 			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Deploy);
 			//SetState(EConstructItemState::ECS_Normal);
 			bIsDeploying = true;
+		}
+		break;
+	case EConstructItemState::ECS_Waiting:
+		if (bUseCount)
+		{
+			Count++;
+			if (Count == 1)
+			{
+				ShowCount(true);
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::AddWaitList);
+			}
 		}
 		break;
 	case EConstructItemState::ECS_Disabled:
@@ -78,6 +104,7 @@ void UConstructItem::OnRightClicked()
 			if (Count == 0)
 			{
 				ShowCount(false);
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::RemoveWaitList);	//暂停建造
 			}
 		}
 		break;
@@ -85,25 +112,37 @@ void UConstructItem::OnRightClicked()
 		if (!bOnHold)
 		{
 			bOnHold = true;
+			SetState(EConstructItemState::ECS_OnHold);
 			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
 		}
-		else
-		{
-			bOnHold = true;
-			if (bUseCount && Count > 0)
-			{
-				Count--;
-				if (Count == 0)
-				{
-					ShowCount(false);
-				}
-			}
-			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Canceled);	//取消建造
-		}
 		break;
+	case EConstructItemState::ECS_OnHold:
+		if (bUseCount)
+		{
+			Count--;
+			if (Count == 0) ShowCount(false);
+			if (Count < 0)
+			{
+				bOnHold = false;
+				SetState(EConstructItemState::ECS_Normal);
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
+			}
+		}
 	case EConstructItemState::ECS_Ready:
-		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Canceled);	//取消建造
+		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Return);	//返还资金	
 		SetState(EConstructItemState::ECS_Normal);
+		break;
+	case EConstructItemState::ECS_Waiting:
+		if (bInWaitList)
+		{
+			Count--;
+			if (Count <= 0)
+			{
+				bInWaitList = false;
+				ShowCount(false);
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::RemoveWaitList);	//取消排队
+			}
+		}
 		break;
 	case EConstructItemState::ECS_Disabled:
 		break;
@@ -130,12 +169,20 @@ void UConstructItem::EnableBlink(bool Enable)
 	}
 }
 
-void UConstructItem::UpdateProgress(float Ratio)
+void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 {
 	CurRatio = Ratio;
 	if (MaskDynamicMaterialIns)
 	{
 		MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), Ratio);
+	}
+	if (bStart)
+	{
+		Count--;
+		if (Count == 0)
+		{
+			ShowCount(false);
+		}
 	}
 	if (Ratio >= 1.f)
 	{
@@ -146,14 +193,9 @@ void UConstructItem::UpdateProgress(float Ratio)
 		}
 		if (bUseCount)
 		{
-			Count--;
 			if (Count >= 0)
 			{
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
-				if (Count == 0)
-				{
-					ShowCount(false);
-				}
 			}
 			else
 			{
@@ -182,7 +224,7 @@ void UConstructItem::SetState(const EConstructItemState& InState)
 	{
 		EnableBlink(false);
 	}
-	if (InState == EConstructItemState::ECS_Building)
+	if (InState == EConstructItemState::ECS_Building || (InState == EConstructItemState::ECS_OnHold))
 	{
 		EnableMask(true);
 	}

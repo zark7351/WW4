@@ -35,6 +35,7 @@ void UConstructMenu::NativeConstruct()
 
 void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items)
 {
+	//TODO:需要优化，不要每次全部重新创建
 	ItemInfoMap.Empty();
 	UGP_Building->ClearChildren();
 	UGP_Vehicle->ClearChildren();
@@ -68,6 +69,7 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 			}
 			TypeNumMap[Type] += 1;
 			Item->OnConstrcutItemClicked.AddDynamic(this, &UConstructMenu::OnConstructItemClick);
+			Item->OnUnitReady.AddDynamic(this, &UConstructMenu::OnUnitReady);
 			Item->ItemInfo = (Items[i]);
 		}
 	}
@@ -112,7 +114,7 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 				}
 				else if (Item->ItemInfo.ItemID != ItemInfo.ItemID)
 				{
-					Item->SetState(EConstructItemState::ECS_Disabled);
+					Item->SetState(EConstructItemState::ECS_Waiting);
 				}
 			}
 		}
@@ -122,11 +124,11 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 	}
 }
 
-void UConstructMenu::UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio)
+void UConstructMenu::UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio, bool bStart)
 {
 	if (ItemInfoMap.Contains(Info))
 	{
-		ItemInfoMap[Info]->UpdateProgress(Ratio);
+		ItemInfoMap[Info]->UpdateProgress(Ratio, bStart);
 	}
 }
 
@@ -139,12 +141,8 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 	case EConstructOperationType::Build:
 		if (PC)
 		{
-			PC->EconomyComponent->AddOrRemoveCostItem(ItemInfo, true);
-			AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
-			if (HUD)
-			{
-				HUD->RefreshItemGroupState(ItemInfo, false);
-			}
+			PC->EconomyComponent->AddCostItem(ItemInfo);
+			RefreshGroupState(ItemInfo, false);
 		}
 		break;
 	case EConstructOperationType::Deploy:
@@ -161,13 +159,32 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 	case EConstructOperationType::AddWaitList:
 		WaitingItems.AddUnique(ItemInfo);
 		break;
-	case EConstructOperationType::Subtract:
+	case EConstructOperationType::RemoveWaitList:
+		WaitingItems.Remove(ItemInfo);
 		break;
-	case EConstructOperationType::Canceled:
+	case EConstructOperationType::Cancele:
+		if (PC)
+		{
+			PC->EconomyComponent->RemoveCostItem(ItemInfo, true);
+		}
+		break;
+	case EConstructOperationType::Return:
+		if (PC)
+		{
+			PC->EconomyComponent->ReturnItemMoney(ItemInfo);
+		}
 		break;
 	case EConstructOperationType::OnHold:
+		if (PC)
+		{
+			PC->EconomyComponent->RemoveCostItem(ItemInfo, false);
+		}
 		break;
 	case EConstructOperationType::Resume:
+		if (PC)
+		{
+			PC->EconomyComponent->AddCostItem(ItemInfo);
+		}
 		break;
 	default:
 		break;
@@ -176,7 +193,12 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 
 void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo)
 {
-	if (PC && ItemInfo.ItemType == EContructItemType::ECT_Vehicle)
+	AWW4PlayerController* PC = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
+	if (!PC)
+	{
+		return;
+	}
+	if (ItemInfo.ItemType == EContructItemType::ECT_Vehicle || ItemInfo.ItemType == EContructItemType::ECT_Infantry)
 	{
 		if (PC->PlayerBaseComponent && PC->PlayerBaseComponent->CurrentVehicleFactory)
 		{
@@ -187,10 +209,16 @@ void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo)
 				PC->PlayerBaseComponent->CurrentVehicleFactory
 			);
 		}
-		AWW4HUD* HUD = Cast<AWW4HUD>(PC->GetHUD());
-		if (HUD)
+		EContructItemType Type = ItemInfo.ItemType;
+		for (int32 i = 0; i < WaitingItems.Num(); i++)
 		{
-			HUD->RefreshItemGroupState(ItemInfo, true);
+			if (WaitingItems[i].ItemType == Type)
+			{
+				PC->EconomyComponent->AddCostItem(WaitingItems[i]);
+				WaitingItems.RemoveAt(i);
+				break;
+			}
 		}
 	}
+	RefreshGroupState(ItemInfo, true);
 }

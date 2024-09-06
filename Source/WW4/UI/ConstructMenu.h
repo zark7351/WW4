@@ -36,7 +36,7 @@ public:
 	void RefreshGroupState(const FItemProductionInfoBase& ItemInfo, bool bEnable);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio);
+	void UpdateItemProgress(const FItemProductionInfoBase& Info, float Ratio, bool bStart);
 
 protected:
 
@@ -51,6 +51,7 @@ private:
 	UFUNCTION()
 	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, EConstructOperationType Type);
 
+	UFUNCTION()
 	void OnUnitReady(const FItemProductionInfoBase& ItemInfo);
 
 	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
