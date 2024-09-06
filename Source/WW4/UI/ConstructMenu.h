@@ -32,6 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitAllConstructionList(const TArray<FItemProductionInfoBase>& Items);
 
+	//刷新同组其他Item的状态，其本身状态由自己控制
 	UFUNCTION(BlueprintCallable)
 	void RefreshGroupState(const FItemProductionInfoBase& ItemInfo, bool bEnable);
 
@@ -52,7 +53,7 @@ private:
 	void OnConstructItemClick(const FItemProductionInfoBase& ItemInfo, EConstructOperationType Type);
 
 	UFUNCTION()
-	void OnUnitReady(const FItemProductionInfoBase& ItemInfo);
+	void OnUnitReady(const FItemProductionInfoBase& ItemInfo, bool bIsLastOne);
 
 	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
 	TArray<FItemProductionInfoBase> WaitingItems;

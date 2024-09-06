@@ -43,7 +43,7 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 				It->Value.SpentMoney += ConstPerTick;
 				Progress = It->Value.SpentMoney / It->Key.ItemPrice;
 				BuildingProgressDelegate.Broadcast(It->Key, Progress, !It->Value.bInProgress);
-				It->Value.bInProgress = true;
+				It->Value.bInProgress = It->Value.SpentMoney == 0.f ? false : true;	//这里需要判断下是不是上一步新加进来的，是的话不设成true
 				if (It->Value.SpentMoney >= It->Key.ItemPrice)
 				{
 					It.RemoveCurrent();
@@ -72,6 +72,7 @@ void UPlayerEconomyComponent::AddCostItem(const FItemProductionInfoBase& Info)
 	if (OnHoldItems.Contains(Info))
 	{
 		ItemCostMap.Add(Info, OnHoldItems[Info]);
+		OnHoldItems.Remove(Info);
 	}
 	else
 	{

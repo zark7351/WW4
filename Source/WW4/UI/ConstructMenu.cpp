@@ -56,12 +56,12 @@ void UConstructMenu::InitAllConstructionList(const TArray<FItemProductionInfoBas
 			{
 			case EContructItemType::ECT_Building:
 				Item->bNeedDeploy = true;
-				Item->bUseCount = false;
+				Item->bMultiBuild = false;
 				UGP_Building->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			case EContructItemType::ECT_Vehicle:
 				Item->bNeedDeploy = false;
-				Item->bUseCount = true;
+				Item->bMultiBuild = true;
 				UGP_Vehicle->AddChildToUniformGrid(Item, TypeNumMap[Type] / 2, TypeNumMap[Type] % 2);
 				break;
 			default:
@@ -83,19 +83,9 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 		for (auto* ItemWidget : UGP_Building->GetAllChildren())
 		{
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
-			if (Item)
+			if (Item && Item->ItemInfo.ItemID != ItemInfo.ItemID)
 			{
-				if (bEnable)
-				{
-					if (Item->Count < 0)
-					{
-						Item->SetState(EConstructItemState::ECS_Normal);
-					}
-				}
-				else if(Item->ItemInfo.ItemID != ItemInfo.ItemID)
-				{
-					Item->SetState(EConstructItemState::ECS_Disabled);
-				}
+				Item->SetState(bEnable ? EConstructItemState::ECS_Normal : EConstructItemState::ECS_Disabled);
 			}
 		}
 		break;
@@ -103,19 +93,9 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 		for (auto* ItemWidget : UGP_Vehicle->GetAllChildren())
 		{
 			UConstructItem* Item = Cast<UConstructItem>(ItemWidget);
-			if (Item)
+			if (Item && Item->ItemInfo.ItemID != ItemInfo.ItemID)
 			{
-				if (bEnable)
-				{
-					if (Item->Count < 0)
-					{
-						Item->SetState(EConstructItemState::ECS_Normal);
-					}
-				}
-				else if (Item->ItemInfo.ItemID != ItemInfo.ItemID)
-				{
-					Item->SetState(EConstructItemState::ECS_Waiting);
-				}
+				Item->SetState(bEnable ? EConstructItemState::ECS_Normal : EConstructItemState::ECS_Waiting);
 			}
 		}
 		break;
@@ -191,7 +171,7 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 	}
 }
 
-void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo)
+void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo, bool bIsLastOne)
 {
 	AWW4PlayerController* PC = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 	if (!PC)
@@ -209,16 +189,25 @@ void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo)
 				PC->PlayerBaseComponent->CurrentVehicleFactory
 			);
 		}
-		EContructItemType Type = ItemInfo.ItemType;
-		for (int32 i = 0; i < WaitingItems.Num(); i++)
+		if (bIsLastOne)
 		{
-			if (WaitingItems[i].ItemType == Type)
+			EContructItemType Type = ItemInfo.ItemType;
+			for (int32 i = 0; i < WaitingItems.Num(); i++)
 			{
-				PC->EconomyComponent->AddCostItem(WaitingItems[i]);
-				WaitingItems.RemoveAt(i);
-				break;
+				if (WaitingItems[i].ItemType == Type)
+				{
+					PC->EconomyComponent->AddCostItem(WaitingItems[i]);
+					ItemInfoMap[WaitingItems[i]]->SetState(EConstructItemState::ECS_Building);
+					RefreshGroupState(WaitingItems[i], false);
+					WaitingItems.RemoveAt(i);
+					return;
+				}
 			}
+			RefreshGroupState(ItemInfo, true);
 		}
 	}
-	RefreshGroupState(ItemInfo, true);
+	else
+	{
+		RefreshGroupState(ItemInfo, true);
+	}
 }

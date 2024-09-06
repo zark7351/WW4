@@ -30,7 +30,7 @@ void UConstructItem::OnClicked()
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
-		if (bUseCount)
+		if (bMultiBuild)
 		{
 			Count++;
 			if (Count == 1)
@@ -50,13 +50,7 @@ void UConstructItem::OnClicked()
 		}
 		break;
 	case EConstructItemState::ECS_Building:
-		if (bOnHold)
-		{
-			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Resume);
-			SetState(EConstructItemState::ECS_Building);
-			bOnHold = false;
-		}
-		if (bUseCount)
+		if (bMultiBuild)
 		{
 			Count++;
 			if (Count > 0)
@@ -64,6 +58,10 @@ void UConstructItem::OnClicked()
 				ShowCount(true);
 			}
 		}
+		break;
+	case EConstructItemState::ECS_OnHold:
+		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Resume);
+		SetState(EConstructItemState::ECS_Building);
 		break;
 	case EConstructItemState::ECS_Ready:
 		if (!bIsDeploying)
@@ -74,7 +72,7 @@ void UConstructItem::OnClicked()
 		}
 		break;
 	case EConstructItemState::ECS_Waiting:
-		if (bUseCount)
+		if (bMultiBuild)
 		{
 			Count++;
 			if (Count == 1)
@@ -98,32 +96,18 @@ void UConstructItem::OnRightClicked()
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
-		if (bUseCount && Count > 0)
-		{
-			Count--;
-			if (Count == 0)
-			{
-				ShowCount(false);
-				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::RemoveWaitList);	//暂停建造
-			}
-		}
 		break;
 	case EConstructItemState::ECS_Building:
-		if (!bOnHold)
-		{
-			bOnHold = true;
-			SetState(EConstructItemState::ECS_OnHold);
-			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
-		}
+		SetState(EConstructItemState::ECS_OnHold);
+		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
 		break;
 	case EConstructItemState::ECS_OnHold:
-		if (bUseCount)
+		if (bMultiBuild)
 		{
 			Count--;
 			if (Count == 0) ShowCount(false);
 			if (Count < 0)
 			{
-				bOnHold = false;
 				SetState(EConstructItemState::ECS_Normal);
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
 			}
@@ -169,6 +153,14 @@ void UConstructItem::EnableBlink(bool Enable)
 	}
 }
 
+void UConstructItem::EnableWait(bool Enable)
+{
+	if (Mask_2)
+	{
+		Mask_2->SetVisibility(Enable ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
+
 void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 {
 	CurRatio = Ratio;
@@ -178,29 +170,34 @@ void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 	}
 	if (bStart)
 	{
-		Count--;
-		if (Count == 0)
+		if (bMultiBuild)
 		{
-			ShowCount(false);
+			Count--;
+			if (Count == 0)
+			{
+				ShowCount(false);
+			}
 		}
 	}
 	if (Ratio >= 1.f)
 	{
-		OnUnitReady.Broadcast(ItemInfo);
-		if (bNeedDeploy)
+		if (bMultiBuild)
 		{
-			SetState(EConstructItemState::ECS_Ready);
-		}
-		if (bUseCount)
-		{
-			if (Count >= 0)
+			if (Count == 0)
 			{
-				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);
+				SetState(EConstructItemState::ECS_Normal);
+				OnUnitReady.Broadcast(ItemInfo, true);	//最后一个完成，Menu会负责刷新组状态
 			}
 			else
 			{
-				SetState(EConstructItemState::ECS_Normal);
+				SetState(EConstructItemState::ECS_Building);
+				OnUnitReady.Broadcast(ItemInfo, false);	//这里Menu不会刷新组状态
+				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Build);	//这里Munu会刷新组状态
 			}
+		}
+		else if (bNeedDeploy)
+		{
+			SetState(EConstructItemState::ECS_Ready);
 		}
 	}
 }
@@ -231,6 +228,14 @@ void UConstructItem::SetState(const EConstructItemState& InState)
 	else
 	{
 		EnableMask(false);
+	}
+	if (InState == EConstructItemState::ECS_Waiting)
+	{
+		EnableWait(true);
+	}
+	else
+	{
+		EnableWait(false);
 	}
 }
 

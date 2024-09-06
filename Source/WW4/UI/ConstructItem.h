@@ -38,7 +38,7 @@ enum class EConstructOperationType : uint8
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnConstrcutItemClicked, const FItemProductionInfoBase&, Info, EConstructOperationType, Type);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUnitReady, const FItemProductionInfoBase&, Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUnitReady, const FItemProductionInfoBase&, Info, bool, bIsLastOne);
 
 UCLASS()
 class WW4_API UConstructItem : public UUserWidget
@@ -58,6 +58,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Mask_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Mask_2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* CountText;
@@ -84,6 +87,9 @@ public:
 	void EnableBlink(bool Enable);
 
 	UFUNCTION(BlueprintCallable)
+	void EnableWait(bool Enable);
+
+	UFUNCTION(BlueprintCallable)
 	void UpdateProgress(float Ratio, bool bStart);
 
 	UFUNCTION(BlueprintCallable)
@@ -104,11 +110,8 @@ public:
 	//是否在等待队列中
 	bool bInWaitList{ false };
 
-	//是否暂停
-	bool bOnHold{ false };
-
 	//是否可以累加
-	bool bUseCount{ false };
+	bool bMultiBuild{ false };
 
 	//是否需要部署
 	bool bNeedDeploy{ true };
