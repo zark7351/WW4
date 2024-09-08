@@ -20,13 +20,21 @@ void UPlayerEconomyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Money = InitMoney;
+	TargetMoney = Money;
 }
 
 
 void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (Money > 0)
+	TimeSinceLastTick += DeltaTime;
+	if (TargetMoney != Money)
+	{
+		Money = FMath::FInterpTo(Money, TargetMoney, DeltaTime, 10.f);
+	}
+	if (TimeSinceLastTick < TickTime) return;
+	TimeSinceLastTick = 0.f;
+	if (TargetMoney > 0)
 	{
 		if (bNoMoney)
 		{
@@ -36,11 +44,11 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 		for (auto It = ItemCostMap.CreateIterator(); It; ++It)
 		{
 			check(It->Key.ItemProductTime);
-			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime) * DeltaTime;
+			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime) * TickTime;
 			float Progress = 0.f;
-			if (Money > ConstPerTick)
+			if (TargetMoney > ConstPerTick)
 			{
-				Money -= ConstPerTick;
+				TargetMoney -= ConstPerTick;
 				It->Value.SpentMoney += ConstPerTick;
 				Progress = It->Value.SpentMoney / It->Key.ItemPrice;
 				BuildingProgressDelegate.Broadcast(It->Key, Progress, !It->Value.bInProgress);
@@ -52,8 +60,8 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 			}
 			else
 			{
-				It->Value.SpentMoney += Money;
-				Money = 0;
+				It->Value.SpentMoney += TargetMoney;
+				TargetMoney = 0;
 				bNoMoney = true;
 				NoMoneyDelegate.Broadcast(bNoMoney);
 				break;

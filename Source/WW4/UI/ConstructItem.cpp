@@ -8,6 +8,7 @@
 
 void UConstructItem::NativeConstruct()
 {
+	Super::NativeConstruct();
 	if (!Button->OnClicked.IsBound())
 	{
 		Button->OnClicked.AddDynamic(this, &UConstructItem::OnClicked);
@@ -23,6 +24,11 @@ void UConstructItem::NativeDestruct()
 	OnConstrcutItemClicked.Clear();
 	OnUnitReady.Clear();
 	Super::NativeDestruct();
+}
+
+void UConstructItem::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
 }
 
 void UConstructItem::OnClicked()
@@ -186,10 +192,6 @@ void UConstructItem::EnableWait(bool Enable)
 void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 {
 	CurRatio = Ratio;
-	if (MaskDynamicMaterialIns)
-	{
-		MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), Ratio);
-	}
 	if (bStart)
 	{
 		if (bMultiBuild)
@@ -207,7 +209,11 @@ void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 			}
 		}
 	}
-	if (Ratio >= 1.f)
+	if (MaskDynamicMaterialIns)
+	{
+		MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), CurRatio);
+	}
+	if (CurRatio >= 1.f)
 	{
 		if (bMultiBuild)
 		{

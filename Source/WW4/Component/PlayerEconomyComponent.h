@@ -37,6 +37,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float InitMoney{ 10000 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TickTime{ 0.25f };
+
 	UFUNCTION(BlueprintCallable, Blueprintpure)
 	FORCEINLINE int32 GetMoney() const { return Money; }
 
@@ -62,6 +65,10 @@ private:
 
 	UPROPERTY(Replicated)
 	float Money;
+
+	float TargetMoney;
+
+	float TimeSinceLastTick;
 
 	TMap<FItemProductionInfoBase, ItemCostInfo> ItemCostMap;
 

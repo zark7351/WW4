@@ -119,12 +119,15 @@ public:
 protected:
 
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 
 private:
 
 
 	float CurRatio;
+
+	float TargetRatio;
 
 	UMaterialInstanceDynamic* MaskDynamicMaterialIns;
 
