@@ -146,6 +146,7 @@ void UConstructMenu::OnConstructItemClick(const FItemProductionInfoBase& ItemInf
 		if (PC)
 		{
 			PC->EconomyComponent->RemoveCostItem(ItemInfo, true);
+			AddNextWaitingItem(ItemInfo, PC);
 		}
 		break;
 	case EConstructOperationType::Return:
@@ -191,23 +192,29 @@ void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo, bool b
 		}
 		if (bIsLastOne)
 		{
-			EContructItemType Type = ItemInfo.ItemType;
-			for (int32 i = 0; i < WaitingItems.Num(); i++)
-			{
-				if (WaitingItems[i].ItemType == Type)
-				{
-					PC->EconomyComponent->AddCostItem(WaitingItems[i]);
-					ItemInfoMap[WaitingItems[i]]->SetState(EConstructItemState::ECS_Building);
-					RefreshGroupState(WaitingItems[i], false);
-					WaitingItems.RemoveAt(i);
-					return;
-				}
-			}
-			RefreshGroupState(ItemInfo, true);
+			if (AddNextWaitingItem(ItemInfo, PC)) return;
 		}
 	}
 	else
 	{
 		RefreshGroupState(ItemInfo, true);
 	}
+}
+
+bool UConstructMenu::AddNextWaitingItem(const FItemProductionInfoBase& ItemInfo, AWW4PlayerController* PC)
+{
+	EContructItemType Type = ItemInfo.ItemType;
+	for (int32 i = 0; i < WaitingItems.Num(); i++)
+	{
+		if (WaitingItems[i].ItemType == Type)
+		{
+			PC->EconomyComponent->AddCostItem(WaitingItems[i]);
+			ItemInfoMap[WaitingItems[i]]->SetState(EConstructItemState::ECS_Building);
+			RefreshGroupState(WaitingItems[i], false);
+			WaitingItems.RemoveAt(i);
+			return true;
+		}
+	}
+	RefreshGroupState(ItemInfo, true);
+	return false;
 }

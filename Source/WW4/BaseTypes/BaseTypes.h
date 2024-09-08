@@ -46,7 +46,7 @@ public:
 	float ItemPrice;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ItemProductTime;
+	float ItemProductTime = 5.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> ItemClass;

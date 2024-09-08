@@ -107,9 +107,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 Count{ 0 };
 
-	//是否在等待队列中
-	bool bInWaitList{ false };
-
 	//是否可以累加
 	bool bMultiBuild{ false };
 
@@ -118,6 +115,11 @@ public:
 
 	//是否正在部署
 	bool bIsDeploying{ false };
+
+protected:
+
+	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 
 private:
 

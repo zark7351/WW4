@@ -35,7 +35,8 @@ void UPlayerEconomyComponent::TickComponent(float DeltaTime, ELevelTick TickType
 		}
 		for (auto It = ItemCostMap.CreateIterator(); It; ++It)
 		{
-			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime = 0.f ? DeltaTime : It->Key.ItemProductTime) * DeltaTime;
+			check(It->Key.ItemProductTime);
+			int32 ConstPerTick = It->Key.ItemPrice / (It->Key.ItemProductTime) * DeltaTime;
 			float Progress = 0.f;
 			if (Money > ConstPerTick)
 			{
@@ -87,12 +88,24 @@ void UPlayerEconomyComponent::RemoveCostItem(const FItemProductionInfoBase& Info
 		if (bCancele)
 		{
 			Money += ItemCostMap[Info].SpentMoney;
+			if (OnHoldItems.Contains(Info))
+			{
+				OnHoldItems.Remove(Info);
+			}
 		}
 		else
 		{
 			OnHoldItems.Add(Info, ItemCostMap[Info]);
 		}
 		ItemCostMap.Remove(Info);
+	}
+	// 取消等待中的
+	else
+	{
+		if (OnHoldItems.Contains(Info))
+		{
+			Money += OnHoldItems[Info].SpentMoney; OnHoldItems.Remove(Info);
+		}
 	}
 }
 

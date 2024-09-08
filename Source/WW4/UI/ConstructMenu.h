@@ -11,6 +11,9 @@
 /**
  * 
  */
+
+class AWW4PlayerController;
+
 UCLASS()
 class WW4_API UConstructMenu : public UUserWidget
 {
@@ -54,6 +57,8 @@ private:
 
 	UFUNCTION()
 	void OnUnitReady(const FItemProductionInfoBase& ItemInfo, bool bIsLastOne);
+
+	bool AddNextWaitingItem(const FItemProductionInfoBase& ItemInfo, AWW4PlayerController* PC);
 
 	TMap<FItemProductionInfoBase, UConstructItem*> ItemInfoMap;
 	TArray<FItemProductionInfoBase> WaitingItems;

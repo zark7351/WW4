@@ -64,11 +64,11 @@ public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
 	TArray<AUnitBase*>Units;
 
+	UPROPERTY(Replicated, EditAnywhere)
+	EFaction Faction{ EFaction::EF_None };
+
 private:
 	class UUnitManager* UnitManager;
-
-	UPROPERTY(Replicated)
-	EFaction Faction{ EFaction::EF_None };
 
 protected:
 	virtual void BeginPlay() override;

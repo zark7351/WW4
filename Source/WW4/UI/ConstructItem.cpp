@@ -93,6 +93,12 @@ void UConstructItem::OnClicked()
 
 void UConstructItem::OnRightClicked()
 {
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		100.f,
+		FColor::Red,
+		FString::Printf(TEXT("Clicked"))
+	);
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
@@ -104,25 +110,41 @@ void UConstructItem::OnRightClicked()
 	case EConstructItemState::ECS_OnHold:
 		if (bMultiBuild)
 		{
-			Count--;
-			if (Count == 0) ShowCount(false);
-			if (Count < 0)
+			if (Count == 0)
 			{
 				SetState(EConstructItemState::ECS_Normal);
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
 			}
+			else if (Count > 0)
+			{
+				Count--;
+				GEngine->AddOnScreenDebugMessage(
+					-1,
+					100.f,
+					FColor::Red,
+					FString::Printf(TEXT("--,%d"),Count)
+				);
+				if (Count == 0) ShowCount(false);
+			}
 		}
+		break;
 	case EConstructItemState::ECS_Ready:
 		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Return);	//返还资金	
+		check(Count != 0);
 		SetState(EConstructItemState::ECS_Normal);
 		break;
 	case EConstructItemState::ECS_Waiting:
-		if (bInWaitList)
+		if (Count > 0)
 		{
 			Count--;
-			if (Count <= 0)
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				100.f,
+				FColor::Red,
+				FString::Printf(TEXT("--,%d"), Count)
+			);
+			if (Count == 0)
 			{
-				bInWaitList = false;
 				ShowCount(false);
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::RemoveWaitList);	//取消排队
 			}
@@ -173,6 +195,12 @@ void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 		if (bMultiBuild)
 		{
 			Count--;
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				100.f,
+				FColor::Red,
+				FString::Printf(TEXT("--,%d"), Count)
+			);
 			if (Count == 0)
 			{
 				ShowCount(false);
@@ -253,4 +281,9 @@ void UConstructItem::SetCount(int32 inCount)
 	{
 		CountText->SetText(FText::AsNumber(inCount));
 	}
+}
+
+FReply UConstructItem::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	return FReply::Unhandled();
 }
