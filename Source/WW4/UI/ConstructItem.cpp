@@ -99,12 +99,12 @@ void UConstructItem::OnClicked()
 
 void UConstructItem::OnRightClicked()
 {
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		100.f,
-		FColor::Red,
-		FString::Printf(TEXT("Clicked"))
-	);
+	//GEngine->AddOnScreenDebugMessage(
+	//	-1,
+	//	100.f,
+	//	FColor::Red,
+	//	FString::Printf(TEXT("Clicked"))
+	//);
 	switch (ItemState)
 	{
 	case EConstructItemState::ECS_Normal:
@@ -114,23 +114,17 @@ void UConstructItem::OnRightClicked()
 		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
 		break;
 	case EConstructItemState::ECS_OnHold:
-		if (bMultiBuild)
+		if (bMultiBuild && Count > 0)
+		{
+			Count--;
+		}
+		else
 		{
 			if (Count == 0)
 			{
+				ShowCount(false);
 				SetState(EConstructItemState::ECS_Normal);
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
-			}
-			else if (Count > 0)
-			{
-				Count--;
-				GEngine->AddOnScreenDebugMessage(
-					-1,
-					100.f,
-					FColor::Red,
-					FString::Printf(TEXT("--,%d"),Count)
-				);
-				if (Count == 0) ShowCount(false);
 			}
 		}
 		break;

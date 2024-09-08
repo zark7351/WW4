@@ -127,8 +127,6 @@ private:
 
 	float CurRatio;
 
-	float TargetRatio;
-
 	UMaterialInstanceDynamic* MaskDynamicMaterialIns;
 
 	EConstructItemState ItemState{ EConstructItemState ::ECS_Normal};
