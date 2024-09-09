@@ -95,7 +95,7 @@ void UPlayerEconomyComponent::RemoveCostItem(const FItemProductionInfoBase& Info
 	{
 		if (bCancele)
 		{
-			Money += ItemCostMap[Info].SpentMoney;
+			TargetMoney += ItemCostMap[Info].SpentMoney;
 			if (OnHoldItems.Contains(Info))
 			{
 				OnHoldItems.Remove(Info);

@@ -38,7 +38,7 @@ public:
 	float InitMoney{ 10000 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float TickTime{ 0.25f };
+	float TickTime{ 0.1f };
 
 	UFUNCTION(BlueprintCallable, Blueprintpure)
 	FORCEINLINE int32 GetMoney() const { return Money; }
