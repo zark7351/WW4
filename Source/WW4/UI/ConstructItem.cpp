@@ -114,35 +114,51 @@ void UConstructItem::OnRightClicked()
 		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::OnHold);	//暂停建造
 		break;
 	case EConstructItemState::ECS_OnHold:
-		if (bMultiBuild && Count > 0)
-		{
-			Count--;
-		}
-		else
+		if (bMultiBuild)
 		{
 			if (Count == 0)
 			{
-				ShowCount(false);
 				SetState(EConstructItemState::ECS_Normal);
 				OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
+				if (MaskDynamicMaterialIns)
+				{
+					MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), 0.f);
+				}
+			}
+			if (Count > 0)
+			{
+				Count--;
+				if (Count == 0)
+				{
+					ShowCount(false);
+				}
+			}
+		}
+		else
+		{
+			SetState(EConstructItemState::ECS_Normal);
+			OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Cancele);	//取消建造
+			if (MaskDynamicMaterialIns)
+			{
+				MaskDynamicMaterialIns->SetScalarParameterValue(FName("Ratio"), 0.f);
 			}
 		}
 		break;
 	case EConstructItemState::ECS_Ready:
 		OnConstrcutItemClicked.Broadcast(ItemInfo, EConstructOperationType::Return);	//返还资金	
-		check(Count != 0);
+		//check(Count != 0);
 		SetState(EConstructItemState::ECS_Normal);
 		break;
 	case EConstructItemState::ECS_Waiting:
 		if (Count > 0)
 		{
 			Count--;
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				100.f,
-				FColor::Red,
-				FString::Printf(TEXT("--,%d"), Count)
-			);
+			//GEngine->AddOnScreenDebugMessage(
+			//	-1,
+			//	100.f,
+			//	FColor::Red,
+			//	FString::Printf(TEXT("--,%d"), Count)
+			//);
 			if (Count == 0)
 			{
 				ShowCount(false);
@@ -191,12 +207,12 @@ void UConstructItem::UpdateProgress(float Ratio, bool bStart)
 		if (bMultiBuild)
 		{
 			Count--;
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				100.f,
-				FColor::Red,
-				FString::Printf(TEXT("--,%d"), Count)
-			);
+			//GEngine->AddOnScreenDebugMessage(
+			//	-1,
+			//	100.f,
+			//	FColor::Red,
+			//	FString::Printf(TEXT("--,%d"), Count)
+			//);
 			if (Count == 0)
 			{
 				ShowCount(false);

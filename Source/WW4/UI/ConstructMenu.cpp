@@ -87,6 +87,10 @@ void UConstructMenu::RefreshGroupState(const FItemProductionInfoBase& ItemInfo, 
 			{
 				Item->SetState(bEnable ? EConstructItemState::ECS_Normal : EConstructItemState::ECS_Disabled);
 			}
+			else if (Item && Item->ItemInfo.ItemID == ItemInfo.ItemID && Item->GetState() == EConstructItemState::ECS_Ready)
+			{
+				Item->SetState(EConstructItemState::ECS_Normal);
+			}
 		}
 		break;
 	case EContructItemType::ECT_Vehicle:

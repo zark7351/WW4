@@ -95,7 +95,8 @@ void UPlayerEconomyComponent::RemoveCostItem(const FItemProductionInfoBase& Info
 	{
 		if (bCancele)
 		{
-			Money += ItemCostMap[Info].SpentMoney;
+			TargetMoney += ItemCostMap[Info].SpentMoney;
+			Money = TargetMoney;
 			if (OnHoldItems.Contains(Info))
 			{
 				OnHoldItems.Remove(Info);
@@ -112,12 +113,14 @@ void UPlayerEconomyComponent::RemoveCostItem(const FItemProductionInfoBase& Info
 	{
 		if (OnHoldItems.Contains(Info))
 		{
-			Money += OnHoldItems[Info].SpentMoney; OnHoldItems.Remove(Info);
+			TargetMoney += OnHoldItems[Info].SpentMoney; OnHoldItems.Remove(Info);
+			Money = TargetMoney;
 		}
 	}
 }
 
 void UPlayerEconomyComponent::ReturnItemMoney(const FItemProductionInfoBase& Info)
 {
-	Money += Info.ItemPrice;
+	TargetMoney += Info.ItemPrice;
+	Money = TargetMoney;
 }
