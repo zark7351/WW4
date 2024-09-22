@@ -5,11 +5,13 @@
 #include "WW4/Component/VehicleMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Net/UnrealNetwork.h"
 
 AVehicleBase::AVehicleBase()
 {
 	VehicleMovement = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("VehicleMovement"));
 	PrimaryActorTick.bCanEverTick = true;
+	SetReplicateMovement(false);
 }
 
 void AVehicleBase::SetTurnInPlaceTarget(const FVector& InTargetLocation)
@@ -18,11 +20,30 @@ void AVehicleBase::SetTurnInPlaceTarget(const FVector& InTargetLocation)
 	TargetLocation = InTargetLocation;
 }
 
+void AVehicleBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AVehicleBase, ServerLocation);
+	DOREPLIFETIME(AVehicleBase, ServerRotation);
+}
+
 void AVehicleBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	TurnInPlace(DeltaSeconds);
-	Rotate(DeltaSeconds);
+	if (HasAuthority())
+	{
+		TurnInPlace(DeltaSeconds);
+		Rotate(DeltaSeconds);
+		ServerLocation = GetActorLocation();
+		ServerRotation = GetActorRotation();
+	}
+	else
+	{
+		FVector ClientLocation = GetActorLocation();
+		FRotator ClientRotation = GetActorRotation();
+		SetActorLocation(FMath::VInterpConstantTo(ClientLocation, ServerLocation, DeltaSeconds, VehicleMovement->MaxSpeed));
+		SetActorRotation(FMath::RInterpConstantTo(ClientRotation, ServerRotation, DeltaSeconds, TurnSpeed));
+	}
 }
 
 void AVehicleBase::Rotate(float DeltaSeconds)

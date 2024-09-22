@@ -29,6 +29,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTurnInPlaceTarget(const FVector& InTargetLocation);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -39,6 +41,12 @@ protected:
 	void Rotate(float DeltaSeconds);
 	
 	void TurnInPlace(float DeltaSeconds);
+
+	UPROPERTY(Replicated)
+	FVector ServerLocation;
+
+	UPROPERTY(Replicated)
+	FRotator ServerRotation;
 
 private:
 
