@@ -24,8 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE ABuildingBase* GetOwnerBuilding() { return OwnerBuilding; }
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void Deploy();
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ServerDeploy();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFaction Faction;
@@ -40,7 +40,8 @@ public:
 
 	virtual EFaction GetFaction_Implementation() const override;
 
-	virtual void Deploy_Implementation();
+	UFUNCTION(BlueprintNativeEvent)
+	void HandleDeploy();
 
 	virtual void OnInit();
 

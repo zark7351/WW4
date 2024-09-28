@@ -45,8 +45,17 @@ void AUnitBase::BeginPlay()
 	}
 }
 
-void AUnitBase::Deploy_Implementation()
+void AUnitBase::ServerDeploy_Implementation()
 {
+	if (HasAuthority())
+	{
+		HandleDeploy();
+	}
+}
+
+void AUnitBase::HandleDeploy_Implementation()
+{
+
 }
 
 void AUnitBase::SetFactionStyle_Implementation(EFaction InFaction)

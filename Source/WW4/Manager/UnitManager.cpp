@@ -58,6 +58,7 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 		Unit->SetOwnerBuilding(OwnerBuilding);
 		Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
 		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+		Unit->SetOwner(Player);
 		if (Player)
 		{
 			UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
