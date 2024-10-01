@@ -103,6 +103,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	//virtual const AActor* GetNetOwner() const override;
+
 private:
 
 	ABuildingBase* OwnerBuilding{ nullptr };

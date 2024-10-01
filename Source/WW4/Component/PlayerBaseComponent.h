@@ -36,16 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EFaction GetFaction() { return Faction; }
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//void Defeated();
-
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void OnBuildingConstructed(int32 InItemID, bool bConstructOrDestruct);
-
-	//UFUNCTION(BlueprintCallable, BlueprintPure)
-	//FORCEINLINE int32 GetWW4PlayerID() const { return WW4PlayerID; }
-	//UFUNCTION(BlueprintCallable)
-	//FORCEINLINE void SetWW4PlayerID(int32 InID) { WW4PlayerID = InID; }
 
 	UPROPERTY(BlueprintReadWrite)
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;

@@ -7,6 +7,9 @@
 #include "Components/WidgetComponent.h"
 #include "WW4/AI/Controller/UnitAIControllerBase.h"
 #include "Net/UnrealNetwork.h"
+#include "WW4/Common/WW4CommonFunctionLibrary.h"
+#include "WW4/Core/WW4PlayerController.h"
+#include "WW4/Component/PlayerBaseComponent.h"
 
 AUnitBase::AUnitBase()
 {
@@ -42,6 +45,15 @@ void AUnitBase::BeginPlay()
 	if (UnitController)
 	{
 		UnitController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
+	}
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		AWW4PlayerController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerController(World);
+		if (Player && Player->PlayerBaseComponent && OwningPlayerID == Player->PlayerBaseComponent->WW4PlayerID)
+		{
+			SetOwner(Player);
+		}
 	}
 }
 
@@ -173,6 +185,11 @@ void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AUnitBase, OwningPlayerID);
 }
+
+//const AActor* AUnitBase::GetNetOwner() const
+//{
+//	return UGameplayStatics::GetPlayerController(this, 0);
+//}
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
