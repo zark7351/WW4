@@ -12,6 +12,7 @@
 #include "WW4/Core/WW4PlayerController.h"
 #include "WW4/Component/PlayerBaseComponent.h"
 #include "EngineUtils.h"
+#include "WW4/Core/WW4PlayerState.h"
 
 
 ABuildingConstructor::ABuildingConstructor()
@@ -26,7 +27,7 @@ bool ABuildingConstructor::Construct()
 		AWW4PlayerController* PlayerController = UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld());
 		if (PlayerController)
 		{
-			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->PlayerBaseComponent->WW4PlayerID, CurBuildingInfo, HitPos, FRotator::ZeroRotator);
+			PlayerController->PlayerBaseComponent->ServerSpawnBuilding(PlayerController->GetPlayerState<AWW4PlayerState>()->WW4PlayerID, CurBuildingInfo, HitPos, FRotator::ZeroRotator);
 			ClearCellArr();
 			return true;
 		}
@@ -40,7 +41,7 @@ void ABuildingConstructor::BeginPlay()
 	PlayerBuildings.Empty();
 	for (TActorIterator<ABuildingBase> BuildingItr(GetWorld()); BuildingItr; ++BuildingItr)
 	{
-		if (BuildingItr->OwningPlayerID == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->PlayerBaseComponent->WW4PlayerID)
+		if (BuildingItr->OwningPlayerID == UWW4CommonFunctionLibrary::GetWW4PlayerController(GetWorld())->GetPlayerState<AWW4PlayerState>()->WW4PlayerID)
 		{
 			PlayerBuildings.Add(*BuildingItr);
 		}

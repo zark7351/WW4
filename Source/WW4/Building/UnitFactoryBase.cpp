@@ -3,8 +3,8 @@
 
 #include "UnitFactoryBase.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
-#include "WW4/Component/PlayerBaseComponent.h"
 #include "WW4/Core/WW4GameModeBase.h"
+#include "WW4/Core/WW4PlayerState.h"
 
 AUnitFactoryBase::AUnitFactoryBase()
 {
@@ -29,10 +29,10 @@ void AUnitFactoryBase::SetMainFactory()
 		AController* Controller = WW4GM->FindPlayerByID(OwningPlayerID);
 		if (Controller)
 		{
-			UPlayerBaseComponent* BaseComp = Controller->GetComponentByClass<UPlayerBaseComponent>();
-			if (BaseComp)
+			AWW4PlayerState* PlayerState = Controller->GetPlayerState<AWW4PlayerState>();
+			if (PlayerState)
 			{
-				BaseComp->SetCurrentFactory(FactoryType, this);
+				PlayerState->SetCurrentFactory(FactoryType, this);
 			}
 		}
 	}

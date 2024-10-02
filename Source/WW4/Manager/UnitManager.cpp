@@ -10,8 +10,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "WW4/Core/WW4GameModeBase.h"
 #include "EngineUtils.h"
-#include "WW4/Component/PlayerBaseComponent.h"
 #include "WW4/Interface/BasePlayerInterface.h"
+#include "WW4/Core/WW4PlayerState.h"
 
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
@@ -25,14 +25,14 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 			Unit->ItemInfo = ItemInfo;
 			Unit->SetOwnerBuilding(SpawnBuilding);
 			Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
-			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
 			if (Player)
 			{
-				UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
-				if (BaseComp)
+				AWW4PlayerState* PlayerState = Player->GetPlayerState<AWW4PlayerState>();
+				if (PlayerState)
 				{
-					BaseComp->Units.Add(Unit);
-					Unit->Execute_SetFactionStyle(Unit, BaseComp->GetFaction());
+					PlayerState->Units.Add(Unit);
+					Unit->Execute_SetFactionStyle(Unit, PlayerState->GetFaction());
 				}
 			}
 			if (Units.Contains(InPlayerID))
@@ -57,15 +57,15 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 		Unit->ItemInfo = ItemInfo;
 		Unit->SetOwnerBuilding(OwnerBuilding);
 		Unit->Execute_SetOwningPlayerID(Unit, InPlayerID);
-		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+		AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
 		Unit->SetOwner(Player);
 		if (Player)
 		{
-			UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
-			if (BaseComp)
+			AWW4PlayerState* PlayerState = Player->GetPlayerState<AWW4PlayerState>();
+			if (PlayerState)
 			{
-				BaseComp->Units.Add(Unit);
-				Unit->Execute_SetFactionStyle(Unit, BaseComp->GetFaction());
+				PlayerState->Units.Add(Unit);
+				Unit->Execute_SetFactionStyle(Unit, PlayerState->GetFaction());
 			}
 		}
 		if (Units.Contains(InPlayerID))
@@ -107,14 +107,14 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 		{
 			Building->ItemInfo = BuildingInfo;
 			Building->Execute_SetOwningPlayerID(Building, InPlayerID);
-			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
 			if (Player)
 			{
-				UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
-				if (BaseComp)
+				AWW4PlayerState* PlayerState = Player->GetPlayerState<AWW4PlayerState>();
+				if (PlayerState)
 				{
-					BaseComp->Buildings.Add(Building);
-					Building->Execute_SetFactionStyle(Building, BaseComp->GetFaction());
+					PlayerState->Buildings.Add(Building);
+					Building->Execute_SetFactionStyle(Building, PlayerState->GetFaction());
 				}
 			}
 			if (Buildings.Contains(InPlayerID))
@@ -140,7 +140,7 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 	{
 		if (CheckIsUniqueBuilding(InPlayerID,InBuilding))
 		{
-			AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+			AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
 			auto BasePlayer = Cast<IBasePlayerInterface>(Player);
 			if (BasePlayer)
 			{
@@ -148,13 +148,13 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 			}
 		}
 		Buildings[InPlayerID].Buildings.Remove(InBuilding);
-		AController* Player = UWW4CommonFunctionLibrary::GetPlayerByID(GetWorld(), InPlayerID);
+		AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
 		if (Player)
 		{
-			UPlayerBaseComponent* BaseComp = Player->GetComponentByClass<UPlayerBaseComponent>();
-			if (BaseComp)
+			AWW4PlayerState* PlayerState = Player->GetPlayerState<AWW4PlayerState>();
+			if (PlayerState)
 			{
-				BaseComp->Buildings.Remove(InBuilding);
+				PlayerState->Buildings.Remove(InBuilding);
 			}
 		}
 		if (Buildings[InPlayerID].Buildings.Num() <= 0)

@@ -15,6 +15,11 @@ UPlayerBaseComponent::UPlayerBaseComponent()
 }
 
 
+void UPlayerBaseComponent::ServerDeployUnit_Implementation(AUnitBase* InUnit)
+{
+	InUnit->HandleDeploy();
+}
+
 void UPlayerBaseComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -27,15 +32,6 @@ void UPlayerBaseComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-}
-
-void UPlayerBaseComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(UPlayerBaseComponent, WW4PlayerID);
-	DOREPLIFETIME(UPlayerBaseComponent, Faction);
-	DOREPLIFETIME(UPlayerBaseComponent, Buildings);
-	DOREPLIFETIME(UPlayerBaseComponent, Units);
 }
 
 void UPlayerBaseComponent::ServerSpawnBuilding_Implementation(int32 InPlayerID, const FItemProductionInfoBase& BuildingInfo, const FVector& Location, const FRotator& Rotation)
@@ -74,22 +70,3 @@ void UPlayerBaseComponent::ServerSetTarget_Implementation(const TArray<AUnitBase
 	}
 }
 
-
-void UPlayerBaseComponent::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory)
-{
-	switch (Type)
-	{
-	case EContructItemType::ECT_Building:
-		break;
-	case EContructItemType::ECT_Infantry:
-		CurrentInfantryFactory = InFactory;
-		break;
-	case EContructItemType::ECT_Vehicle:
-		CurrentVehicleFactory = InFactory;
-		break;
-	case EContructItemType::ECT_Max:
-		break;
-	default:
-		break;
-	}
-}

@@ -24,8 +24,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE ABuildingBase* GetOwnerBuilding() { return OwnerBuilding; }
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void ServerDeploy();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFaction Faction;

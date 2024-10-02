@@ -16,6 +16,7 @@
 #include "WW4/Component/PlayerBaseComponent.h"
 #include "WW4/Core/WW4HUD.h"
 #include "WW4/Building/UnitFactoryBase.h"
+#include "WW4/Core/WW4PlayerState.h"
 
 UConstructMenu::UConstructMenu(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -185,13 +186,13 @@ void UConstructMenu::OnUnitReady(const FItemProductionInfoBase& ItemInfo, bool b
 	}
 	if (ItemInfo.ItemType == EContructItemType::ECT_Vehicle || ItemInfo.ItemType == EContructItemType::ECT_Infantry)
 	{
-		if (PC->PlayerBaseComponent && PC->PlayerBaseComponent->CurrentVehicleFactory)
+		if (PC->PlayerBaseComponent && PC->GetPlayerState<AWW4PlayerState>()->CurrentVehicleFactory)
 		{
 			PC->PlayerBaseComponent->ServerSpawnUnit(
 				ItemInfo,
-				PC->PlayerBaseComponent->WW4PlayerID,
-				PC->PlayerBaseComponent->CurrentVehicleFactory->GetSpawnTransform(),
-				PC->PlayerBaseComponent->CurrentVehicleFactory
+				PC->GetPlayerState<AWW4PlayerState>()->WW4PlayerID,
+				PC->GetPlayerState<AWW4PlayerState>()->CurrentVehicleFactory->GetSpawnTransform(),
+				PC->GetPlayerState<AWW4PlayerState>()->CurrentVehicleFactory
 			);
 		}
 		if (bIsLastOne)

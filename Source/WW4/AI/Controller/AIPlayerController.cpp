@@ -15,10 +15,13 @@ AAIPlayerController::AAIPlayerController()
 
 void AAIPlayerController::SetPlayerFaction_Implementation(const EFaction& InFaction)
 {
-	PlayerBaseComponent->SetFaction(InFaction);
+	//TODO:AI玩家阵营
+	//PlayerBaseComponent->SetFaction(InFaction);
 }
 
 EFaction AAIPlayerController::GetPlayerFaction_Implementation() const
 {
-	return PlayerBaseComponent->GetFaction();
+	//TODO:AI玩家阵营
+	//return PlayerBaseComponent->GetFaction();
+	return EFaction::EF_None;
 }

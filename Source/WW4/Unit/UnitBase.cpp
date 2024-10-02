@@ -9,7 +9,8 @@
 #include "Net/UnrealNetwork.h"
 #include "WW4/Common/WW4CommonFunctionLibrary.h"
 #include "WW4/Core/WW4PlayerController.h"
-#include "WW4/Component/PlayerBaseComponent.h"
+#include "WW4/Core/WW4PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 
 AUnitBase::AUnitBase()
 {
@@ -46,28 +47,6 @@ void AUnitBase::BeginPlay()
 	{
 		UnitController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
 	}
-	UWorld* World = GetWorld();
-	if (World)
-	{
-		AWW4PlayerController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerController(World);
-		if (Player && Player->PlayerBaseComponent && OwningPlayerID == Player->PlayerBaseComponent->WW4PlayerID)
-		{
-			SetOwner(Player);
-		}
-	}
-}
-
-void AUnitBase::ServerDeploy_Implementation()
-{
-	if (HasAuthority())
-	{
-		HandleDeploy();
-	}
-}
-
-void AUnitBase::HandleDeploy_Implementation()
-{
-
 }
 
 void AUnitBase::SetFactionStyle_Implementation(EFaction InFaction)
@@ -177,7 +156,6 @@ int32 AUnitBase::GetOwningPlayerID_Implementation()
 void AUnitBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -185,11 +163,6 @@ void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AUnitBase, OwningPlayerID);
 }
-
-//const AActor* AUnitBase::GetNetOwner() const
-//{
-//	return UGameplayStatics::GetPlayerController(this, 0);
-//}
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
@@ -202,5 +175,10 @@ void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Re
 void AUnitBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+}
+
+void AUnitBase::HandleDeploy_Implementation()
+{
 
 }
