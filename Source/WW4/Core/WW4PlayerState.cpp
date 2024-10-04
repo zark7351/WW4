@@ -10,6 +10,8 @@ void AWW4PlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME(AWW4PlayerState, Faction);
 	DOREPLIFETIME(AWW4PlayerState, Buildings);
 	DOREPLIFETIME(AWW4PlayerState, Units);
+	DOREPLIFETIME(AWW4PlayerState, CurrentVehicleFactory);
+	DOREPLIFETIME(AWW4PlayerState, CurrentInfantryFactory);
 }
 
 void AWW4PlayerState::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory)

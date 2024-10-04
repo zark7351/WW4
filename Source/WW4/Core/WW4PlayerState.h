@@ -23,10 +23,10 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(Replicated, BlueprintReadWrite)
 	class AUnitFactoryBase* CurrentVehicleFactory = nullptr;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(Replicated, BlueprintReadWrite)
 	class AUnitFactoryBase* CurrentInfantryFactory = nullptr;
 
 	void SetCurrentFactory(EContructItemType Type, AUnitFactoryBase* InFactory);
