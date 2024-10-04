@@ -29,9 +29,6 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerSetTarget(const TArray<AUnitBase*>& Actors, AActor* TargetActor);
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void OnBuildingConstructed(int32 InItemID, bool bConstructOrDestruct);
-
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerDeployUnit(AUnitBase* InUnit);
 

@@ -12,6 +12,7 @@
 #include "EngineUtils.h"
 #include "WW4/Interface/BasePlayerInterface.h"
 #include "WW4/Core/WW4PlayerState.h"
+#include "WW4/Component/TechTreeComponent.h"
 
 
 AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPlayerID, AUnitFactoryBase* SpawnBuilding)
@@ -141,10 +142,10 @@ void UUnitManager::OnBuildingDestroy(int32 InPlayerID, ABuildingBase* InBuilding
 		if (CheckIsUniqueBuilding(InPlayerID,InBuilding))
 		{
 			AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), InPlayerID);
-			auto BasePlayer = Cast<IBasePlayerInterface>(Player);
-			if (BasePlayer)
+			UTechTreeComponent* TecComp = Player->GetComponentByClass<UTechTreeComponent>();
+			if (TecComp)
 			{
-				BasePlayer->Execute_OnBuildingConstructed(Player,InBuilding->ItemInfo.ItemID, false);
+				TecComp->OnLastItemDestructed(InBuilding->ItemInfo.ItemID);
 			}
 		}
 		Buildings[InPlayerID].Buildings.Remove(InBuilding);

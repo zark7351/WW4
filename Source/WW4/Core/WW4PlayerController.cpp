@@ -14,6 +14,11 @@ AWW4PlayerController::AWW4PlayerController()
 	TechTreeComponent = CreateDefaultSubobject<UTechTreeComponent>(TEXT("TechTreeComponent"));
 }
 
+AWW4PlayerState* AWW4PlayerController::GetWW4PlayerState() const
+{
+	return GetPlayerState<AWW4PlayerState>();
+}
+
 void AWW4PlayerController::SetPlayerFaction_Implementation(const EFaction& InFaction)
 {
 	GetPlayerState<AWW4PlayerState>()->SetFaction(InFaction);

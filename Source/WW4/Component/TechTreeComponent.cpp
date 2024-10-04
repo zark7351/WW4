@@ -5,11 +5,12 @@
 #include "TechTreeComponent.h"
 #include "WW4/Core/WW4PlayerController.h"
 #include "WW4/Core/WW4HUD.h"
+#include "Net/UnrealNetwork.h"
 
 UTechTreeComponent::UTechTreeComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
+	SetIsReplicatedByDefault(true);
 }
 
 
@@ -24,6 +25,12 @@ void UTechTreeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+}
+
+void UTechTreeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UTechTreeComponent, UnlockedItems);
 }
 
 void UTechTreeComponent::InitConstructItems()
@@ -62,9 +69,27 @@ void UTechTreeComponent::InitConstructItems()
 			}
 		}
 	}
+	//服务器端需要单独处理
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_UnlockedItems();
+	}
 }
 
-void UTechTreeComponent::OnNewItemConstructed(int32 InItemID)
+void UTechTreeComponent::OnRep_UnlockedItems()
+{
+	AWW4PlayerController* Player = Cast<AWW4PlayerController>(GetOwner());
+	if (Player)
+	{
+		AWW4HUD* HUD = Player->GetHUD<AWW4HUD>();
+		if (HUD)
+		{
+			HUD->RefreshConstructItems(UnlockedItems);
+		}
+	}
+}
+
+void UTechTreeComponent::UpdateTecTreeWithNewItem(int32 InItemID)
 {
 	if (!BuiltItemsID.Contains(InItemID))
 	{
@@ -82,7 +107,11 @@ void UTechTreeComponent::OnNewItemConstructed(int32 InItemID)
 				}
 			}
 		}
-		RefreshHUD();
+	}
+	//服务器端需要单独处理
+	if (GetOwner()->HasAuthority())
+	{
+		OnRep_UnlockedItems();
 	}
 }
 
@@ -99,20 +128,11 @@ void UTechTreeComponent::OnLastItemDestructed(int32 InItemID)
 				UnlockedItems.RemoveAt(i);
 			}
 		}
-		RefreshHUD();
 	}
-}
-
-void UTechTreeComponent::RefreshHUD()
-{
-	AWW4PlayerController* Player = Cast<AWW4PlayerController>(GetOwner());
-	if (Player)
+	//服务器端需要单独处理
+	if (GetOwner()->HasAuthority())
 	{
-		AWW4HUD* HUD = Cast<AWW4HUD>(Player->GetHUD());
-		if (HUD)
-		{
-			HUD->RefreshConstructItems(UnlockedItems);
-		}
+		OnRep_UnlockedItems();
 	}
 }
 

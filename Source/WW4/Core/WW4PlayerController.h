@@ -23,14 +23,17 @@ public:
 
 	AWW4PlayerController();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	AWW4PlayerState* GetWW4PlayerState() const;
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Defeated();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPlayerEconomyComponent* EconomyComponent;
+	UPlayerBaseComponent* PlayerBaseComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPlayerBaseComponent* PlayerBaseComponent;
+	UPlayerEconomyComponent* EconomyComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTechTreeComponent* TechTreeComponent;

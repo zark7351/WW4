@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "WW4/Interface/BasePlayerInterface.h"
 #include "WW4/Core/WW4PlayerState.h"
+#include "WW4/Component/TechTreeComponent.h"
 
 ABuildingBase::ABuildingBase()
 {
@@ -36,16 +37,19 @@ void ABuildingBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitGrid();
-	AController* Controller = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), OwningPlayerID);
-	if (Controller)
+	if (HasAuthority())
 	{
-		AWW4PlayerState* PlayerState = Controller->GetPlayerState<AWW4PlayerState>();
-		if (PlayerState && PlayerState->WW4PlayerID == Execute_GetOwningPlayerID(this))
+		AController* Controller = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), OwningPlayerID);
+		if (Controller)
 		{
-			IBasePlayerInterface* Player = Cast<IBasePlayerInterface>(Controller);
-			if (Player)
+			AWW4PlayerState* PlayerState = Controller->GetPlayerState<AWW4PlayerState>();
+			if (PlayerState && PlayerState->WW4PlayerID == Execute_GetOwningPlayerID(this))
 			{
-				Player->Execute_OnBuildingConstructed(Controller, ItemInfo.ItemID, true);
+				UTechTreeComponent* TecComp = Controller->GetComponentByClass<UTechTreeComponent>();
+				if (TecComp)
+				{
+					TecComp->UpdateTecTreeWithNewItem(ItemInfo.ItemID);
+				}
 			}
 		}
 	}
