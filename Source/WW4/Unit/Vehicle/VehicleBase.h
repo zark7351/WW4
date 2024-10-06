@@ -20,6 +20,8 @@ public:
 
 	AVehicleBase();
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TurnSpeed{500.f};
 
@@ -31,10 +33,21 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* MoveSound;
+
+	virtual void OnSetMoving(bool bMoving) override;
+
+	void DelayStopSound();
+
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UVehicleMovementComponent* VehicleMovement;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAudioComponent* AudioComponent;
 
 	virtual void Tick(float DeltaSeconds) override;
 

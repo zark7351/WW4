@@ -18,6 +18,13 @@ public:
 
 	UHealthComponent();
 
+	virtual void BeginPlay() override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UHealthBar* HealthBar{ nullptr };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth{ 100.f };
 
@@ -36,9 +43,7 @@ public:
 
 private:
 
-	UPROPERTY()
-	class UHealthBar* HealthBar{ nullptr };
-
+	UPROPERTY(Replicated)
 	float CurrentHealth{ 100.f };
 
 	bool bShowing{ false };

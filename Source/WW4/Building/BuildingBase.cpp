@@ -30,7 +30,6 @@ ABuildingBase::ABuildingBase()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->SetupAttachment(RootComponent);
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 250.f));
-	SetFactionStyle_Implementation(Faction);
 }
 
 void ABuildingBase::BeginPlay()
@@ -53,6 +52,11 @@ void ABuildingBase::BeginPlay()
 			}
 		}
 	}
+	SetFactionStyle_Implementation(Faction);
+	if (ConstructSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), ConstructSound, GetActorLocation());
+	}
 }
 
 void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -62,6 +66,18 @@ void ABuildingBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		UnitManager->OnBuildingDestroy(OwningPlayerID,this);
 	}
+	if (DestructEffect)
+	{
+		FTransform Transform;
+		Transform.SetLocation(GetActorLocation());
+		Transform.SetRotation(FRotator(GetActorRotation().Pitch, FMath::FRandRange(-180.f, 180.f), GetActorRotation().Roll).Quaternion());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestructEffect, Transform);
+	}
+	if (DestructSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestructSound, GetActorLocation());
+	}
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABuildingBase::Tick(float DeltaTime)
@@ -74,6 +90,7 @@ void ABuildingBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ABuildingBase, OwningPlayerID);
+	DOREPLIFETIME(ABuildingBase, Faction);
 }
 
 float ABuildingBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

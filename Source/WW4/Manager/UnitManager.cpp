@@ -33,7 +33,9 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 				if (PlayerState)
 				{
 					PlayerState->Units.Add(Unit);
-					Unit->Execute_SetFactionStyle(Unit, PlayerState->GetFaction());
+					Unit->Faction = PlayerState->GetFaction();
+					Unit->FinishSpawning(SpawnBuilding->GetSpawnTransform());
+					Unit->OnInit();
 				}
 			}
 			if (Units.Contains(InPlayerID))
@@ -44,7 +46,6 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 			{
 				Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 			}
-			Unit->FinishSpawning(SpawnBuilding->GetSpawnTransform());
 		}
 	}
 	return Unit;
@@ -66,7 +67,9 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 			if (PlayerState)
 			{
 				PlayerState->Units.Add(Unit);
-				Unit->Execute_SetFactionStyle(Unit, PlayerState->GetFaction());
+				Unit->Faction = PlayerState->GetFaction();
+				Unit->FinishSpawning(Transform);
+				Unit->OnInit();
 			}
 		}
 		if (Units.Contains(InPlayerID))
@@ -77,8 +80,6 @@ AUnitBase* UUnitManager::SpawnUnit(FItemProductionInfoBase ItemInfo, int32 InPla
 		{
 			Units.Add(InPlayerID, FUnitsInfo(Unit, InPlayerID));
 		}
-		Unit->FinishSpawning(Transform);
-		Unit->OnInit();
 	}
 	return Unit;
 }
@@ -115,7 +116,8 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 				if (PlayerState)
 				{
 					PlayerState->Buildings.Add(Building);
-					Building->Execute_SetFactionStyle(Building, PlayerState->GetFaction());
+					Building->Faction = PlayerState->GetFaction();
+					Building->FinishSpawning(FTransform(Rotation, Location));
 				}
 			}
 			if (Buildings.Contains(InPlayerID))
@@ -126,7 +128,6 @@ void UUnitManager::SpawnBuilding(int32 InPlayerID, const FItemProductionInfoBase
 			{
 				Buildings.Add(InPlayerID, Building);
 			}
-			Building->FinishSpawning(FTransform(Rotation, Location));
 		}
 	}
 }

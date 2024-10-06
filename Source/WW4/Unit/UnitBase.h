@@ -25,7 +25,7 @@ public:
 	FORCEINLINE ABuildingBase* GetOwnerBuilding() { return OwnerBuilding; }
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite)
 	EFaction Faction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -66,6 +66,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsMoving(bool InMoving);
 
+	virtual void OnSetMoving(bool bMoving);
+
 	virtual void SetOwningPlayerID_Implementation(int32 InID) override;
 
 	virtual int32 GetOwningPlayerID_Implementation() override;
@@ -90,6 +92,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UHealthComponent* HealthComponent;
+
 
 protected:
 	virtual void BeginPlay() override;

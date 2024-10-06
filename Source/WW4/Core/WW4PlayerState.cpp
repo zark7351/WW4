@@ -32,3 +32,8 @@ void AWW4PlayerState::SetCurrentFactory(EContructItemType Type, AUnitFactoryBase
 		break;
 	}
 }
+
+void AWW4PlayerState::SetFaction_Implementation(EFaction InFaction)
+{
+	Faction = InFaction;
+}

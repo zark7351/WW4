@@ -30,7 +30,6 @@ AUnitBase::AUnitBase()
 	HealthComponent->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	AIControllerClass = AUnitAIControllerBase::StaticClass();	
-	SetFactionStyle_Implementation(Faction);
 }
 
 void AUnitBase::SetDestication(const FVector& InDestination)
@@ -47,6 +46,7 @@ void AUnitBase::BeginPlay()
 	{
 		UnitController->ReceiveMoveCompleted.AddDynamic(this, &AUnitBase::OnStopMove);
 	}
+	SetFactionStyle_Implementation(Faction);
 }
 
 void AUnitBase::SetFactionStyle_Implementation(EFaction InFaction)
@@ -141,6 +141,11 @@ void AUnitBase::SetIsMoving(bool InMoving)
 	{
 		UnitController->SetMoving(InMoving);
 	}
+	OnSetMoving(InMoving);
+}
+
+void AUnitBase::OnSetMoving(bool bMoving)
+{
 }
 
 void AUnitBase::SetOwningPlayerID_Implementation(int32 InID)
@@ -162,6 +167,7 @@ void AUnitBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AUnitBase, OwningPlayerID);
+	DOREPLIFETIME(AUnitBase, Faction);
 }
 
 void AUnitBase::OnStopMove(FAIRequestID RequestID, EPathFollowingResult::Type Result)

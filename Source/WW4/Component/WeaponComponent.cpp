@@ -7,6 +7,7 @@
 #include "WW4/Projectile/ProjectileBase.h"
 #include "WW4/Unit/UnitBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Net/UnrealNetwork.h"
 
 UWeaponComponent::UWeaponComponent()
 {
@@ -39,27 +40,36 @@ void UWeaponComponent::BeginPlay()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (OwnerUnit)
+	if (GetOwner()->HasAuthority())
 	{
-		if (IsTargetInRange() && OwnerUnit->GetIsMoving())
+		if (OwnerUnit)
 		{
-			OwnerUnit->StopMoving();
-		}
-		TurnToTarget(DeltaTime);
-		//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerUnit->GetActorRotation().Yaw);
-
-		if (IsTargetInRange() && bAimReady)
-		{
-			if (!Firing)
+			if (IsTargetInRange() && OwnerUnit->GetIsMoving())
 			{
-				BeginFire();
+				OwnerUnit->StopMoving();
+			}
+			TurnToTarget(DeltaTime);
+			//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerUnit->GetActorRotation().Yaw);
+
+			if (IsTargetInRange() && bAimReady)
+			{
+				if (!Firing)
+				{
+					BeginFire();
+				}
+			}
+			else if (Firing)
+			{
+				StopFire();
 			}
 		}
-		else if(Firing)
-		{
-			StopFire();
-		}
 	}
+}
+
+void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UWeaponComponent, RotateAngle);
 }
 
 bool UWeaponComponent::IsTargetInRange() const

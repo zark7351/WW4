@@ -43,8 +43,8 @@ public:
 	UPROPERTY(Replicated, EditAnywhere)
 	EFaction Faction{ EFaction::ET_Blue };
 
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetFaction(EFaction InFaction) { Faction = InFaction; }
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void SetFaction(EFaction InFaction);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE EFaction GetFaction() { return Faction; }

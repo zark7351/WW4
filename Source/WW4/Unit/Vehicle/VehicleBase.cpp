@@ -6,12 +6,25 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/AudioComponent.h"
+#include "TimerManager.h"
 
 AVehicleBase::AVehicleBase()
 {
 	VehicleMovement = CreateDefaultSubobject<UVehicleMovementComponent>(TEXT("VehicleMovement"));
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
+	AudioComponent->SetupAttachment(RootComponent);
 	PrimaryActorTick.bCanEverTick = true;
 	SetReplicateMovement(false);
+}
+
+void AVehicleBase::BeginPlay()
+{
+	Super::BeginPlay();
+	if (MoveSound)
+	{
+		AudioComponent->SetSound(MoveSound);
+	}
 }
 
 void AVehicleBase::SetTurnInPlaceTarget(const FVector& InTargetLocation)
@@ -25,6 +38,34 @@ void AVehicleBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AVehicleBase, ServerLocation);
 	DOREPLIFETIME(AVehicleBase, ServerRotation);
+}
+
+void AVehicleBase::OnSetMoving(bool bMoving)
+{
+	if(AudioComponent)
+	{
+		if (bMoving)
+		{
+			if (!AudioComponent->IsPlaying())
+			{
+				AudioComponent->FadeIn(0.2f);
+			}
+		}
+		else
+		{
+			//如果改变移动目标，bMoving会变化，这里延迟检查一下是否还在移动，如果停止再StopPlay
+			FTimerHandle TimerHandle;
+			GetWorldTimerManager().SetTimer(TimerHandle, this, &AVehicleBase::DelayStopSound, 0.2f);
+		}
+	}
+}
+
+void AVehicleBase::DelayStopSound()
+{
+	if (AudioComponent && !GetIsMoving() && !TurningInPlace)
+	{
+		AudioComponent->FadeOut(0.2f, 0.f);
+	}
 }
 
 void AVehicleBase::Tick(float DeltaSeconds)

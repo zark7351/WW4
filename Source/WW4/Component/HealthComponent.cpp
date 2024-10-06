@@ -3,7 +3,7 @@
 
 #include "HealthComponent.h"
 #include "WW4/UI/HealthBar.h"
-
+#include "Net/UnrealNetwork.h"
 //UE_DISABLE_OPTIMIZATION
 
 UHealthComponent::UHealthComponent()
@@ -15,8 +15,22 @@ UHealthComponent::UHealthComponent()
 	}
 	SetWidgetSpace(EWidgetSpace::Screen);
 	SetDrawAtDesiredSize(true);
+}
+
+void UHealthComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
+	InitWidget();
+	HealthBar = Cast<UHealthBar>(GetUserWidgetObject());
 	UpdateHealth();
 	SetVisibility(false);
+}
+
+void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UHealthComponent, CurrentHealth);
 }
 
 void UHealthComponent::ShowHealthBar(bool bShow)
@@ -31,11 +45,14 @@ void UHealthComponent::ShowHealthBar(bool bShow)
 
 void UHealthComponent::UpdateHealth()
 {
-	HealthBar = HealthBar == nullptr ? Cast<UHealthBar>(GetWidget()) : HealthBar;
 	if (HealthBar)
 	{
 		float Percentage = CurrentHealth / MaxHealth;
 		HealthBar->UpdateBar(Percentage);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HealthBar Not Valid!"));
 	}
 }
 
