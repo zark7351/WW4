@@ -113,6 +113,7 @@ void AVehicleBase::TurnInPlace(float DeltaSeconds)
 		FRotator CurRotation = GetActorRotation();
 		FRotator TempRot = FMath::RInterpConstantTo(CurRotation, FRotator(CurRotation.Pitch, LookAtRotation.Yaw, CurRotation.Roll), DeltaSeconds, TurnSpeed);
 		SetActorRotation(TempRot);
+		//GEngine->AddOnScreenDebugMessage(2, 1.f, FColor::Green, FString::Printf(TEXT("Vehicle: TurningInPlace %d, LookAtYaw: %f, TempYaw: %f"), TurningInPlace, LookAtRotation.Yaw, TempRot.Yaw));
 		if (FMath::IsNearlyEqual(CurRotation.Yaw, LookAtRotation.Yaw))
 		{
 			OnTurnInPlaceFinished.Broadcast(this);

@@ -54,7 +54,7 @@ public:
 	bool Firing{ false };
 
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetTarget(AActor* InTarget) { Target = InTarget; }
+	void SetTarget(AActor* InTarget);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	FORCEINLINE AActor* GetTarget() const { return Target; }

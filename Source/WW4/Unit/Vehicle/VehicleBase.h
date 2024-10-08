@@ -40,6 +40,7 @@ public:
 
 	void DelayStopSound();
 
+	bool TurningInPlace{ false };
 
 protected:
 
@@ -62,8 +63,6 @@ protected:
 	FRotator ServerRotation;
 
 private:
-
-	bool TurningInPlace{ false };
 
 	FVector TargetLocation;
 };

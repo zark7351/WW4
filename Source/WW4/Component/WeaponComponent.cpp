@@ -8,6 +8,7 @@
 #include "WW4/Unit/UnitBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "WW4/Unit/Vehicle/VehicleBase.h"
 
 UWeaponComponent::UWeaponComponent()
 {
@@ -50,8 +51,14 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			}
 			TurnToTarget(DeltaTime);
 			//UE_LOG(LogTemp, Warning, TEXT("%f"), OwnerUnit->GetActorRotation().Yaw);
-
-			if (IsTargetInRange() && bAimReady)
+			//GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::Green, FString::Printf(TEXT("WeaponComponent: bAimReady %d"), bAimReady));
+			AVehicleBase* Vehicle = Cast<AVehicleBase>(GetOwner());
+			bool Turning = false;
+			if (Vehicle)
+			{
+				Turning = Vehicle->TurningInPlace;
+			}
+			if (IsTargetInRange() && bAimReady && !Turning)
 			{
 				if (!Firing)
 				{
@@ -70,6 +77,12 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UWeaponComponent, RotateAngle);
+}
+
+void UWeaponComponent::SetTarget(AActor* InTarget)
+{
+	Target = InTarget;
+	bAimReady = false;
 }
 
 bool UWeaponComponent::IsTargetInRange() const
@@ -102,6 +115,7 @@ void UWeaponComponent::TurnToTarget(float DeltaTime)
 	}
 	TempRot = FMath::RInterpConstantTo(FRotator(CurRot.Pitch,RotateAngle,CurRot.Roll), TargetRot, DeltaTime, TurnSpeed);
 	bAimReady = FMath::IsNearlyEqual(RotateAngle,TargetRot.Yaw, 3.0f);
+	//UE_LOG(LogTemp, Warning, TEXT("WeaponComponent: bAimReady %d, TargetYaw: %f, RotAngle: %f"),bAimReady, TempRot.Yaw, RotateAngle);
 	if (bAimReady)
 	{
 		return;
