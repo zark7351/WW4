@@ -22,6 +22,7 @@ AProjectileBase::AProjectileBase()
 	CollisionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	CollisionSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECR_Ignore);
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnBeginOverlap);
+	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -83,6 +84,11 @@ void AProjectileBase::Explode(AActor* HitActor)
 		}
 	}
 	Destroy();
+}
+
+void AProjectileBase::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	Explode(OtherActor);
 }
 
 void AProjectileBase::Tick(float DeltaTime)
