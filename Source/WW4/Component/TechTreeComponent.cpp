@@ -35,6 +35,10 @@ void UTechTreeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 void UTechTreeComponent::InitConstructItems()
 {
+	if (Initialized)
+	{
+		return;
+	}
 	AllItems.Empty();
 	UnlockedItems.Empty();
 	if (BuildingTable)
@@ -74,6 +78,7 @@ void UTechTreeComponent::InitConstructItems()
 	{
 		OnRep_UnlockedItems();
 	}
+	Initialized = true;
 }
 
 void UTechTreeComponent::OnRep_UnlockedItems()
@@ -89,28 +94,34 @@ void UTechTreeComponent::OnRep_UnlockedItems()
 	}
 }
 
-void UTechTreeComponent::UpdateTecTreeWithNewItem(int32 InItemID)
+void UTechTreeComponent::UnlockItems(TArray<int32> InItemsID)
 {
-	if (!BuiltItemsID.Contains(InItemID))
+	if (!Initialized)
 	{
-		BuiltItemsID.Add(InItemID);
-		for (FItemProductionInfoBase Info : AllItems)
+		InitConstructItems();
+	}
+	if (GetOwner()->HasAuthority())
+	{ 
+		for (int32 InItemID : InItemsID)
 		{
-			if (Info.ItemID != InItemID)
+			if (!BuiltItemsID.Contains(InItemID))
 			{
-				if (!UnlockedItems.Contains(Info))
+				BuiltItemsID.Add(InItemID);
+				for (FItemProductionInfoBase Info : AllItems)
 				{
-					if (CheckPrerequisite(Info))
+					if (Info.ItemID != InItemID)
 					{
-						UnlockedItems.Add(Info);
+						if (!UnlockedItems.Contains(Info))
+						{
+							if (CheckPrerequisite(Info))
+							{
+								UnlockedItems.Add(Info);
+							}
+						}
 					}
 				}
 			}
 		}
-	}
-	//服务器端需要单独处理
-	if (GetOwner()->HasAuthority())
-	{
 		OnRep_UnlockedItems();
 	}
 }

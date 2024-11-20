@@ -199,4 +199,43 @@ void UUnitManager::CollectBuildingsAndUnits()
 	{
 		Units.Add(UnitItr->GetOwningPlayerID(), FUnitsInfo(*UnitItr, UnitItr->GetOwningPlayerID()));
 	}
+	//TArray<int32> ItemsID;
+	//for (TMap<int32,FBuildingArr>::TConstIterator It(Buildings);It;++It)
+	//{
+	//	for (ABuildingBase* Building : It.Value().Buildings)
+	//	{
+	//		if (!ItemsID.Contains(Building->ItemInfo.ItemID))
+	//		{
+	//			ItemsID.Add(Building->ItemInfo.ItemID);
+	//		}
+	//	}
+	//	AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), It.Key());
+	//	if (Player)
+	//	{
+	//		UTechTreeComponent* TecComp = Player->GetComponentByClass<UTechTreeComponent>();
+	//		if (TecComp)
+	//		{
+	//			TecComp->UnlockItems(ItemsID);
+	//		}
+	//	}
+	//}
+	//for (TMap<int32, FUnitsInfo>::TConstIterator It(Units); It; ++It)
+	//{
+	//	for (AUnitBase* Unit : It.Value().Units)
+	//	{
+	//		if (!ItemsID.Contains(Unit->ItemInfo.ItemID))
+	//		{
+	//			ItemsID.Add(Unit->ItemInfo.ItemID);
+	//		}
+	//	}
+	//	AController* Player = UWW4CommonFunctionLibrary::GetWW4PlayerByID(GetWorld(), It.Key());
+	//	if (Player)
+	//	{
+	//		UTechTreeComponent* TecComp = Player->GetComponentByClass<UTechTreeComponent>();
+	//		if (TecComp)
+	//		{
+	//			TecComp->UnlockItems(ItemsID);
+	//		}
+	//	}
+	//}
 }

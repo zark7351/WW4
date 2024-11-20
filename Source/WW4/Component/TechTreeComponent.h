@@ -22,6 +22,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	bool Initialized = false;
 	void InitConstructItems();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -46,7 +47,7 @@ public:
 	TSet<int32> BuiltItemsID;
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateTecTreeWithNewItem(int32 InItemID);
+	void UnlockItems(TArray<int32> InItemsID);
 
 	UFUNCTION(BlueprintCallable)
 	void OnLastItemDestructed(int32 InItemID);

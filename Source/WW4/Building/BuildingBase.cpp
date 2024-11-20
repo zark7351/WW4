@@ -47,7 +47,9 @@ void ABuildingBase::BeginPlay()
 				UTechTreeComponent* TecComp = Controller->GetComponentByClass<UTechTreeComponent>();
 				if (TecComp)
 				{
-					TecComp->UpdateTecTreeWithNewItem(ItemInfo.ItemID);
+					TArray<int32> ItemsID;
+					ItemsID.Add(ItemInfo.ItemID);
+					TecComp->UnlockItems(ItemsID);
 				}
 			}
 		}
